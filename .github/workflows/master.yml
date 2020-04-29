@@ -41,21 +41,21 @@ jobs:
 
       - name: Build the Package
         working-directory: src
-        run: MIX_ENV=prod mix release $IMAGE
+        run: MIX_ENV=prod mix release plyxchg
 
       - name: Copy Build folders
         working-directory: src/_build/prod/rel/
-        run: tar -czvf $IMAGE.tar.gz $IMAGE
+        run: tar -czvf plyxchg.tar.gz plyxchg
 
       - name: Archive the build
         uses: actions/upload-artifact@v1
         with:
-          name: $DEPLOYMENT_$IMAGE
+          name: prod_plyxchg
           path: src/_build/prod/rel/plyxchg.tar.gz
 
       - name: Move the tar file into the docker folders
         working-directory: src/_build/prod/rel/
-        run: mv $IMAGE.tar.gz ../../../docker/$IMAGE
+        run: mv plyxchg.tar.gz ../../../docker/plyxchg
 
       # Setup gcloud CLI
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
@@ -81,19 +81,19 @@ jobs:
 
       # Build the Docker image
       - name: Build
-        working-directory: src/docker/$IMAGE
+        working-directory: src/docker/plyxchg
         run: |
           export BUILD_VSN=$(cat ../../vsn.txt) &&
-          docker build -t gcr.io/$GKE_PROJECT/$IMAGE:$BUILD_VSN -t gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA \
+          docker build -t gcr.io/$GKE_PROJECT/plyxchg:$BUILD_VSN -t gcr.io/$GKE_PROJECT/plyxchg:$GITHUB_SHA \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="$GITHUB_REF" .
       # Push the Docker image to Google Container Registry
       - name: Publish
-        working-directory: src/docker/$IMAGE
+        working-directory: src/docker/plyxchg
         run: |
-          docker push gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA
+          docker push gcr.io/$GKE_PROJECT/plyxchg:$GITHUB_SHA
 
       - name: Deploy the environment
         working-directory: devops
         run: |
-          ./ops --deploy --spec $DEPLOYMENT --sha $GITHUB_SHA
+          ./ops --deploy --spec prod --sha $GITHUB_SHA
