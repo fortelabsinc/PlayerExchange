@@ -80,7 +80,7 @@ if(None != args.ansible_root):
     ansible_root = args.ansible_root
 
 if(None != args.spec):
-    ansible_root = args.spec
+    spec = args.spec
 
 verboseOpts = ''
 if(args.verbose):
