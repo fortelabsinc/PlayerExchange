@@ -1,4 +1,8 @@
 ---
+- name: What is going on here?
+  debug:
+    msg: "gcr.io/forte-player-exchange/plyxchg@{{build_ver}}"
+
 - name: Define the Deployment
   k8s:
     state: "{{cluster_state}}"
