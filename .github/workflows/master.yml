@@ -67,7 +67,7 @@ jobs:
 
       # Configure docker to use the gcloud command-line tool as a credential helper
       - run: |
-          gcloud auth configure-docker
+          gcloud auth configure-docker --quiet
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
@@ -75,7 +75,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
+          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --quiet
           python3 -m pip install --upgrade pip
           python3 -m pip install ansible==2.9.2 requests docker openshift google-auth
 
@@ -96,4 +96,4 @@ jobs:
       - name: Deploy the environment
         working-directory: devops
         run: |
-          ./ops --deploy --spec prod --ver sha256:$GITHUB_SHA
+          ./ops --deploy --spec prod --ver $GITHUB_SHA
