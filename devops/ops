@@ -1,0 +1,162 @@
+#!/usr/bin/env python3
+
+#----------------------------------------------------------------------------
+# Imported Libraries
+#----------------------------------------------------------------------------
+import sys
+import argparse
+import os
+import subprocess
+#----------------------------------------------------------------------------
+# Setup Commandline Processing
+#----------------------------------------------------------------------------
+parser = argparse.ArgumentParser('Player Exchange Deployment Tool')
+
+# Because I am bad at remembers stuff, lets throw a "tips" block in
+parser.add_argument('--tips',
+                    help='Tips and examples of executing some common ops',
+                    action="store_true")
+
+parser.add_argument('--verbose',
+                    help='Runs the Ansible Commands in Full Verbose mode.  Helpful for debugging ansible playbooks but not much else.',
+                    action="store_true")
+
+parser.add_argument('--spec',
+                    help='The name of the spec you want to run',
+                    action="store")
+
+parser.add_argument('--ansible_root',
+                    help='Set the path for the ansible playbooks. Useful for system development.  Default is ./devops',
+                    action="store")
+
+parser.add_argument('--setup_local',
+                    help='Installs any additional Ansible packages needed.',
+                    action="store_true")
+
+parser.add_argument('--local_dev_start',
+                    help='Starts a local dev environment',
+                    action="store_true")
+
+parser.add_argument('--local_dev_stop',
+                    help='Stops a local dev environment',
+                    action="store_true")
+
+parser.add_argument('--cluster_create',
+                    help='Creates a cluster on GKE.',
+                    action="store_true")
+
+parser.add_argument('--cluster_destroy',
+                    help='Destroy a cluster on GKE.',
+                    action="store_true")
+
+parser.add_argument('--deploy',
+                    help='Deploy services to GKE',
+                    action="store_true")
+
+parser.add_argument('--release',
+                    help='Release the services to GKE',
+                    action="store_true")
+
+parser.add_argument('--dev',
+                    help='Used to test some stuff out while developing scripts.',
+                    action="store_true")
+
+parser.add_argument('--sha',
+                    help='Image sha to use',
+                    action="store")
+
+#----------------------------------------------------------------------------
+# Parse the Commandline Arguments
+#----------------------------------------------------------------------------
+args = parser.parse_args()
+
+#----------------------------------------------------------------------------
+# Load some default arguments
+#----------------------------------------------------------------------------
+ansible_root = "./"
+spec = "default"
+
+if(None != args.ansible_root):
+    ansible_root = args.ansible_root
+
+if(None != args.spec):
+    ansible_root = args.spec
+
+verboseOpts = ''
+if(args.verbose):
+    verboseOpts = '-vvvv'
+
+#----------------------------------------------------------------------------
+# --tips Handler
+#----------------------------------------------------------------------------
+if args.tips:
+    print("""
+Player Exchange DevOps Environment Tool
+
+Junk about this tool
+
+""")
+
+#----------------------------------------------------------------------------
+# --setup_local
+#----------------------------------------------------------------------------
+elif args.setup_local:
+    print("Installing all packages needed by ansible (typically via pip3)")
+    os.system('pip install --user ansible')
+    cmd = '~/.local/bin/ansible-playbook -i {0}/inventory/hosts {0}/playbooks/install_local.yml {1}'
+    os.system(cmd.format(ansible_root, verboseOpts))
+    print("setup_local complete.  Please make sure to add ~/.local/bin to your path or future commands will fail")
+    print("Also given the order of ops you may see some failures.  Try running command a second time and report back if failures persist")
+
+#----------------------------------------------------------------------------
+# --create_cluster Handler
+#----------------------------------------------------------------------------
+elif args.cluster_create:
+    print("Starting the local dev environment")
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/cluster_env.yml --extra-vars "env_state=start spec={1}" {2}'
+    os.system(cmd.format(ansible_root, spec, verboseOpts))
+    print("Cluster Create Complete")
+
+elif args.cluster_destroy:
+    print("Starting the local dev environment")
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/cluster_env.yml --extra-vars "env_state=stop spec={1}" {2}'
+    os.system(cmd.format(ansible_root, spec, verboseOpts))
+    print("Cluster Create Complete")
+
+elif args.deploy:
+    print("Deploy the environments")
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_env.yml --extra-vars "env_state=start spec={1}" {2}'
+    os.system(cmd.format(ansible_root, spec, verboseOpts))
+    print("Cluster Create Complete")
+
+elif args.release:
+    print("Deploy the environments")
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_env.yml --extra-vars "env_state=stop spec={1}" {2}'
+    os.system(cmd.format(ansible_root, spec, verboseOpts))
+    print("Cluster Create Complete")
+
+elif args.local_dev_start:
+    print("Starting the local dev environment")
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/dev_local.yml --extra-vars "env_state=start" {1}'
+    os.system(cmd.format(ansible_root, verboseOpts))
+    print("Local Environment Started")
+
+elif args.local_dev_stop:
+    print("Stopping the local dev environment")
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/dev_local.yml --extra-vars "env_state=stop" {1}'
+    os.system(cmd.format(ansible_root, verboseOpts))
+    print("Local Environment Stopped")
+
+
+elif args.dev:
+    print("Starting the local dev environment")
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/dev.yml --extra-vars "env_state=start spec={1} build_sha={2}" {3}'
+    os.system(cmd.format(ansible_root, spec, args.sha, verboseOpts))
+    print("Cluster Create Complete")
+
+
+#----------------------------------------------------------------------------
+# Unknown Operation
+#----------------------------------------------------------------------------
+else:
+    print("Unknown Command")

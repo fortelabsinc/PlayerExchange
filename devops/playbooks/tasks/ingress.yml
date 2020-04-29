@@ -1,0 +1,19 @@
+- name: Setup Ingress Controller
+  k8s:
+    state: "{{cluster_state}}"
+    wait: yes
+    definition:
+      kind: Ingress
+      apiVersion: networking.k8s.io/v1beta1
+      metadata:
+        name: basic-ingress
+        namespace: "{{cluster_name}}-{{namespace}}"
+      spec:
+        rules:
+          - host: localhost
+            http:
+              paths:
+                - path: /
+                  backend:
+                    serviceName: cockroachdb-public
+                    servicePort: 8080

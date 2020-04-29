@@ -1,0 +1,36 @@
+---
+- hosts: localhost
+  gather_facts: false
+
+  pre_tasks:
+    - include_tasks: tasks/args_load.yml
+
+  tasks:
+    - debug:
+        msg: "Deploy Called"
+  #  # Define all needed namespaces
+  #  - include_tasks: tasks/namespaces.yml
+
+  #  # Setup the Monitoring System
+  #  - include_tasks: tasks/monitoring/kube_deploy.yml
+  #    loop: "{{ environments }}"
+  #    loop_control:
+  #      loop_var: namespace
+
+  #  # Deploy Cockroach
+  #  - include_tasks: tasks/cockroach/kube_deploy.yml
+  #    loop: "{{ environments }}"
+  #    loop_control:
+  #      loop_var: namespace
+
+  #  # Deploy Ingress
+  #  - include_tasks: tasks/ingress.yml
+  #    loop: "{{ environments }}"
+  #    loop_control:
+  #      loop_var: namespace
+
+  #  # Deploy Local Dev loadbalancer
+  #  - include_tasks: tasks/loadbalancer.yml
+  #    loop: "{{ environments }}"
+  #    loop_control:
+  #      loop_var: namespace

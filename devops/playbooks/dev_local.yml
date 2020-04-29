@@ -1,0 +1,93 @@
+---
+#------------------------------------------------------------------------------
+# This configuration is used to setup a local docker container for development.
+# The goal here is to create a setup for running unit test as well as doing
+# local dev work.
+- hosts: localhost
+  gather_facts: false
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+
+  # Setup the state of the node.
+  pre_tasks:
+    - name: Validate that the `env_state` is set [Skip means it is set]
+      debug:
+        msg: "You must define a command line argument `env_state` to run this playbook"
+      when: env_state is undefined
+
+    - name: End execution if `env_state` is not set [Skip means it is set]
+      meta: end_play
+      when: env_state is undefined
+
+    - name: Set the cluster action based on env_state [Skip means it is set]
+      set_fact:
+        action_class: "started"
+        network_state: "present"
+      when: env_state == 'start'
+
+    - name: Set the cluster action based on env_state [Skip means it is set]
+      set_fact:
+        action_class: "absent"
+        network_state: "absent"
+      when: env_state == 'stop'
+
+  # Running the tasks to setup the environments for all local testing, etc.
+  tasks:
+    # Setup/Remove the blockchain nodes
+    # TODO: We should setup a network to run this stuff in.
+    - name: "Set Blockchain node to {{ action_class }}"
+      docker_container:
+        state: "{{ action_class }}"
+        image: parity/parity:latest
+        name: parity
+        ports:
+          - "8545:8545"
+          - "8546:8546"
+          - "30303:30303"
+          - "30303:30303/udp"
+        command: --config dev --jsonrpc-interface all --unsafe-expose
+
+    - name: "{{ action_class }} the backend docker network"
+      docker_network:
+        name: backend_local
+        state: "{{ network_state }}"
+
+    - name: "{{ action_class }} the cockroach 1 backend in docker"
+      docker_container:
+        name: roach1
+        hostname: roach1
+        image: cockroachdb/cockroach:v19.2.4
+        networks:
+          - name: backend_local
+        command: start --insecure --join=roach1,roach2,roach3
+        ports:
+          - "26257:26257"
+          - "8080:8080"
+        state: "{{ action_class }}"
+
+    - name: Register the Cockroach container to the inventory
+      add_host:
+        hostname: "roach1"
+        ansible_connection: docker
+        ansible_python_interpreter: /usr/bin/python3
+      when: env_state != 'stop'
+
+    - name: "{{ action_class }} the cockroach 2 backend in docker"
+      docker_container:
+        name: roach2
+        hostname: roach2
+        image: cockroachdb/cockroach:v19.2.4
+        networks:
+          - name: backend_local
+        command: start --insecure --join=roach1,roach2,roach3
+        state: "{{ action_class }}"
+
+    - name: "{{ action_class }} the cockroach 3 backend in docker"
+      docker_container:
+        name: roach3
+        hostname: roach3
+        image: cockroachdb/cockroach:v19.2.4
+        networks:
+          - name: backend_local
+        command: start --insecure --join=roach1,roach2,roach3
+        state: "{{ action_class }}"

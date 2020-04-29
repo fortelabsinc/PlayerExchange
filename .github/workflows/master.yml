@@ -1,0 +1,99 @@
+name: Forte Player Exchange Master Build
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+env:
+  GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: forte-player-exchange
+  GKE_ZONE: us-central1-c
+  IMAGE: plyxchg
+  DEPLOYMENT: prod
+
+jobs:
+  build-application:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup elixir
+        uses: actions/setup-elixir@v1
+        with:
+          elixir-version: 1.10.3 # Define the elixir version [required]
+          otp-version: 22.3 # Define the OTP version [required]
+
+      # Grab the deps and compile them
+      - name: Install Dependencies
+        working-directory: src
+        run: |
+          mix deps.get
+          mix deps.compile
+
+      - name: Build the Project
+        working-directory: src
+        run: mix compile
+
+      - name: Run Tests
+        working-directory: src
+        run: mix test
+
+      - name: Build the Package
+        working-directory: src
+        run: MIX_ENV=prod mix release $IMAGE
+
+      - name: Copy Build folders
+        working-directory: src/_build/prod/rel/
+        run: tar -czvf $IMAGE.tar.gz $IMAGE
+
+      - name: Archive the build
+        uses: actions/upload-artifact@v1
+        with:
+          name: ${{DEPLOYMENT}}_${{IMAGE}}
+          path: src/_build/prod/rel/${{IMAGE}}.tar.gz
+
+      - name: Move the tar file into the docker folders
+        working-directory: src/_build/prod/rel/
+        run: mv $IMAGE.tar.gz ../../../docker/$IMAGE
+
+      # Setup gcloud CLI
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: "270.0.0"
+          service_account_email: ${{ secrets.SA_EMAIL }}
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          project_id: ${{GKE_PROJECT}}
+
+      # Configure docker to use the gcloud command-line tool as a credential helper
+      - run: |
+          gcloud auth configure-docker
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
+          python3 -m pip install --upgrade pip
+          python3 -m pip install ansible==2.9.2 requests docker openshift google-auth
+
+      # Build the Docker image
+      - name: Build
+        working-directory: src/docker/${{IMAGE}}
+        run: |
+          export BUILD_VSN=$(cat ../../vsn.txt) &&
+          docker build -t gcr.io/$GKE_PROJECT/$IMAGE:$BUILD_VSN -t gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF="$GITHUB_REF" .
+      # Push the Docker image to Google Container Registry
+      - name: Publish
+        working-directory: src/docker/${{IMAGE}}
+        run: |
+          docker push gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA
+
+      - name: Deploy the environment
+        working-directory: devops
+        run: |
+          ./ops --deploy --spec $DEPLOYMENT --sha $GITHUB_SHA

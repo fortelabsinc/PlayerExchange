@@ -1,0 +1,43 @@
+---
+- name: "Read configuration file"
+  include_vars:
+    file: "../../specs/{{spec}}.yml"
+
+# Verify expected command line params are given
+- name: Validate that the `env_state` is set [Skip means it is set]
+  debug:
+    msg: "You must define a command line argument `env_state` to run this playbook"
+  when: env_state is undefined
+
+- name: End execution if `env_state` is not set [Skip means it is set]
+  meta: end_play
+  when: env_state is undefined
+
+- name: Validate that the `spec` is set [Skip means it is set]
+  debug:
+    msg: "You must define a command line argument `spec` to run this playbook"
+  when: spec is undefined
+
+- name: End execution if `spec` is not set [Skip means it is set]
+  meta: end_play
+  when: spec is undefined
+
+- name: Set the cluster action based on env_state [Skip means it is set]
+  set_fact:
+    cluster_action: "create"
+  when: env_state == 'start'
+
+- name: Set the cluster action based on env_state [Skip means it is set]
+  set_fact:
+    cluster_action: "delete"
+  when: env_state == 'stop'
+
+- name: Set the cluster action based on env_state [Skip means it is set]
+  set_fact:
+    cluster_state: "present"
+  when: env_state == 'start'
+
+- name: Set the cluster action based on env_state [Skip means it is set]
+  set_fact:
+    cluster_state: "absent"
+  when: env_state == 'stop'

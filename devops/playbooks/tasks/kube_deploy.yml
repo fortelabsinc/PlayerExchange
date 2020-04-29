@@ -1,0 +1,118 @@
+---
+- name: Setting up the Deployments
+  block:
+    - name: Log it
+      debug:
+        var: item
+  with_items: "{{environments}}"
+#- name: Creating Namespace for deployment
+#  k8s:
+#    name: "{{cluster_name}}-{{deployment_name}}"
+#    api_version: v1
+#    kind: Namespace
+#    state: present
+#    wait: yes
+#
+#- name: Create the deployment
+#  k8s:
+#    state: present
+#    wait: yes
+#    definition:
+#      apiVersion: apps/v1
+#      kind: Deployment
+#      metadata:
+#        namespace: "{{cluster_name}}-{{deployment_name}}"
+#        name: forte-player-exchange
+#        labels:
+#          app: forte-player-exchange
+#          tier: frontend
+#      spec:
+#        replicas: 1
+#        selector:
+#          matchLabels:
+#            app: forte-player-exchange
+#            tier: frontend
+#        template:
+#          metadata:
+#            labels:
+#              app: forte-player-exchange
+#              tier: frontend
+#          spec:
+#            containers:
+#              - image: gcr.io/forte-player-exchange/plyxchg:{{build_sha}}
+#                imagePullPolicy: Always
+#                name: forte-player-exchange
+#                labels:
+#                  - app: "forte-player-exchange"
+#
+#                # This will check to see if the node is running
+#                livenessProbe:
+#                  httpGet:
+#                    path: /node/v1/healthy
+#                    port: 8180
+#                  # How long since the launch of the node until health checks start
+#                  initialDelaySeconds: 5
+#                  # Timeout for the health request.  If it takes longer to respond, it is considered a failure
+#                  timeoutSeconds: 1
+#                  # The amount of time between health checks
+#                  periodSeconds: 10
+#                  # How many failed attempts until the node is just killed
+#                  failureThreshold: 3
+#
+#                # Check to see if the application is fully running and ready to go
+#                # NOTE: I think this means that the system will stop routing traffic
+#                #       to it but NOT kill it if the ready probes fail
+#                readinessProbe:
+#                  httpGet:
+#                    path: /node/v1/ready
+#                    port: 8180
+#                  # Amount of time to wait before the first ready check comes in
+#                  initialDelaySeconds: 0
+#                  # The amount of time between ready checks
+#                  periodSeconds: 2
+#                  # The number of times the ready check can fail in a row before it is considered bad
+#                  failureThreshold: 3
+#                  # The number of success calls that must happen before traffic is routed to it
+#                  successThreshold: 1
+#
+#                #resources:
+#                #  # Request is a "I want at least" kind of request and it is per container not pod
+#                #  # NOTE: An interesting thing about erlang is it will check the total number of cores
+#                #  #       and base it thread count on that.  I wonder if these requests/limits will
+#                #  #       effect that calculation at all....
+#                #  requests:
+#                #    # We need at least half a core
+#                #    cpu: "500m"
+#                #    # and lets say 128mb of ram
+#                #    memory: "128Mi"
+#                #  # Limits define the total amount of CPU processing we can take
+#                #  limits:
+#                #    # Expand up to say 2 full cores `cpu: "2000m"`
+#                #    cpu: "500m"
+#                #    # And let's cap it at 256Mi of ram
+#                #    memory: "256Mi"
+#                ports:
+#                  - containerPort: 8180
+#                    name: http
+#                    protocol: TCP
+#
+#- name: Create the Load Balancer
+#  k8s:
+#    state: present
+#    wait: yes
+#    definition:
+#      apiVersion: v1
+#      kind: Service
+#      metadata:
+#        namespace: "{{cluster_name}}-{{deployment_name}}"
+#        name: forte-player-exchange
+#        labels:
+#          app: forte-player-exchange
+#          tier: frontend
+#      spec:
+#        type: LoadBalancer
+#        ports:
+#          - port: 8180
+#        selector:
+#          app: forte-player-exchange
+#          tier: frontend

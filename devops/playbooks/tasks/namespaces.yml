@@ -1,0 +1,21 @@
+---
+# Create the namespace for Monitoring
+- name: Monitoring Namespace
+  k8s:
+    state: "{{cluster_state}}"
+    wait: yes
+    name: "monitoring"
+    api_version: v1
+    kind: "Namespace"
+
+# Create end environment namespaces
+- name: Deployment Namespace
+  k8s:
+    state: "{{cluster_state}}"
+    wait: yes
+    name: "{{cluster_name}}-{{namespace}}"
+    api_version: v1
+    kind: "Namespace"
+  loop: "{{ environments }}"
+  loop_control:
+    loop_var: namespace

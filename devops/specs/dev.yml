@@ -1,0 +1,10 @@
+---
+cluster_name: forte-player-exchange
+cluster_machine_type: e2-micro
+#cluster_machine_type: n1-standard-1
+cluster_num_nodes: 3
+cluster_machine_preemptible: false
+
+domain_url: "playerexchange.io"
+#environments: ["prod", "stage", "dev"]
+environments: ["dev"]

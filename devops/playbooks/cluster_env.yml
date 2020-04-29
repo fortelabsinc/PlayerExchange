@@ -1,0 +1,63 @@
+---
+#--------------------------------------------------------------------
+# playbook: cluster_env
+#
+# This playbook is designed to create a K8 cluster or release it based
+# on the arguments given.
+#
+# Required Vars:
+#
+# env_state: "create" or "delete" - what kind of action we are doing
+# spec: "name of file in specs folder without the .yml" - config info
+
+- hosts: localhost
+  gather_facts: false
+  vars:
+    ansible_python_interpreter: "/usr/bin/python3"
+
+  pre_tasks:
+    # Verify expected command line params are given
+    - debug:
+        msg: "You must define a command line argument `env_state` to run this playbook"
+      when: env_state is undefined
+    - meta: end_play
+      when: env_state is undefined
+
+    - debug:
+        msg: "You must define a command line argument `spec` to run this playbook"
+      when: spec is undefined
+    - meta: end_play
+      when: spec is undefined
+
+    - set_fact:
+        cluster_action: "create"
+      when: env_state == 'start'
+
+    - set_fact:
+        cluster_action: "delete"
+      when: env_state == 'stop'
+
+    # Load the spec file for the system.  This will
+    # define some critical
+    - name: "Read configuration file"
+      include_vars:
+        file: "../specs/{{spec}}.yml"
+
+  tasks:
+    # Launch the cluster!!!  For dev we are going to try out preemptible because it is much cheaper
+    - name: "{{cluster_action}} the preemptible cluster {{cluster_name}}"
+      raw: >
+        gcloud container clusters {{cluster_action}} {{cluster_name}} --quiet --machine-type={{cluster_machine_type}} --num-nodes={{cluster_num_nodes}} --preemptible
+      when: true == cluster_machine_preemptible and env_state == 'start'
+
+    # Launch the cluster!!!  Or we can run it without preemptible flag
+    - name: "{{cluster_action}} the cluster {{cluster_name}}"
+      raw: >
+        gcloud container clusters {{cluster_action}} {{cluster_name}} --quiet --machine-type={{cluster_machine_type}} --num-nodes={{cluster_num_nodes}}
+      when: false == cluster_machine_preemptible and env_state == 'start'
+
+    # Blow it away because I said so...
+    - name: "{{cluster_action}} the cluster {{cluster_name}}"
+      raw: >
+        gcloud container clusters {{cluster_action}} {{cluster_name}} --quiet
+      when: env_state == 'stop'

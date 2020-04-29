@@ -1,0 +1,17 @@
+- name: Manage the Cockroach Loadbalancer
+  k8s:
+    state: "{{cluster_state}}"
+    wait: yes
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        namespace: "{{cluster_name}}-{{namespace}}"
+        name: loadbalancer-cockroachdb
+      spec:
+        type: LoadBalancer
+        selector:
+          app: cockroachdb
+        ports:
+          - port: 26257
+            targetPort: 26257
