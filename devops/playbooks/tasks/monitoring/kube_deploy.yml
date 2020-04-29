@@ -52,7 +52,7 @@
       kind: ConfigMap
       metadata:
         name: prometheus-server-conf
-        namespace: "{{cluster_name}}-{{namespace}}"
+        namespace: "{{cluster_name}}-{{stage}}"
         labels:
           name: prometheus-server-conf
       data:
@@ -224,7 +224,7 @@
       kind: Deployment
       metadata:
         name: prometheus-deployment
-        namespace: "{{cluster_name}}-{{namespace}}"
+        namespace: "{{cluster_name}}-{{stage}}"
       spec:
         replicas: 1
         selector:
@@ -266,7 +266,7 @@
       kind: Service
       metadata:
         name: prometheus-service
-        namespace: "{{cluster_name}}-{{namespace}}"
+        namespace: "{{cluster_name}}-{{stage}}"
         annotations:
           prometheus.io/scrape: "true"
           prometheus.io/port: "9090"
@@ -288,7 +288,7 @@
       kind: ConfigMap
       metadata:
         name: grafana-datasources
-        namespace: "{{cluster_name}}-{{namespace}}"
+        namespace: "{{cluster_name}}-{{stage}}"
       data:
         prometheus.yaml: |-
           {
@@ -315,7 +315,7 @@
       kind: ConfigMap
       metadata:
         name: grafana-config
-        namespace: "{{cluster_name}}-{{namespace}}"
+        namespace: "{{cluster_name}}-{{stage}}"
       data:
         all.yaml: |-
           apiVersion: 1
@@ -341,7 +341,7 @@
       kind: ConfigMap
       metadata:
         name: grafana-dashboards
-        namespace: "{{cluster_name}}-{{namespace}}"
+        namespace: "{{cluster_name}}-{{stage}}"
       data:
         kube_deploy_metrics.json: '{{lookup("file", "kube_deploy_metrics.json") | from_json | to_json}}'
         cockroach_replicas.json: '{{lookup("file", "cockroach_replicas.json") | from_json | to_json}}'
@@ -358,7 +358,7 @@
       kind: Deployment
       metadata:
         name: grafana
-        namespace: "{{cluster_name}}-{{namespace}}"
+        namespace: "{{cluster_name}}-{{stage}}"
       spec:
         replicas: 1
         selector:
@@ -420,7 +420,7 @@
       kind: Service
       metadata:
         name: grafana
-        namespace: "{{cluster_name}}-{{namespace}}"
+        namespace: "{{cluster_name}}-{{stage}}"
         annotations:
           prometheus.io/scrape: "true"
           prometheus.io/port: "3000"

@@ -121,19 +121,21 @@ elif args.cluster_destroy:
     print("Starting the local dev environment")
     cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/cluster_env.yml --extra-vars "env_state=stop spec={1}" {2}'
     os.system(cmd.format(ansible_root, spec, verboseOpts))
-    print("Cluster Create Complete")
+    print("Cluster Destroyed Complete")
 
 elif args.deploy:
     print("Deploy the environments")
     cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_remote.yml --extra-vars "env_state=start spec={1}" {2}'
-    os.system(cmd.format(ansible_root, spec, verboseOpts))
-    print("Cluster Create Complete")
+    osCmd = cmd.format(ansible_root, spec, verboseOpts)
+    print(osCmd)
+    os.system(osCmd)
+    print("Cluster Deployment Complete")
 
 elif args.release:
-    print("Deploy the environments")
+    print("Release the environments")
     cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_remote.yml --extra-vars "env_state=stop spec={1}" {2}'
     os.system(cmd.format(ansible_root, spec, verboseOpts))
-    print("Cluster Create Complete")
+    print("Cluster Deployment Release Complete")
 
 elif args.local_dev_start:
     print("Starting the local dev environment")

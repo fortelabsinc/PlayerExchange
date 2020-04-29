@@ -1,7 +1,14 @@
 ---
+- debug:
+    var: spec
+
 - name: "Read configuration file"
   include_vars:
     file: "../../specs/{{spec}}.yml"
+  register: rez
+
+- debug:
+    var: stage
 
 # Verify expected command line params are given
 - name: Validate that the `env_state` is set [Skip means it is set]

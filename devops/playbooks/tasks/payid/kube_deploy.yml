@@ -1,0 +1,4 @@
+---
+- name: Deploying payid image
+  debug:
+    msg: "I got here"

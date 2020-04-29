@@ -1,12 +1,14 @@
 ---
 - hosts: localhost
   gather_facts: false
-  vars:
-    ansible_python_interpreter: "/opt/hostedtoolcache/Python/3.8.2/x64/bin/python3"
+  #vars:
+  #  ansible_python_interpreter: "/opt/hostedtoolcache/Python/3.8.2/x64/bin/python3"
 
   pre_tasks:
     - include_tasks: tasks/args_load.yml
 
   tasks:
-    - debug:
-        msg: "Deploy Remote Called"
+    - include_tasks: tasks/namespaces.yml
+    - include_tasks: tasks/cockroach/kube_deploy.yml
+    - include_tasks: tasks/monitoring/kube_deploy.yml
+    - include_tasks: tasks/plyxchg/kube_deploy.yml

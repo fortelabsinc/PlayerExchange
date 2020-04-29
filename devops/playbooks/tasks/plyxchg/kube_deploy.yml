@@ -1,0 +1,33 @@
+---
+- name: Define the Deployment
+  k8s:
+    state: "{{cluster_state}}"
+    wait: yes
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: plyxchg-deployment
+        namespace: "{{cluster_name}}-{{stage}}"
+      spec:
+        replicas: 3
+        selector:
+          matchLabels:
+            app: plyxchg
+        template:
+          metadata:
+            labels:
+              app: plyxchg
+          spec:
+            containers:
+              - name: plyxchg
+                image: gcr.io/forte-player-exchange/plyxchg@sha256:fc75e38212eb07b78a608839f247866daa9197a28457f11d432f808b534b1651
+                resources:
+                  limits:
+                    memory: "2Gi"
+                    cpu: "1000m"
+                  requests:
+                    memory: "1Gi"
+                    cpu: "500m"
+                ports:
+                  - containerPort: 8180
