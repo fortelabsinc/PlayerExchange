@@ -91,9 +91,9 @@ jobs:
       - name: Publish
         working-directory: src/docker/plyxchg
         run: |
-          docker push gcr.io/$GKE_PROJECT/plyxchg:$GITHUB_SHA
+          docker push gcr.io/$GKE_PROJECT/plyxchg
 
       - name: Deploy the environment
         working-directory: devops
         run: |
-          ./ops --deploy --spec prod --sha $GITHUB_SHA
+          ./ops --deploy --spec prod --ver sha256:$GITHUB_SHA

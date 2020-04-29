@@ -61,7 +61,7 @@ parser.add_argument('--dev',
                     help='Used to test some stuff out while developing scripts.',
                     action="store_true")
 
-parser.add_argument('--sha',
+parser.add_argument('--ver',
                     help='Image sha to use',
                     action="store")
 
@@ -75,12 +75,16 @@ args = parser.parse_args()
 #----------------------------------------------------------------------------
 ansible_root = "./"
 spec = "default"
+ver = "latest"
 
 if(None != args.ansible_root):
     ansible_root = args.ansible_root
 
 if(None != args.spec):
     spec = args.spec
+
+if(None != args.ver):
+    ver = args.ver
 
 verboseOpts = ''
 if(args.verbose):
@@ -125,8 +129,8 @@ elif args.cluster_destroy:
 
 elif args.deploy:
     print("Deploy the environments")
-    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_remote.yml --extra-vars "env_state=start spec={1}" {2}'
-    osCmd = cmd.format(ansible_root, spec, verboseOpts)
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_remote.yml --extra-vars "env_state=start spec={1} build_ver={2}" {3}'
+    osCmd = cmd.format(ansible_root, spec, ver, verboseOpts)
     print(osCmd)
     os.system(osCmd)
     print("Cluster Deployment Complete")
