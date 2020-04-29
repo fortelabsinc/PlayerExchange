@@ -14,7 +14,7 @@ defmodule Gateway.Router.Node.Handler do
 
   @spec ping :: <<_::32>>
   def ping() do
-    "pong"
+    "node pong"
   end
 
   @doc """

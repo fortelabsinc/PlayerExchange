@@ -8,12 +8,10 @@ defmodule Gateway.Application do
   def start(_type, _args) do
     children =
       enableNodeRouter([])
-      |> enableAppRouter()
-      |> enableSiteRouter()
+      |> enablePortalRouter()
 
     # Setup any state needed for the Node Router
     Gateway.Router.Node.Handler.init()
-    Gateway.Router.Site.Handler.init()
     Gateway.Router.Portal.Handler.init()
     opts = [strategy: :one_for_one, name: Gateway.Supervisor]
     Supervisor.start_link(children, opts)
@@ -39,7 +37,7 @@ defmodule Gateway.Application do
           String.to_integer(
             System.get_env(
               "PLYXCHG_GATEWAY_NODE_PORT",
-              Application.get_env(:gateway, :node_port, "8180")
+              Application.get_env(:gateway, :node_port, "8182")
             )
           )
       )
@@ -47,12 +45,12 @@ defmodule Gateway.Application do
     ]
   end
 
-  defp enableAppRouter(children) do
+  defp enablePortalRouter(children) do
     httpType =
-      if String.to_existing_atom(System.get_env("PLYXCHG_GATEWAY_NODE_TLS", "false")) do
+      if String.to_existing_atom(System.get_env("PLYXCHG_GATEWAY_PORTAL_TLS", "false")) do
         :https
       else
-        if Application.get_env(:gateway, :site_enable_tls, false) do
+        if Application.get_env(:gateway, :portal_enable_tls, false) do
           :https
         else
           :http
@@ -62,40 +60,12 @@ defmodule Gateway.Application do
     [
       Plug.Cowboy.child_spec(
         scheme: httpType,
-        plug: Gateway.Router.App,
+        plug: Gateway.Router.Portal,
         port:
           String.to_integer(
             System.get_env(
-              "PLYXCHG_GATEWAY_APP_PORT",
-              Application.get_env(:gateway, :app_port, "8181")
-            )
-          )
-      )
-      | children
-    ]
-  end
-
-  defp enableSiteRouter(children) do
-    httpType =
-      if String.to_existing_atom(System.get_env("PLYXCHG_GATEWAY_SITE_TLS", "false")) do
-        :https
-      else
-        if Application.get_env(:gateway, :site_enable_tls, false) do
-          :https
-        else
-          :http
-        end
-      end
-
-    [
-      Plug.Cowboy.child_spec(
-        scheme: httpType,
-        plug: Gateway.Router.App,
-        port:
-          String.to_integer(
-            System.get_env(
-              "PLYXCHG_GATEWAY_SITE_PORT",
-              Application.get_env(:gateway, :site_port, "8182")
+              "PLYXCHG_GATEWAY_PORTAL_PORT",
+              Application.get_env(:gateway, :portal_port, "8180")
             )
           )
       )
