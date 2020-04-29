@@ -51,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: $DEPLOYMENT_$IMAGE
-          path: src/_build/prod/rel/${{IMAGE}}.tar.gz
+          path: src/_build/prod/rel/$IMAGE.tar.gz
 
       - name: Move the tar file into the docker folders
         working-directory: src/_build/prod/rel/
@@ -81,7 +81,7 @@ jobs:
 
       # Build the Docker image
       - name: Build
-        working-directory: src/docker/${{IMAGE}}
+        working-directory: src/docker/$IMAGE
         run: |
           export BUILD_VSN=$(cat ../../vsn.txt) &&
           docker build -t gcr.io/$GKE_PROJECT/$IMAGE:$BUILD_VSN -t gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA \
@@ -89,7 +89,7 @@ jobs:
             --build-arg GITHUB_REF="$GITHUB_REF" .
       # Push the Docker image to Google Container Registry
       - name: Publish
-        working-directory: src/docker/${{IMAGE}}
+        working-directory: src/docker/$IMAGE
         run: |
           docker push gcr.io/$GKE_PROJECT/$IMAGE:$GITHUB_SHA
 
