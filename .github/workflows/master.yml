@@ -51,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: $DEPLOYMENT_$IMAGE
-          path: src/_build/prod/rel/$IMAGE.tar.gz
+          path: src/_build/prod/rel/plyxchg.tar.gz
 
       - name: Move the tar file into the docker folders
         working-directory: src/_build/prod/rel/
