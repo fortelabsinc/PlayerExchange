@@ -50,7 +50,7 @@ jobs:
       - name: Archive the build
         uses: actions/upload-artifact@v1
         with:
-          name: ${{DEPLOYMENT}}_${{IMAGE}}
+          name: $DEPLOYMENT_$IMAGE
           path: src/_build/prod/rel/${{IMAGE}}.tar.gz
 
       - name: Move the tar file into the docker folders
@@ -63,7 +63,7 @@ jobs:
           version: "270.0.0"
           service_account_email: ${{ secrets.SA_EMAIL }}
           service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          project_id: ${{GKE_PROJECT}}
+          project_id: $GKE_PROJECT
 
       # Configure docker to use the gcloud command-line tool as a credential helper
       - run: |

@@ -125,13 +125,13 @@ elif args.cluster_destroy:
 
 elif args.deploy:
     print("Deploy the environments")
-    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_env.yml --extra-vars "env_state=start spec={1}" {2}'
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_remote.yml --extra-vars "env_state=start spec={1}" {2}'
     os.system(cmd.format(ansible_root, spec, verboseOpts))
     print("Cluster Create Complete")
 
 elif args.release:
     print("Deploy the environments")
-    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_env.yml --extra-vars "env_state=stop spec={1}" {2}'
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_remote.yml --extra-vars "env_state=stop spec={1}" {2}'
     os.system(cmd.format(ansible_root, spec, verboseOpts))
     print("Cluster Create Complete")
 
