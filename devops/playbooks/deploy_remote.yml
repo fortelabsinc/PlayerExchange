@@ -1,10 +1,10 @@
 ---
 - hosts: localhost
   gather_facts: false
-  #vars:
-  #  ansible_python_interpreter: "/opt/hostedtoolcache/Python/3.8.2/x64/bin/python3"
   vars:
-    ansible_python_interpreter: "/usr/bin/python3"
+    ansible_python_interpreter: "/opt/hostedtoolcache/Python/3.8.2/x64/bin/python3"
+  #vars:
+  #  ansible_python_interpreter: "/usr/bin/python3"
 
   pre_tasks:
     - include_tasks: tasks/args_load.yml
