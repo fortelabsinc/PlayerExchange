@@ -9,10 +9,10 @@
 #    kind: "Namespace"
 
 # Create end environment namespaces
-- name: Deployment Namespace
-  k8s:
-    state: "{{cluster_state}}"
-    wait: yes
-    name: "{{cluster_name}}-{{stage}}"
-    api_version: v1
-    kind: "Namespace"
+#- name: Deployment Namespace
+#  k8s:
+#    api_version: v1
+#    kind: "Namespace"
+#    name: "{{cluster_name}}-{{stage}}"
+#    wait: yes
+#    state: "{{cluster_state}}"

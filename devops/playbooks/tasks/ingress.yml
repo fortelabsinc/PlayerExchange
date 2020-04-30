@@ -1,3 +1,17 @@
+#- name: Setup Ingress Controller
+#  k8s:
+#    state: "{{cluster_state}}"
+#    wait: yes
+#    definition:
+#      apiVersion: networking.gke.io/v1beta2
+#      kind: ManagedCertificate
+#      metadata:
+#        name: "{{cluster_name}}"
+#        namespace: "{{cluster_name}}-{{stage}}"
+#      spec:
+#        domains:
+#          - "{{stage}}.playerexchange.io"
+
 - name: Setup Ingress Controller
   k8s:
     state: "{{cluster_state}}"
@@ -7,13 +21,11 @@
       apiVersion: networking.k8s.io/v1beta1
       metadata:
         name: basic-ingress
-        namespace: "{{cluster_name}}-{{namespace}}"
+        #namespace: "{{cluster_name}}-{{stage}}"
+        namespace: default
+        annotations:
+          kubernetes.io/ingress.global-static-ip-name: "forte-player-exchange"
       spec:
-        rules:
-          - host: localhost
-            http:
-              paths:
-                - path: /
-                  backend:
-                    serviceName: cockroachdb-public
-                    servicePort: 8080
+        backend:
+          serviceName: plyxchg
+          servicePort: 8180

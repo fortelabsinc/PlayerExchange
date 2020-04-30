@@ -87,8 +87,8 @@ export default {
         title: this.$t('tables.headings.name'),
         width: '30%',
       }, {
-        name: 'email',
-        title: this.$t('tables.headings.email'),
+        name: 'payid',
+        title: this.$t('tables.headings.payid'),
         width: '30%',
       }, {
         name: '__slot:status',
@@ -110,8 +110,8 @@ export default {
         title: this.$t('tables.headings.name'),
         width: '20%',
       }, {
-        name: 'email',
-        title: this.$t('tables.headings.email'),
+        name: 'payid',
+        title: this.$t('tables.headings.payid'),
         width: '20%',
       },
       {

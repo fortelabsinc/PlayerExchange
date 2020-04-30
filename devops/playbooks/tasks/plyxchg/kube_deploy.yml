@@ -7,10 +7,11 @@
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: plyxchg-deployment
-        namespace: "{{cluster_name}}-{{stage}}"
+        name: plyxchg
+        namespace: default
+        #namespace: "{{cluster_name}}-{{stage}}"
       spec:
-        replicas: 3
+        replicas: 1
         selector:
           matchLabels:
             app: plyxchg
@@ -30,6 +31,12 @@
                   requests:
                     memory: "1Gi"
                     cpu: "500m"
+                readinessProbe:
+                  httpGet:
+                    path: /node/v1/healthy
+                    port: 8182
+                  initialDelaySeconds: 3
+                  periodSeconds: 3
                 livenessProbe:
                   httpGet:
                     path: /node/v1/healthy
@@ -38,6 +45,7 @@
                   periodSeconds: 3
                 ports:
                   - containerPort: 8180
+                    protocol: TCP
 
 - name: Manage plyxchg Service
   k8s:
@@ -47,12 +55,16 @@
       apiVersion: v1
       kind: Service
       metadata:
-        name: plyxchg-service
-        namespace: "{{cluster_name}}-{{stage}}"
+        name: plyxchg
+        namespace: default
+        #namespace: "{{cluster_name}}-{{stage}}"
+        #annotations:
+        #  cloud.google.com/neg: '{"ingress": true}'
       spec:
-        selector:
-          app: plyxchg
         ports:
-          - port: 80
+          - port: 8180
             protocol: TCP
             targetPort: 8180
+        selector:
+          app: plyxchg
+        type: NodePort

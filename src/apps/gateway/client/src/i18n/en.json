@@ -440,7 +440,7 @@
     "noReport": "There is no data to display. Report will be available on November 3, 2018.",
     "loading": "Loading",
     "headings": {
-      "email": "Email",
+      "payid": "payid",
       "name": "Name",
       "firstName": "First Name",
       "lastName": "Last Name",

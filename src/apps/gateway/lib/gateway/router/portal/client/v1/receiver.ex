@@ -15,6 +15,6 @@ defmodule Gateway.Router.Portal.Client.V1.Receiver do
   @spec not_found(Plug.Conn.t(), any) :: Plug.Conn.t()
   def not_found(conn, _) do
     Logger.error("Gateway.Router.Portal.Client.V1.Receiver: Path not found #{inspect(conn)}")
-    send_resp(conn, 404, "not found")
+    send_resp(conn, 200, "ok")
   end
 end

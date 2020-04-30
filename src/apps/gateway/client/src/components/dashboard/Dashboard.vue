@@ -1,5 +1,7 @@
 <template>
   <div class="dashboard">
+    <dashboard-table />
+    <!--
     <dashboard-charts />
     <dashboard-info-block />
     <div class="row">
@@ -15,6 +17,7 @@
         <dashboard-map ref="dashboardMap"/>
       </div>
     </div>
+    -->
   </div>
 </template>
 
