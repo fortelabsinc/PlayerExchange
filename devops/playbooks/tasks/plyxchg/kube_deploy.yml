@@ -1,9 +1,5 @@
 ---
-- name: What is going on here?
-  debug:
-    msg: "gcr.io/forte-player-exchange/plyxchg:{{build_ver}}"
-
-- name: Define the Deployment
+- name: Manage plyxchg Deployment
   k8s:
     state: "{{cluster_state}}"
     wait: yes
@@ -26,6 +22,7 @@
             containers:
               - name: plyxchg
                 image: "gcr.io/forte-player-exchange/plyxchg:{{build_ver}}"
+                imagePullPolicy: Always
                 resources:
                   limits:
                     memory: "2Gi"
@@ -41,3 +38,21 @@
                   periodSeconds: 3
                 ports:
                   - containerPort: 8180
+
+- name: Manage plyxchg Service
+  k8s:
+    state: "{{cluster_state}}"
+    wait: yes
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: plyxchg-service
+        namespace: "{{cluster_name}}-{{stage}}"
+      spec:
+        selector:
+          app: plyxchg
+        ports:
+          - port: 80
+            protocol: TCP
+            targetPort: 8180

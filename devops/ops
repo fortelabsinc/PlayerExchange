@@ -131,14 +131,14 @@ elif args.deploy:
     print("Deploy the environments")
     cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_remote.yml --extra-vars "env_state=start spec={1} build_ver={2}" {3}'
     osCmd = cmd.format(ansible_root, spec, ver, verboseOpts)
-    print(osCmd)
     os.system(osCmd)
     print("Cluster Deployment Complete")
 
 elif args.release:
     print("Release the environments")
     cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_remote.yml --extra-vars "env_state=stop spec={1} build_ver={2}" {3}'
-    os.system(cmd.format(ansible_root, spec, ver, verboseOpts))
+    osCmd = cmd.format(ansible_root, spec, ver, verboseOpts)
+    os.system(osCmd)
     print("Cluster Deployment Release Complete")
 
 elif args.local_dev_start:
