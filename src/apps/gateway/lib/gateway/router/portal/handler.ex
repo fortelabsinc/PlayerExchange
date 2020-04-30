@@ -8,9 +8,4 @@ defmodule Gateway.Router.Portal.Handler do
     Gateway.Router.Portal.Commands.Handler.Auth.init()
     :ok
   end
-
-  @spec ping :: <<_::32>>
-  def ping() do
-    "auth pong"
-  end
 end

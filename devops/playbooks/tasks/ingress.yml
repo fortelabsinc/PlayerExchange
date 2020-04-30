@@ -1,16 +1,17 @@
-#- name: Setup Ingress Controller
-#  k8s:
-#    state: "{{cluster_state}}"
-#    wait: yes
-#    definition:
-#      apiVersion: networking.gke.io/v1beta2
-#      kind: ManagedCertificate
-#      metadata:
-#        name: "{{cluster_name}}"
-#        namespace: "{{cluster_name}}-{{stage}}"
-#      spec:
-#        domains:
-#          - "{{stage}}.playerexchange.io"
+- name: Setup Ingress Controller
+  k8s:
+    state: "{{cluster_state}}"
+    wait: yes
+    definition:
+      apiVersion: networking.gke.io/v1beta1
+      kind: ManagedCertificate
+      metadata:
+        name: "{{cluster_name}}"
+        #namespace: "{{cluster_name}}-{{stage}}"
+        namespace: default
+      spec:
+        domains:
+          - prod.playerexchange.io
 
 - name: Setup Ingress Controller
   k8s:
@@ -25,6 +26,7 @@
         namespace: default
         annotations:
           kubernetes.io/ingress.global-static-ip-name: "forte-player-exchange"
+          networking.gke.io/managed-certificates: "{{cluster_name}}"
       spec:
         backend:
           serviceName: plyxchg

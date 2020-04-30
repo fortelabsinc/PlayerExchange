@@ -10,6 +10,6 @@ defmodule Gateway.Router.Portal.Commands.Handler.Auth do
 
   @spec ping :: <<_::32>>
   def ping() do
-    "auth pong"
+    "pong"
   end
 end
