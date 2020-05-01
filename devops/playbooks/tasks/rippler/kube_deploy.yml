@@ -1,0 +1,69 @@
+---
+- name: Manage rippler Deployment
+  k8s:
+    state: "{{cluster_state}}"
+    wait: yes
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: rippler
+        namespace: default
+        #namespace: "{{cluster_name}}-{{stage}}"
+      spec:
+        replicas: 3
+        selector:
+          matchLabels:
+            app: rippler
+        template:
+          metadata:
+            labels:
+              app: rippler
+          spec:
+            containers:
+              - name: rippler
+                image: "gcr.io/forte-player-exchange/rippler:{{build_ver}}"
+                imagePullPolicy: Always
+                resources:
+                  limits:
+                    memory: "2Gi"
+                    cpu: "1000m"
+                  requests:
+                    memory: "1Gi"
+                    cpu: "500m"
+                readinessProbe:
+                  httpGet:
+                    path: /node/healthy
+                    port: 3000
+                  initialDelaySeconds: 3
+                  periodSeconds: 3
+                livenessProbe:
+                  httpGet:
+                    path: /node/healthy
+                    port: 3000
+                  initialDelaySeconds: 3
+                  periodSeconds: 3
+                ports:
+                  - containerPort: 8180
+                    protocol: TCP
+
+- name: Manage rippler Service
+  k8s:
+    state: "{{cluster_state}}"
+    wait: yes
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: rippler
+        namespace: default
+        #namespace: "{{cluster_name}}-{{stage}}"
+        #annotations:
+        #  cloud.google.com/neg: '{"ingress": true}'
+      spec:
+        ports:
+          - port: 3000
+            protocol: TCP
+            targetPort: 3000
+        selector:
+          app: rippler

@@ -79,16 +79,32 @@ jobs:
           python3 -m pip install --upgrade pip
           python3 -m pip install ansible==2.9.2 requests docker openshift google-auth
 
-      # Build the Docker image
-      - name: Build
+      # Build the Rippler Docker image
+      - name: Build rippler
+        working-directory: rippler
+        run: |
+          export BUILD_VSN=$(cat ../vsn.txt) &&
+          docker build -t gcr.io/$GKE_PROJECT/rippler:$BUILD_VSN -t gcr.io/$GKE_PROJECT/rippler:$GITHUB_SHA \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF="$GITHUB_REF" .
+
+      # Push the Docker Rippler image to Google Container Registry
+      - name: Publish rippler
+        working-directory: rippler
+        run: |
+          docker push gcr.io/$GKE_PROJECT/rippler
+
+      # Build the plyxchg Docker image
+      - name: Build plyxchg
         working-directory: src/docker/plyxchg
         run: |
           export BUILD_VSN=$(cat ../../vsn.txt) &&
           docker build -t gcr.io/$GKE_PROJECT/plyxchg:$BUILD_VSN -t gcr.io/$GKE_PROJECT/plyxchg:$GITHUB_SHA \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="$GITHUB_REF" .
-      # Push the Docker image to Google Container Registry
-      - name: Publish
+
+      # Push the Docker plyxchg image to Google Container Registry
+      - name: Publish plyxchg
         working-directory: src/docker/plyxchg
         run: |
           docker push gcr.io/$GKE_PROJECT/plyxchg
