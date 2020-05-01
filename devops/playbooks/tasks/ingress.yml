@@ -11,35 +11,7 @@
         namespace: default
       spec:
         domains:
-          #- prod.playerexchange.io
           - forte.playerexchange.io
-          #- payid.playerexchange.io
-#- name: Setup Ingress Controller
-#  k8s:
-#    state: "{{cluster_state}}"
-#    wait: yes
-#    definition:
-#      kind: Ingress
-#      apiVersion: networking.k8s.io/v1beta2
-#      metadata:
-#        name: basic-ingress
-#        #namespace: "{{cluster_name}}-{{stage}}"
-#        namespace: default
-#        annotations:
-#          kubernetes.io/ingress.global-static-ip-name: "forte-player-exchange"
-#          networking.gke.io/managed-certificates: "{{cluster_name}}"
-#          kubernetes.io/ingress.allow-http: "false"
-#      spec:
-#        backend:
-#          serviceName: plyxchg
-#          servicePort: 8180
-#        rules:
-#          - http:
-#              paths:
-#                - path: /site
-#                  backend:
-#                    serviceName: plyxchg
-#                    servicePort: 8180
 
 - name: Setup Ingress Controller
   k8s:
@@ -55,7 +27,7 @@
         annotations:
           kubernetes.io/ingress.global-static-ip-name: "forte-player-exchange"
           networking.gke.io/managed-certificates: "{{cluster_name}}"
-          #kubernetes.io/ingress.allow-http: "false"
+          kubernetes.io/ingress.allow-http: "false"
       spec:
         rules:
           - http:
@@ -65,6 +37,18 @@
                     serviceName: payid
                     servicePort: 8080
                 - path: /portal
+                  backend:
+                    serviceName: plyxchg
+                    servicePort: 8180
+                - path: /portal/*
+                  backend:
+                    serviceName: plyxchg
+                    servicePort: 8180
+                - path: /portal/client/*
+                  backend:
+                    serviceName: plyxchg
+                    servicePort: 8180
+                - path: /portal/client/v1/*
                   backend:
                     serviceName: plyxchg
                     servicePort: 8180

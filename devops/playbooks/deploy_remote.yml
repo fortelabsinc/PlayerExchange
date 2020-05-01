@@ -12,7 +12,7 @@
   tasks:
     - include_tasks: tasks/namespaces.yml
     - include_tasks: tasks/cockroach/kube_deploy.yml
-    ##- include_tasks: tasks/monitoring/kube_deploy.yml
+    #- include_tasks: tasks/monitoring/kube_deploy.yml
     - include_tasks: tasks/payid/kube_deploy.yml
     - include_tasks: tasks/plyxchg/kube_deploy.yml
     - include_tasks: tasks/ingress.yml
