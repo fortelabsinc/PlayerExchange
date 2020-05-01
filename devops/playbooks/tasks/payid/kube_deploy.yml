@@ -1,4 +1,79 @@
 ---
-- name: Deploying payid image
-  debug:
-    msg: "I got here"
+- name: Manage Payid Deployment
+  k8s:
+    state: "{{cluster_state}}"
+    wait: yes
+    definition:
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: payid
+        namespace: default
+        #namespace: "{{cluster_name}}-{{stage}}"
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: payid
+        template:
+          metadata:
+            labels:
+              app: payid
+          spec:
+            containers:
+              - name: payid
+                image: gcr.io/forte-player-exchange/payid:latest
+                imagePullPolicy: Always
+                resources:
+                  limits:
+                    memory: "2Gi"
+                    cpu: "1000m"
+                  requests:
+                    memory: "1Gi"
+                    cpu: "500m"
+                readinessProbe:
+                  httpGet:
+                    path: /status/health
+                    port: 8080
+                  initialDelaySeconds: 3
+                  periodSeconds: 3
+                livenessProbe:
+                  httpGet:
+                    path: /status/health
+                    port: 8080
+                  initialDelaySeconds: 3
+                  periodSeconds: 3
+                ports:
+                  - containerPort: 8080
+                    protocol: TCP
+                    name: public
+                  - containerPort: 8081
+                    protocol: TCP
+                    name: private
+
+- name: Manage payid Service
+  k8s:
+    state: "{{cluster_state}}"
+    wait: yes
+    definition:
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: payid
+        namespace: default
+        #namespace: "{{cluster_name}}-{{stage}}"
+        #annotations:
+        #  cloud.google.com/neg: '{"ingress": true}'
+      spec:
+        ports:
+          - port: 8080
+            protocol: TCP
+            targetPort: 8080
+            name: public
+          - port: 8081
+            protocol: TCP
+            targetPort: 8081
+            name: private
+        selector:
+          app: payid
+        type: NodePort

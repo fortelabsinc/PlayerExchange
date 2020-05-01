@@ -47,17 +47,17 @@
     # Launch the cluster!!!  For dev we are going to try out preemptible because it is much cheaper
     - name: "{{cluster_action}} the preemptible cluster {{cluster_name}}"
       raw: >
-        gcloud container clusters {{cluster_action}} {{cluster_name}} --quiet --machine-type={{cluster_machine_type}} --num-nodes={{cluster_num_nodes}} --preemptible
+        gcloud beta container clusters {{cluster_action}} {{cluster_name}} --quiet --machine-type={{cluster_machine_type}} --num-nodes={{cluster_num_nodes}} --preemptible --release-channel=rapid
       when: true == cluster_machine_preemptible and env_state == 'start'
 
     # Launch the cluster!!!  Or we can run it without preemptible flag
     - name: "{{cluster_action}} the cluster {{cluster_name}}"
       raw: >
-        gcloud container clusters {{cluster_action}} {{cluster_name}} --quiet --machine-type={{cluster_machine_type}} --num-nodes={{cluster_num_nodes}}
+        gcloud beta container clusters {{cluster_action}} {{cluster_name}} --quiet --machine-type={{cluster_machine_type}} --num-nodes={{cluster_num_nodes}} --release-channel=rapid
       when: false == cluster_machine_preemptible and env_state == 'start'
 
     # Blow it away because I said so...
     - name: "{{cluster_action}} the cluster {{cluster_name}}"
       raw: >
-        gcloud container clusters {{cluster_action}} {{cluster_name}} --quiet
+        gcloud beta container clusters {{cluster_action}} {{cluster_name}} --quiet
       when: env_state == 'stop'

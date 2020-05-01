@@ -15,6 +15,7 @@ const getLastCommitHash = () => {
 const lintOnSave = true
 
 module.exports = {
+  publicPath: "/portal/client/v1",
   outputDir: path.resolve(__dirname, "../priv/static/client/v1"),
   lintOnSave,
   transpileDependencies: [

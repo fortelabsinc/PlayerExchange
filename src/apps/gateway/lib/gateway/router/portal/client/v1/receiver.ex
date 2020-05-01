@@ -3,6 +3,21 @@ defmodule Gateway.Router.Portal.Client.V1.Receiver do
   use Plug.Builder
 
   plug(Plug.Static,
+    at: "/portal/client/v1",
+    from: {:gateway, "priv/static/client/v1"}
+  )
+
+  plug(Plug.Static,
+    at: "/portal/client",
+    from: {:gateway, "priv/static/client/v1"}
+  )
+
+  plug(Plug.Static,
+    at: "/portal",
+    from: {:gateway, "priv/static/client/v1"}
+  )
+
+  plug(Plug.Static,
     at: "/",
     from: {:gateway, "priv/static/client/v1"}
   )
