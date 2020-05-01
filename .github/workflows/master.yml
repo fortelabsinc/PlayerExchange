@@ -83,7 +83,7 @@ jobs:
       - name: Build rippler
         working-directory: rippler
         run: |
-          export BUILD_VSN=$(cat ../vsn.txt) &&
+          export BUILD_VSN=$(cat ../src/vsn.txt) &&
           docker build -t gcr.io/$GKE_PROJECT/rippler:$BUILD_VSN -t gcr.io/$GKE_PROJECT/rippler:$GITHUB_SHA \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="$GITHUB_REF" .
