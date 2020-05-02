@@ -11,7 +11,7 @@
         namespace: default
         #namespace: "{{cluster_name}}-{{stage}}"
       spec:
-        replicas: 3
+        replicas: 1
         selector:
           matchLabels:
             app: plyxchg

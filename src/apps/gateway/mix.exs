@@ -29,6 +29,8 @@ defmodule Gateway.MixProject do
   defp deps do
     [
       {:utils, in_umbrella: true},
+      {:storage, in_umbrella: true},
+      {:blockchain, in_umbrella: true},
       {:cowboy, "~> 2.7", override: true},
       {:plug_cowboy, "~> 2.2"}
     ]

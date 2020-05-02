@@ -16,3 +16,15 @@ import Config
 #       format: "$date $time [$level] $metadata$message\n",
 #       metadata: [:user_id]
 #
+config :storage,
+  ecto_repos: [Storage.Repo]
+
+config :access_pass, AccessPass.Mailer,
+  adapter: Bamboo.SendgridAdapter,
+  api_key: "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"
+
+config :access_pass,
+  repo: Storage.Repo,
+  from: "cjimison@gmail.com"
+
+config :access_pass, overrides_module: Storage.Auth.EmailTemplate
