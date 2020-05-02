@@ -37,6 +37,7 @@ defmodule Playerexchange.MixProject do
       include_erts: true,
       applications: [
         runtime_tools: :permanent,
+        blockchain: :permanent,
         auth: :permanent,
         storage: :permanent,
         gateway: :permanent

@@ -75,7 +75,7 @@ router.get('/balance/:address', asyncMiddleware(async (req, res, next) => {
 
 router.post('/send', asyncMiddleware(async (req, res, next) => {
   const info = req.body;
-  const amount = BigInt("10");
+  const amount = BigInt(req.body.amount);
   var wallet = undefined;
   const xrpClient = new XRPClient(testNet, XRPLNetwork.Test);
   if ("mnemonic" == info.type) {
