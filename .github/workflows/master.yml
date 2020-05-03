@@ -13,7 +13,7 @@ env:
   IMAGE: plyxchg
   DEPLOYMENT: prod
   SEND_GRID_KEY: ${{ secrets.SEND_GRID_KEY }}
-  PLYXCHG_DB: ${{ secrets.PLYXCHG_DB }}
+  PLYXCHG_DB_HOST: ${{ secrets.PLYXCHG_DB_HOST }}
 
 jobs:
   build-application:
