@@ -18,7 +18,7 @@ import Config
 #
 
 config :storage,
-  ecto_repos: [Storage.Repo]
+  ecto_repos: [Storage.Repo],
   database: System.get_env("PLYXCH_DB_HOST", "localhost")
 
 config :access_pass, AccessPass.Mailer,
