@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import Network from '../../../network'
 export default {
   name: 'signup',
   data () {
@@ -54,13 +55,23 @@ export default {
   },
   methods: {
     onsubmit () {
+
+      var self = this;
       this.emailErrors = this.email ? [] : ['Email is required']
       this.passwordErrors = this.password ? [] : ['Password is required']
-      this.agreedToTermsErrors = this.agreedToTerms ? [] : ['You must agree to the terms of use to continue']
       if (!this.formReady) {
         return
       }
-      this.$router.push({ name: 'dashboard' })
+      Network.auth.register(this.email, this.email, this.password, (success, rsp) => {
+        if(success){
+          self.$router.push({ name: 'login' });
+        }
+        else{
+          console.log("Failed to log in user: " + JSON.stringify(rsp));
+          self.emailErrors = ['Login Failed'];
+          self.passwordErrors = ['Login Failed'];
+        }
+      });
     },
   },
   computed: {

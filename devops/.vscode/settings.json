@@ -1,6 +1,10 @@
 {
   "cSpell.ignoreWords": [
     "ansible",
-    "devops"
+    "devops",
+    "kubernetes",
+    "payid",
+    "playerexchange",
+    "plyxchg"
   ]
 }

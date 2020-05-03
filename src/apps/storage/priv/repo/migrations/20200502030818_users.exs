@@ -13,7 +13,7 @@ defmodule Storage.Repo.Migrations.Users do
       add(:password_reset_key, :string)
       add(:password_reset_expire, :integer)
       add(:confirmed, :boolean)
-      timestamps
+      timestamps()
     end
 
     create(unique_index(:users, [:email]))

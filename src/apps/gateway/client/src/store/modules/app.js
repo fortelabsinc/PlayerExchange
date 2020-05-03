@@ -17,11 +17,38 @@ const state = {
     },
   },
   isLoading: true,
+
+  // Login State Info
+  authToken: '',
+  authRefreshToken: '',
+  authUserName: '',
+  authEmail: '',
+  authMeta: {},
 }
 
 const mutations = {
-  setLoading (state, isLoading) {
+  setLoading(state, isLoading) {
     state.isLoading = isLoading
+  },
+
+  setAuthToken(token) {
+    state.authToken = token
+  },
+
+  setAuthRefreshToken(token) {
+    state.authToken = token
+  },
+
+  setAuthUserName(name) {
+    state.authUserName = name
+  },
+
+  setAuthEmail(email) {
+    state.authEmail = email
+  },
+
+  setAuthMeta(meta) {
+    state.authMeta = meta
   },
 }
 

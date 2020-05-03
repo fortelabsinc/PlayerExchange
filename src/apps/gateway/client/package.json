@@ -7,6 +7,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build_dev": "vue-cli-service build --mode development",
     "lint": "vue-cli-service lint",
     "lint:style": "stylelint --fix src/**/*.{vue,htm,html,css,sss,less,scss}",
     "inspect": "vue-cli-service inspect > inspect.js",

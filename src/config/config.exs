@@ -16,15 +16,17 @@ import Config
 #       format: "$date $time [$level] $metadata$message\n",
 #       metadata: [:user_id]
 #
+
 config :storage,
   ecto_repos: [Storage.Repo]
+  database: System.get_env("PLYXCH_DB_HOST", "localhost")
 
 config :access_pass, AccessPass.Mailer,
   adapter: Bamboo.SendgridAdapter,
-  api_key: "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"
+  api_key: System.get_env("SEND_GRID_KEY")
 
 config :access_pass,
   repo: Storage.Repo,
-  from: "cjimison@gmail.com"
+  from: "forte@playerexchange.io"
 
 config :access_pass, overrides_module: Storage.Auth.EmailTemplate

@@ -12,6 +12,8 @@ env:
   GKE_ZONE: us-central1-c
   IMAGE: plyxchg
   DEPLOYMENT: prod
+  SEND_GRID_KEY: ${{ secrets.SEND_GRID_KEY }}
+  PLYXCHG_DB: ${{ secrets.PLYXCHG_DB }}
 
 jobs:
   build-application:

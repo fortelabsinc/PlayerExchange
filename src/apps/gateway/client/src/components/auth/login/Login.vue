@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import Network from '../../../network'
 export default {
   name: 'login',
   data () {
@@ -46,12 +47,22 @@ export default {
   },
   methods: {
     onsubmit () {
+      var self = this;
       this.emailErrors = this.email ? [] : ['Email is required']
       this.passwordErrors = this.password ? [] : ['Password is required']
       if (!this.formReady) {
         return
       }
-      this.$router.push({ name: 'dashboard' })
+      Network.auth.login(this.email, this.password, (success, rsp) => {
+        if(success){
+          self.$router.push({ name: 'dashboard' });
+        }
+        else{
+          console.log("Failed to log in user: " + JSON.stringify(rsp));
+          self.emailErrors = ['Login Failed'];
+          self.passwordErrors = ['Login Failed'];
+        }
+      });
     },
   },
 }

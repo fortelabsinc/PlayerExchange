@@ -20,7 +20,7 @@ defmodule Storage.Repo do
   @doc """
   Called by Ecto to setup the repo with the passed in keyword args
   """
-  @spec init(term, keyword) :: keyword
+  @spec init(term, keyword) :: {:ok, keyword}
   def init(_, opts) do
     {:ok, buildOpts(opts)}
   end
@@ -38,7 +38,8 @@ defmodule Storage.Repo do
       database: System.get_env("EMP_DATABASE", "storage_repo"),
       username: System.get_env("EMP_DATABASE_USER_NAME", "root"),
       password: System.get_env("EMP_DATABASE_USER_PASSWORD", "dbpassword"),
-      hostname: System.get_env("EMP_DATABASE_HOST", "localhost"),
+      hostname:
+        System.get_env("PLYXCH_DB_HOST", Application.get_env(:storage, :database, "localhost")),
       port: System.get_env("EMP_DATABASE_PORT", "26257") |> String.to_integer()
     ]
     |> removeEmptyOpts()
