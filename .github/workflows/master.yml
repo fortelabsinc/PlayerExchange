@@ -49,9 +49,9 @@ jobs:
         working-directory: src
         run: mix compile
 
-      - name: Run Tests
-        working-directory: src
-        run: mix test
+      #- name: Run Tests
+      #  working-directory: src
+      #  run: mix test
 
       - name: Build the Package
         working-directory: src
