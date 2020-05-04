@@ -33,8 +33,10 @@ export default new Router({
     ...demoRoutes,
     {
       path: '*',
-      redirect: { name: 'dashboard' },
-      //redirect: { name: 'login' },
+      // UNCOMMENT  For Development Work
+      //redirect: { name: 'dashboard' },
+      // COMMENT OUT  For Development work
+      redirect: { name: 'login' },
     },
     {
       path: '/auth',
@@ -97,8 +99,8 @@ export default new Router({
           path: 'dashboard',
           component: () => import('../components/dashboard/Dashboard.vue'),
           default: true,
-          // If you are doing local dev, uncomment this line to skip auth
-          //beforeEnter: requireAuth
+          // COMMENT OUT for Development work
+          beforeEnter: requireAuth
         },
         {
           name: 'statistics',
