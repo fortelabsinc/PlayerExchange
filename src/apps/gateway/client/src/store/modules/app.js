@@ -24,6 +24,7 @@ const state = {
   authUserName: '',
   authEmail: '',
   authMeta: {},
+  workPostings: []
 }
 
 const mutations = {
@@ -49,6 +50,9 @@ const mutations = {
 
   setAuthMeta(meta) {
     state.authMeta = meta
+  },
+  setWorkPostings(postings) {
+    state.workPostings = postings
   },
 }
 

@@ -28,6 +28,7 @@ defmodule Gateway.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:auth, in_umbrella: true},
       {:utils, in_umbrella: true},
       {:storage, in_umbrella: true},
       {:blockchain, in_umbrella: true},

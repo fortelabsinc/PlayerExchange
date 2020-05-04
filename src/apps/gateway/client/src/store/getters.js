@@ -6,6 +6,7 @@ const authRefreshToken = state => state.app.authRefreshToken
 const authUserName = state => state.app.authUserName
 const authEmail = state => state.app.authEmail
 const authMeta = state => state.app.authMeta
+const workPostings = state => state.app.workPostings
 
 export {
   config,
@@ -16,5 +17,7 @@ export {
   authRefreshToken,
   authUserName,
   authEmail,
-  authMeta
+  authMeta,
+  // Work Data
+  workPostings
 }

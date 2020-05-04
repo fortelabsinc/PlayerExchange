@@ -19,9 +19,31 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-defmodule Storage.Work.Posting do
+defmodule Storage.Wallet.XRP do
   @moduledoc ~S"""
-  Jobs board postings data management.  All this data will be stored in ecto.
+  NOTE:
+
+  THIS IS NOT A WALLET.  IT IS A SHITTY DB ENTRY THAT IS SUPER INSECURE.
+
+
+  defmodule Storage.Repo.Migrations.WalletXrp do
+  use Ecto.Migration
+
+  def change do
+    create table(:xrp) do
+      add(:address, :string)
+      add(:derivation, :string)
+      add(:mnemonic, :string)
+      add(:privatekey, :string)
+      add(:publickey, :string)
+    end
+
+    create(unique_index(:xrp, [:address]))
+  end
+  end
+
+
+
   """
   require Logger
   use Ecto.Schema
@@ -35,27 +57,12 @@ defmodule Storage.Work.Posting do
   from the database.
   """
   @primary_key false
-  schema "postings" do
-    field(:post_id, :string, primary_key: true)
-    field(:user_id, :string)
-    field(:assigned_id, :string)
-    field(:meta, :map)
-    field(:game_id, :string)
-    field(:details, :string)
-    field(:state, :string)
-    field(:expired_at, :naive_datetime)
-    field(:meetup_at, :naive_datetime)
-    field(:confirm_pay_amt, :string)
-    field(:confirm_pay_type, :string)
-    field(:complete_pay_amt, :string)
-    field(:complete_pay_type, :string)
-    field(:bonus_pay_amt, :string)
-    field(:bonus_pay_type, :string)
-    field(:bonus_req, :string)
-    field(:level_req, :string)
-    field(:class_req, :string)
-    field(:user_count_req, :integer)
-    field(:type_req, :string)
+  schema "xrp" do
+    field(:address, :string, primary_key: true)
+    field(:derivation, :string)
+    field(:mnemonic, :string)
+    field(:privatekey, :string)
+    field(:publickey, :string)
   end
 
   # ----------------------------------------------------------------------------
@@ -66,222 +73,61 @@ defmodule Storage.Work.Posting do
   # to use this struct directly however I did add accessors so that
   # it can be used without having to know the actual key names
   # incase I change them in the future
-  @type t :: %Storage.Work.Posting{
-          post_id: String.t(),
-          user_id: String.t(),
-          assigned_id: String.t(),
-          meta: map,
-          game_id: String.t(),
-          details: String.t(),
-          state: String.t(),
-          expired_at: NativeDateTime.t(),
-          meetup_at: NativeDateTime.t(),
-          confirm_pay_type: String.t(),
-          confirm_pay_amt: String.t(),
-          complete_pay_type: String.t(),
-          complete_pay_amt: String.t(),
-          bonus_pay_amt: String.t(),
-          bonus_pay_type: String.t(),
-          bonus_req: String.t(),
-          level_req: String.t(),
-          class_req: String.t(),
-          user_count_req: integer(),
-          type_req: String.t()
+  @type t :: %Storage.Wallet.XRP{
+          address: String.t(),
+          derivation: String.t(),
+          mnemonic: String.t(),
+          privatekey: String.t(),
+          publickey: String.t()
         }
 
   @doc """
-  Storage.Work.Posting.t accessor to postId
+  Storage.Work.Posting.t accessor to address
   """
-  @spec postId(Storage.Work.Posting.t()) :: String.t()
-  def postId(postT), do: postT.post_id
+  @spec address(Storage.Wallet.XRP.t()) :: String.t()
+  def address(xrpT), do: xrpT.address
 
   @doc """
-  Storage.Work.Posting.t accessor the user who posted this work
+  Storage.Work.Posting.t accessor to derivation
   """
-  @spec userId(Storage.Work.Posting.t()) :: String.t()
-  def userId(postT), do: postT.user_id
+  @spec derivation(Storage.Wallet.XRP.t()) :: String.t()
+  def derivation(xrpT), do: xrpT.derivation
 
   @doc """
-  Storage.Work.Posting.t accessor the user who posted this work
+  Storage.Work.Posting.t accessor to mnemonic
   """
-  @spec assignedTo(Storage.Work.Posting.t()) :: String.t()
-  def assignedTo(postT), do: postT.assigned_id
+  @spec mnemonic(Storage.Wallet.XRP.t()) :: String.t()
+  def mnemonic(xrpT), do: xrpT.mnemonic
 
   @doc """
+  Storage.Work.Posting.t accessor to mnemonic
   """
-  @spec meta(Storage.Work.Posting.t()) :: map
-  def meta(postT), do: postT.meta
+  @spec privateKey(Storage.Wallet.XRP.t()) :: String.t()
+  def privateKey(xrpT), do: xrpT.privatekey
 
   @doc """
+  Storage.Work.Posting.t accessor to mnemonic
   """
-  @spec gameId(Storage.Work.Posting.t()) :: String.t()
-  def gameId(postT), do: postT.game_id
+  @spec publicKey(Storage.Wallet.XRP.t()) :: String.t()
+  def publicKey(xrpT), do: xrpT.publickey
 
-  @doc """
-  """
-  @spec details(Storage.Work.Posting.t()) :: String.t()
-  def details(postT), do: postT.details
-
-  @doc """
-  """
-  @spec state(Storage.Work.Posting.t()) :: String.t()
-  def state(postT), do: postT.state
-
-  @doc """
-  """
-  @spec expiresTime(Storage.Work.Posting.t()) :: NativeDateTime.t()
-  def expiresTime(postT), do: postT.expired_at
-
-  @doc """
-  """
-  @spec meetTime(Storage.Work.Posting.t()) :: NativeDateTime.t()
-  def meetTime(postT), do: postT.meetup_at
-
-  @doc """
-    "XRP"
-    "BTC"
-    "ETH"
-  """
-  @spec confirmPayType(Storage.Work.Posting.t()) :: String.t()
-  def(confirmPayType(postT), do: postT.confirm_pay_type)
-
-  @doc """
-  """
-  @spec confirmPayAmt(Storage.Work.Posting.t()) :: String.t()
-  def confirmPayAmt(postT), do: postT.confirm_pay_amt
-
-  @doc """
-    "XRP"
-    "BTC"
-    "ETH"
-  """
-  @spec completePayType(Storage.Work.Posting.t()) :: String.t()
-  def completePayType(postT), do: postT.complete_pay_type
-
-  @doc """
-  """
-  @spec completePayAmt(Storage.Work.Posting.t()) :: String.t()
-  def completePayAmt(postT), do: postT.complete_pay_amt
-
-  @doc """
-  """
-  @spec bonusPayAmt(Storage.Work.Posting.t()) :: String.t()
-  def bonusPayAmt(postT), do: postT.bonus_pay_amt
-
-  @doc """
-    "XRP"
-    "BTC"
-    "ETH"
-  """
-  @spec bonusPayType(Storage.Work.Posting.t()) :: String.t()
-  def bonusPayType(postT), do: postT.bonus_pay_type
-
-  @doc """
-  """
-  @spec bonusRequirement(Storage.Work.Posting.t()) :: String.t()
-  def bonusRequirement(postT), do: postT.bonus_req
-
-  @doc """
-  """
-  @spec levelRequirement(Storage.Work.Posting.t()) :: String.t()
-  def levelRequirement(postT), do: postT.level_req
-
-  @doc """
-  """
-  @spec classRequirement(Storage.Work.Posting.t()) :: String.t()
-  def classRequirement(postT), do: postT.class_req
-
-  @doc """
-  """
-  @spec numUsersRequirement(Storage.Work.Posting.t()) :: integer()
-  def numUsersRequirement(postT), do: postT.user_count_req
-
-  @doc """
-    "group"
-    "individual"
-  """
-  @spec type(Storage.Work.Posting.t()) :: String.t()
-  def type(postT), do: postT.type_req
+  @spec new(map) :: Storage.Wallet.XRP.t()
+  def new(map) do
+    %Storage.Wallet.XRP{
+      address: map["address"],
+      derivation: map["derivation"],
+      mnemonic: map["mnemonic"],
+      privatekey: map["privateKey"],
+      publickey: map["publicKey"]
+    }
+  end
 
   # ----------------------------------------------------------------------------
   # Insertion Commands
   # ----------------------------------------------------------------------------
 
-  @spec new(
-          String.t(),
-          String.t(),
-          String.t(),
-          String.t(),
-          String.t(),
-          String.t(),
-          String.t(),
-          String.t(),
-          String.t(),
-          String.t(),
-          String.t(),
-          String.t(),
-          integer(),
-          map
-        ) :: Storage.Work.Posting.t()
-  @doc """
-  """
-  def new(
-        postId,
-        userId,
-        gameId,
-        details,
-        confType,
-        confAmt,
-        compType,
-        compAmt,
-        bonusType,
-        bonusAmt,
-        bonusReq,
-        userCount,
-        type,
-        meta \\ %{}
-      ) do
-    %Storage.Work.Posting{
-      post_id: postId,
-      user_id: userId,
-      meta: meta,
-      game_id: gameId,
-      details: details,
-      state: "open",
-      confirm_pay_type: confType,
-      confirm_pay_amt: confAmt,
-      complete_pay_type: compType,
-      complete_pay_amt: compAmt,
-      bonus_pay_amt: bonusAmt,
-      bonus_pay_type: bonusType,
-      bonus_req: bonusReq,
-      user_count_req: userCount,
-      type_req: type
-    }
-  end
-
-  def new(map) do
-    %Storage.Work.Posting{
-      post_id: UUID.uuid4(),
-      user_id: map["user_id"],
-      meta: map["meta"],
-      game_id: map["game_id"],
-      details: map["details"],
-      state: "open",
-      confirm_pay_type: map["conf_type"],
-      confirm_pay_amt: map["conf_amt"],
-      complete_pay_type: map["comp_type"],
-      complete_pay_amt: map["comp_amt"],
-      bonus_pay_amt: map["bonus_amt"],
-      bonus_pay_type: map["bonus_type"],
-      bonus_req: map["bonus_req"],
-      user_count_req: map["user_count"],
-      type_req: map["type"]
-    }
-  end
-
-  @spec write(Storage.Work.Posting.t()) :: {:ok, Storage.Work.Posting.t()} | {:error, any()}
-  def write(posting), do: Storage.Repo.insert(posting)
+  @spec write(Storage.Wallet.XRP.t()) :: {:ok, Storage.Wallet.XRP.t()} | {:error, any()}
+  def write(xrp), do: Storage.Repo.insert(xrp)
 
   ## ----------------------------------------------------------------------------
   ## Query Operations

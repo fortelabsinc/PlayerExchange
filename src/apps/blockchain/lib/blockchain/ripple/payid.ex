@@ -1,32 +1,86 @@
+# MIT License
+#
+# Copyright (c) 2020 forte labs inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 defmodule Blockchain.Ripple.PayID do
-  @moduledoc """
+  @moduledoc ~S"""
+  Manages all the calls to the PayID services
   """
+
   require Logger
   import Utils.Build
+  use Tesla
 
-  # In production builds we will look to kubernetes
-  # DNS services to find the service.  Otherwise
-  # just assume it is on local host and move forward
+  # ----------------------------------------------------------------------------
+  # Module Consts
+  # ----------------------------------------------------------------------------
   if_prod do
+    # TODO:  This data should come from the config files
     @serverName "http://payid.default.svc.cluster.local:8081"
   else
     @serverName "http://localhost:8081"
   end
 
-  @middleware [
-    {Tesla.Middleware.BaseUrl, @serverName},
-    Tesla.Middleware.JSON
-  ]
+  # ----------------------------------------------------------------------------
+  # Plug options
+  # ----------------------------------------------------------------------------
+  plug(Tesla.Middleware.BaseUrl, @serverName)
+  plug(Tesla.Middleware.JSON)
+  plug(Tesla.Middleware.Headers, [{"Content-Type", "application/json"}])
+
+  # ----------------------------------------------------------------------------
+  # Public API
+  # ----------------------------------------------------------------------------
 
   @doc """
-  Lookup a PayID user.  The format returned will be
-  {:ok, %{
+  Format an a username string to be payID safe
+  """
+  @spec format(String.t()) :: String.t()
+  def format(name) do
+    String.replace(name, "@", "_")
+    |> String.replace(".", "_")
+  end
+
+  @doc """
+  Looks up a payid account from a public payid server.  This will decode the
+  payid format and return a map from the payid server.
+
+  Arguments:
+  payID:  String in the form of <username>$<server address>
+  type: The blockchain network requested
+
+  Returns:
+
+  Success: {ok, map}
+  Map is of the form
+  ```
+  %{
     "addressDetailType" => "CryptoAddressDetails",
     "addressDetails" => %{
-      "address" => "address"
+      "address" => "<wallet address>"
     }
-  }}
+  }
+  ```
   """
+  @spec lookup(String.t(), :xrp_test) ::
+          {:ok, map} | {:error, String.t()} | {:error, :invalid_format}
   def lookup(payID, type \\ :xrp_test) do
     accountInfo = String.split(payID, "$")
 
@@ -50,8 +104,36 @@ defmodule Blockchain.Ripple.PayID do
     end
   end
 
-  def lookupFull(client, payID) do
-    {:ok, rsp} = Tesla.get(client, "/v1/users/#{payID}")
+  @doc """
+  Looks up a payid account from the internal payid server.  This will decode
+  the payid format and return a map from the payid server.
+
+  Arguments:
+  payID:  String in the form of <username>$<server address>
+
+  Returns:
+
+  Success: {ok, map}
+  Map is of the form
+  ```
+   %{
+    "addresses" => [
+      %{
+        "details" => %{
+          "address" => "<wallet Address>"
+        },
+        "environment" => "TESTNET",
+        "payment_network" => "XRPL"
+      }
+    ],
+    "pay_id" => "<pay id account name, same that was passed in>"
+  }
+  ```
+  """
+  @spec lookupFull(any) ::
+          {:error, :bad_request | :not_found | :server_unavailable} | {:ok, map}
+  def lookupFull(payID) do
+    {:ok, rsp} = get("/v1/users/#{payID}")
 
     case rsp.status do
       200 -> {:ok, rsp.body}
@@ -61,22 +143,29 @@ defmodule Blockchain.Ripple.PayID do
     end
   end
 
-  def create(client, payID, wallet, :xrp_test) do
-    data = """
-    {
-      "pay_id": "#{payID}"",
-      "addresses": [
-        "payment_network": "XRPL",
-        "environment": "TESTNET",
-        "details": {
-            "address": "#{wallet}"
+  @doc """
+  Creates a new PayID account on the interal server
+
+  Arguments:
+  payID:  String in the form of <username>$<server address>
+  """
+  @spec create(String.t(), String.t(), :xrp_test) ::
+          :ok | {:error, :bad_request | :in_use | :server_unavailable}
+  def create(payID, wallet, type \\ :xrp_test) do
+    data = %{
+      pay_id: payID,
+      addresses: [
+        %{
+          payment_network: network(type),
+          environment: environment(type),
+          details: %{
+            address: wallet
+          }
         }
       ]
     }
-    """
 
-    {:ok, rsp} =
-      Tesla.post(client, "/v1/users", data, headers: [{"Content-Type", "application/json"}])
+    {:ok, rsp} = post("/v1/users", data)
 
     case rsp.status do
       201 -> :ok
@@ -86,45 +175,62 @@ defmodule Blockchain.Ripple.PayID do
     end
   end
 
-  def update(client, payID, wallet, :xrp_test) do
-    data = """
-    {
-      "pay_id": "#{payID}"",
-      "addresses": [
-        "payment_network": "XRPL",
-        "environment": "TESTNET",
-        "details": {
-            "address": "#{wallet}"
+  @doc """
+  Updates the wallet address assigned to the current payID account
+
+  Arguments:
+  payID:  String in the form of <username>$<server address>
+  """
+  @spec update(String.t(), String.t(), :xrp_test) ::
+          :ok | {:error, :bad_request | :in_use | :server_unavailable}
+  def update(payID, wallet, type \\ :xrp_test) do
+    data = %{
+      pay_id: payID,
+      addresses: [
+        %{
+          payment_network: network(type),
+          environment: environment(type),
+          details: %{
+            address: wallet
+          }
         }
       ]
     }
-    """
 
-    {:ok, rsp} =
-      Tesla.put(client, "/v1/users/#{payID}", data,
-        headers: [{"Content-Type", "application/json"}]
-      )
+    {:ok, rsp} = put("/v1/users/#{payID}", data)
 
     case rsp.status do
       200 -> :ok
+      201 -> :ok
       400 -> {:error, :bad_request}
       409 -> {:error, :in_use}
       503 -> {:error, :server_unavailable}
     end
   end
 
-  def delete(client, payID) do
-    {:ok, rsp} = Tesla.delete(client, "/v1/users/#{payID}/")
+  @doc """
+  Deletes a PayID from the internal server
+
+  Arguments:
+  payID:  String in the form of <username>$<server address>
+  """
+  @spec remove(String.t()) ::
+          :ok | {:error, :bad_request | :not_found | :server_unavailable}
+  def remove(payID) do
+    {:ok, rsp} = delete("/v1/users/#{payID}")
 
     case rsp.status do
       200 -> :ok
+      204 -> :ok
       400 -> {:error, :bad_request}
       404 -> {:error, :not_found}
       503 -> {:error, :server_unavailable}
     end
   end
 
-  def client(), do: Tesla.client(@middleware)
+  # ----------------------------------------------------------------------------
+  # Private API
+  # ----------------------------------------------------------------------------
 
   # Pull out the header address for the network you are looking for
   defp header(:xrp), do: "application/xrpl-mainnet+json"
@@ -139,4 +245,8 @@ defmodule Blockchain.Ripple.PayID do
   defp header(:eth_rinkeby), do: "application/eth-rinkeby+json"
   defp header(:eth_goerli), do: "application/eth-goerli+json"
   defp header(:eth_kovan), do: "application/eth-kovan+json"
+
+  defp network(:xrp_test), do: "XRPL"
+
+  defp environment(:xrp_test), do: "TESTNET"
 end

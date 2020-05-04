@@ -294,6 +294,15 @@ defmodule Storage.Auth.User do
   end
 
   @doc """
+  Pulls a User recorded based on the given user confirmation id.  This will
+  require a DB operation however it will only pull the one record
+  """
+  @spec queryByConfirmId(String.t()) :: nil | Storage.Auth.User.t()
+  def queryByConfirmId(id) do
+    Storage.Repo.get_by(Storage.Auth.User, confirm_id: id)
+  end
+
+  @doc """
   Read the Meta data field from the users database who matches the given username
 
   Note: You should use this API if you are sure the user exists.  Otherwise
@@ -392,6 +401,26 @@ defmodule Storage.Auth.User do
   @spec write(Storage.Auth.User.t()) ::
           {:ok, Storage.Auth.User.t()} | {:error, any()}
   def write(user), do: Storage.Repo.insert(user)
+
+  @doc """
+  Create an Ecto changeset to write the meta data
+  """
+  @spec changeMeta(
+          {map, map} | %{:__struct__ => atom | %{__changeset__: any}, optional(atom) => any},
+          any
+        ) :: Ecto.Changeset.t()
+  def changeMeta(user, data) do
+    Ecto.Changeset.change(user, meta: data)
+  end
+
+  @doc """
+  Write all the changes to the database
+  """
+  @spec change(Ecto.Changeset.t()) ::
+          {:ok, Storage.Auth.User.t()} | {:error, any()}
+  def change(changeset) do
+    Storage.Repo.update(changeset)
+  end
 
   # ----------------------------------------------------------------------------
   # Private Helpers

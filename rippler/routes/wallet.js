@@ -54,20 +54,46 @@ router.get('/balance/:address', asyncMiddleware(async (req, res, next) => {
 router.get('/history/:address', asyncMiddleware(async (req, res, next) => {
   var address = req.params.address;
   const xrpClient = new XRPClient(testNet, XRPLNetwork.Test);
-  const transactions = await xrpClient.paymentHistory(address);
-  res.send(transactions);
+  var tran = await xrpClient.paymentHistory(address);
+  for (var index = 0; index < tran.length; ++index) {
+    tran[index]["account"] = Utils.encodeXAddress(tran[index]["account"], undefined, true);
+    tran[index]["paymentFields"]["destination"] = Utils.encodeXAddress(tran[index]["paymentFields"]["destination"], undefined, true);
+  }
+  res.send(tran);
 }));
 
-router.get('/status/:hash', function(req, res, next) {
+router.get('/status/:hash', asyncMiddleware(async (req, res, next) => {
   var hash = req.params.hash;
   const xrpClient = new XRPClient(testNet, XRPLNetwork.Test);
-  const status = xrpClient.getPaymentStatus(hash);
-  res.send(status);
-});
+  const data = await xrpClient.getPaymentStatus(hash);
+  res.send(JSON.stringify(data));
+}));
+
+router.get('/payment/:address/:hash', asyncMiddleware(async (req, res, next) => {
+  const hash = req.params.hash;
+  const address = req.params.address;
+  const xrpClient = new XRPClient(testNet, XRPLNetwork.Test);
+  const status = await xrpClient.paymentHistory(address);
+  var sendDefault = true;
+  for (var index = 0; index < status.length; ++index) {
+    if (status[index].hash == hash) {
+      var tran = status[index];
+      tran["account"] = Utils.encodeXAddress(tran["account"], undefined, true);
+      tran["paymentFields"]["destination"] = Utils.encodeXAddress(tran["paymentFields"]["destination"], undefined, true);
+      res.send(status[index]);
+      sendDefault = false;
+      break;
+    }
+  }
+
+  if (sendDefault) {
+    res.send("not_found")
+  }
+}));
+
 
 router.get('/balance/:address', asyncMiddleware(async (req, res, next) => {
   var address = req.params.address;
-  console.log("Getting balance for user: " + address);
   const xrpClient = new XRPClient(testNet, XRPLNetwork.Test);
   const balance = await xrpClient.getBalance(address);
   res.send(balance);

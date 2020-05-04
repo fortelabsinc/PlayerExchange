@@ -19,22 +19,35 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-defmodule Auth.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
-  @moduledoc false
+defmodule Gateway.Router.Portal.Commands.Handler.Profile do
+  @moduledoc ~S"""
+  Processes the HTTP based requests and sends them to the correct handler.
 
-  use Application
+  The handler or business logic is broken out of http request so I can
+  change API versions later on but still keep backwards compatability
+  support if possible
+  """
 
-  def start(_type, _args) do
-    children = [
-      # Starts a worker by calling: Auth.Worker.start_link(arg)
-      # {Auth.Worker, arg}
-    ]
+  # ----------------------------------------------------------------------------
+  # Public Auth APIs
+  # ----------------------------------------------------------------------------
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Auth.Supervisor]
-    Supervisor.start_link(children, opts)
+  @doc """
+  Basic setup.  Nothing to do here
+  """
+  @spec init :: :ok
+  def init() do
+    :ok
+  end
+
+  def get(userId), do: Storage.Auth.User.queryMetaById(userId)
+
+  def set(userId, data) do
+    # Read the user info
+    Storage.Auth.User.queryById(userId)
+    |> Storage.Auth.User.changeMeta(data)
+    |> Storage.Auth.User.change()
+
+    :ok
   end
 end

@@ -1,8 +1,40 @@
+# MIT License
+#
+# Copyright (c) 2020 forte labs inc.
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 defmodule Gateway.Router.Portal.Commands.V1.Receiver.Auth do
+  @moduledoc ~S"""
+  Processes the HTTP based requests and sends them to the correct handler.
+
+  The handler or business logic is broken out of http request so I can
+  change API versions later on but still keep backwards compatability
+  support if possible
+  """
+
   require Logger
   use Plug.Router
   import Plug.Conn
 
+  # ----------------------------------------------------------------------------
+  # Plug options
+  # ----------------------------------------------------------------------------
   plug(Plug.Logger)
   plug(:match)
 
@@ -23,15 +55,11 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Auth do
   get "/check" do
     case getHeaderValue(conn, "access-token") do
       nil ->
-        Logger.debug("*** I got the check but the access-token is nil")
         send_resp(conn, 422, "Missing request parameters: access-token")
 
       token ->
-        Logger.debug("*** Got access token")
-
         case Gateway.Router.Portal.Commands.Handler.Auth.check(token) do
           {:ok, meta} ->
-            Logger.debug("*** Meta!!! #{inspect(meta)}")
             jsonRsp(conn, 200, %{ok: meta})
 
           {:error, errorMessage} ->
@@ -81,22 +109,17 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Auth do
 
   # ----------------------------------------------------------------------------
   # Confirm a user is on the system?
-
   get "/confirm" do
     case conn.params do
       nil ->
         send_resp(conn, 422, "Missing boday parameters")
 
       params ->
-        Logger.debug("*** Params = #{inspect(params)}")
-
         case params["confirm_id"] do
           nil ->
             send_resp(conn, 422, "Missing request parameters: confirm_id")
 
           id ->
-            Logger.debug("*** id = #{inspect(id)}")
-
             case Gateway.Router.Portal.Commands.Handler.Auth.confirm(id) do
               {:ok, _data} ->
                 msg = """
@@ -122,6 +145,8 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Auth do
     end
   end
 
+  # ----------------------------------------------------------------------------
+  # Confirm a registration
   post "/confirm" do
     case conn.body_params do
       nil ->
@@ -190,6 +215,8 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Auth do
     end
   end
 
+  # ----------------------------------------------------------------------------
+  # Reset a password
   post "/reset_password" do
     case conn.body_params do
       nil ->
@@ -212,6 +239,8 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Auth do
     end
   end
 
+  # ----------------------------------------------------------------------------
+  # Change the password
   post "/change_password" do
     case conn.body_params do
       nil ->
@@ -240,6 +269,8 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Auth do
     end
   end
 
+  # ----------------------------------------------------------------------------
+  # Forgot the password.  Genreate email
   post "forgot_username" do
     case conn.body_params do
       nil ->
@@ -266,14 +297,21 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Auth do
     end
   end
 
+  # ----------------------------------------------------------------------------
+  # Fallback
   match _ do
     Logger.error(
-      "[Gateway.Portal.Commands.V1.Receiver.Auth] Unknown Request: #{inspect(conn.body_params)}"
+      "[Gateway.Router.Portal.Commands.V1.Receiver.Auth] Unknown Request: #{
+        inspect(conn.body_params)
+      }"
     )
 
     send_resp(conn, 404, "Invalid Forte Route")
   end
 
+  # ----------------------------------------------------------------------------
+  # Private API
+  # ----------------------------------------------------------------------------
   defp jsonRsp(conn, status, obj) do
     put_resp_content_type(conn, "application/json")
     |> send_resp(status, Jason.encode!(obj))
