@@ -34,66 +34,56 @@ jobs:
       - name: Build the Project
         working-directory: src
         run: mix compile
-
-      - name: Run Tests
-        working-directory: src
-        run: mix test
-
-      - name: Build the Package
-        working-directory: src
-        run: MIX_ENV=prod mix release plyxchg
-
-      - name: Copy Build folders
-        working-directory: src/_build/prod/rel/
-        run: tar -czvf plyxchg.tar.gz plyxchg
-
-      - name: Archive the build
-        uses: actions/upload-artifact@v1
-        with:
-          name: prod_plyxchg
-          path: src/_build/prod/rel/plyxchg.tar.gz
-
-      - name: Move the tar file into the docker folders
-        working-directory: src/_build/prod/rel/
-        run: mv plyxchg.tar.gz ../../../docker/plyxchg
-
-      # Setup gcloud CLI
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-        with:
-          version: "270.0.0"
-          #service_account_email: ${{ secrets.SA_EMAIL }}
-          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-          project_id: forte-player-exchange
-
-      # Configure docker to use the gcloud command-line tool as a credential helper
-      - run: |
-          gcloud auth configure-docker
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.8
-
-      - name: Install dependencies
-        run: |
-          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
-          python3 -m pip install --upgrade pip
-          python3 -m pip install ansible==2.9.2 requests docker openshift google-auth
-
-      # Build the Docker image
-      - name: Build
-        working-directory: src/docker/plyxchg
-        run: |
-          export BUILD_VSN=$(cat ../../vsn.txt) &&
-          docker build -t gcr.io/$GKE_PROJECT/plyxchg:$BUILD_VSN -t gcr.io/$GKE_PROJECT/plyxchg:$GITHUB_SHA \
-            --build-arg GITHUB_SHA="$GITHUB_SHA" \
-            --build-arg GITHUB_REF="$GITHUB_REF" .
-      # Push the Docker image to Google Container Registry
-      - name: Publish
-        working-directory: src/docker/plyxchg
-        run: |
-          docker push gcr.io/$GKE_PROJECT/plyxchg:$GITHUB_SHA
-
-      - name: Deploy the environment
-        working-directory: devops
-        run: |
-          ./ops --deploy --spec dev --sha $GITHUB_SHA
+      #- name: Run Tests
+      #  working-directory: src
+      #  run: mix test
+      #- name: Build the Package
+      #  working-directory: src
+      #  run: MIX_ENV=prod mix release plyxchg
+      #- name: Copy Build folders
+      #  working-directory: src/_build/prod/rel/
+      #  run: tar -czvf plyxchg.tar.gz plyxchg
+      #- name: Archive the build
+      #  uses: actions/upload-artifact@v1
+      #  with:
+      #    name: prod_plyxchg
+      #    path: src/_build/prod/rel/plyxchg.tar.gz
+      #- name: Move the tar file into the docker folders
+      #  working-directory: src/_build/prod/rel/
+      #  run: mv plyxchg.tar.gz ../../../docker/plyxchg
+      ## Setup gcloud CLI
+      #- uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      #  with:
+      #    version: "270.0.0"
+      #    #service_account_email: ${{ secrets.SA_EMAIL }}
+      #    service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+      #    project_id: forte-player-exchange
+      ## Configure docker to use the gcloud command-line tool as a credential helper
+      #- run: |
+      #    gcloud auth configure-docker
+      #- name: Set up Python 3.8
+      #  uses: actions/setup-python@v1
+      #  with:
+      #    python-version: 3.8
+      #- name: Install dependencies
+      #  run: |
+      #    gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
+      #    python3 -m pip install --upgrade pip
+      #    python3 -m pip install ansible==2.9.2 requests docker openshift google-auth
+      ## Build the Docker image
+      #- name: Build
+      #  working-directory: src/docker/plyxchg
+      #  run: |
+      #    export BUILD_VSN=$(cat ../../vsn.txt) &&
+      #    docker build -t gcr.io/$GKE_PROJECT/plyxchg:$BUILD_VSN -t gcr.io/$GKE_PROJECT/plyxchg:$GITHUB_SHA \
+      #      --build-arg GITHUB_SHA="$GITHUB_SHA" \
+      #      --build-arg GITHUB_REF="$GITHUB_REF" .
+      ## Push the Docker image to Google Container Registry
+      #- name: Publish
+      #  working-directory: src/docker/plyxchg
+      #  run: |
+      #    docker push gcr.io/$GKE_PROJECT/plyxchg:$GITHUB_SHA
+      #- name: Deploy the environment
+      #  working-directory: devops
+      #  run: |
+      #    ./ops --deploy --spec dev --sha $GITHUB_SHA
