@@ -12,6 +12,14 @@
     "termsOfUse": "Terms of Use.",
     "reset_password": "Reset password"
   },
+  "postings": {
+    "forms": {
+      "create": {
+        "title": "Create Help Wanted",
+        "game_select": "Game Name"
+      }
+    }
+  },
   "404": {
     "title": "This page’s gone fishing.",
     "text": "If you feel that it’s not right, please send us a message at ",

@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import AuthLayout from '../components/auth/AuthLayout'
 import AppLayout from '../components/admin/AppLayout'
-import Network from '../network'
 import store from '../store'
 
 Vue.use(Router)
@@ -34,8 +33,8 @@ export default new Router({
     ...demoRoutes,
     {
       path: '*',
-      //redirect: { name: 'dashboard' },
-      redirect: { name: 'login' },
+      redirect: { name: 'dashboard' },
+      //redirect: { name: 'login' },
     },
     {
       path: '/auth',
@@ -98,7 +97,8 @@ export default new Router({
           path: 'dashboard',
           component: () => import('../components/dashboard/Dashboard.vue'),
           default: true,
-          beforeEnter: requireAuth
+          // If you are doing local dev, uncomment this line to skip auth
+          //beforeEnter: requireAuth
         },
         {
           name: 'statistics',
