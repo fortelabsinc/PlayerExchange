@@ -8,6 +8,7 @@ const authEmail = state => state.app.authEmail
 const authMeta = state => state.app.authMeta
 const workPostings = state => state.app.workPostings
 const games = state => state.app.games
+const currencies = state => state.app.currencies
 
 export {
   config,
@@ -21,5 +22,6 @@ export {
   authMeta,
   // Work Data
   workPostings,
-  games
+  games,
+  currencies,
 }
