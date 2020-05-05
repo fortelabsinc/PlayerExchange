@@ -11,9 +11,9 @@ export default {
     return {
       // Temporary config for 2.1.
       contextConfig: {
-        gradient: true,
-        shadow: 'lg', // 3 states: 'sm', 'lg', undefined (no shadow).
-        invertedColor: false,
+        gradient: false,
+        shadow: 'sm', // 3 states: 'sm', 'lg', undefined (no shadow).
+        invertedColor: true,
       },
     }
   },
