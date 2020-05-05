@@ -105,6 +105,52 @@ defmodule Gateway.Router.Portal.Commands.Handler.Work do
     Storage.Work.Posting.delete(username)
   end
 
+  @doc """
+  Make a payment to a payID
+  """
+  @spec payment(String.t(), String.t(), String.t()) ::
+          {:error, String.t()} | {:ok, String.t()}
+  def payment(amt, username, payId) do
+    fuser = Blockchain.Ripple.PayID.format(username)
+
+    info =
+      "#{fuser}$forte.playerexchange.io"
+      |> Blockchain.Ripple.PayID.lookup()
+
+    case info do
+      {:ok, rsp} ->
+        from =
+          Map.get(rsp, "addressDetails")
+          |> Map.get("address")
+
+        # Lookup the address info
+        case Storage.Wallet.XRP.queryByAddress(from) do
+          nil ->
+            {:error, "wallet not found"}
+
+          wallet ->
+            # Now Let's lookup the receiver wallet address
+            case Blockchain.Ripple.PayID.lookup(payId) do
+              {:ok, toRsp} ->
+                to =
+                  Map.get(toRsp, "addressDetails")
+                  |> Map.get("address")
+
+                mnemonic = Storage.Wallet.XRP.mnemonic(wallet)
+                # now let's pay this out
+                amt = String.to_integer(amt) * 1_000_000
+                Blockchain.Ripple.XRP.pay("#{amt}", mnemonic, to)
+
+              _ ->
+                {:error, "could not find PayID #{payId}"}
+            end
+        end
+
+      _ ->
+        {:error, "could not get PayID wallet"}
+    end
+  end
+
   def payPostingConfirm(postId, username, payId) do
     case Storage.Work.Posting.queryByPostId(postId) do
       nil ->
@@ -151,8 +197,10 @@ defmodule Gateway.Router.Portal.Commands.Handler.Work do
     # Verify that the user owns the post
     if username == Storage.Work.Posting.userId(postT) do
       fuser = Blockchain.Ripple.PayID.format(username)
-      toPayID = "#{fuser}$forte.playerexchange.io"
-      info = Blockchain.Ripple.PayID.lookup(toPayID)
+
+      info =
+        "#{fuser}$forte.playerexchange.io"
+        |> Blockchain.Ripple.PayID.lookup()
 
       case info do
         {:ok, rsp} ->
