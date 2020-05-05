@@ -12,6 +12,7 @@ import { VuesticPlugin } from '../services/vuestic-ui/components'
 import '../i18n/index'
 import YmapPlugin from 'vue-yandex-maps'
 import VueClipboard from 'vue-clipboard2'
+import { corporateTheme } from 'vuestic-ui/src/services/themes'
 
 import '../metrics'
 import '../registerServiceWorker'
@@ -31,7 +32,7 @@ Vue.use(YmapPlugin)
 Vue.use(VueClipboard)
 
 Vue.use(ColorThemePlugin, {
-  // override colors here.
+  ...corporateTheme.colors,
 })
 
 router.beforeEach((to, from, next) => {

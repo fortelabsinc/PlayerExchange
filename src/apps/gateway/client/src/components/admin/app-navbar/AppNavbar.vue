@@ -19,15 +19,21 @@
           :color="contextConfig.invertedColor ? $themes.gray : 'white'"
         />
 
-        <router-link
+        <!-- <router-link
           class="app-navbar__logo mr-3"
           to="/"
         >
           <va-icon-vuestic />
+        </router-link> -->
+        <router-link
+          class="app-navbar__logo mr-3"
+          to="/"
+        >
+          Player Exchange
         </router-link>
       </div>
       <div class="app-navbar__center lg5 md4">
-        <span
+        <!-- <span
           class="app-navbar__text"
           :style="{color: this.$themes.gray}"
         >
@@ -40,9 +46,9 @@
           >
             hello@epicmax.co
           </a>
-        </span>
+        </span> -->
         <va-button
-          href="https://github.com/epicmaxco/vuestic-admin"
+          href="https://github.com/fortelabsinc/PlayerExchange"
           color="#000000"
           class="app-navbar__button"
           icon="fa fa-github"
@@ -65,7 +71,7 @@
 </template>
 
 <script>
-import VaIconVuestic from '../../../iconset/VaIconVuestic'
+// import VaIconVuestic from '../../../iconset/VaIconVuestic'
 import VaIconMenu from '../../../iconset/VaIconMenu'
 import VaIconMenuCollapsed from '../../../iconset/VaIconMenuCollapsed'
 import AppNavbarActions from './components/AppNavbarActions'
@@ -76,7 +82,7 @@ export default {
   mixins: [ColorThemeMixin],
   inject: ['contextConfig'],
   components: {
-    VaIconVuestic,
+    // VaIconVuestic,
     VaIconMenu,
     VaIconMenuCollapsed,
     AppNavbarActions,
@@ -200,7 +206,9 @@ $nav-border-side-width: 3.1875rem;
   }
 
   &__logo {
-    width: 9.5rem;
+    font-size: 22px;
+    font-weight: bold;
+    color: rgb(108, 127, 238);
     height: auto;
     align-items: center;
 
