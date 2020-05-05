@@ -1,7 +1,9 @@
 <template>
   <div class="dashboard">
-    <dashboard-my-postings-table />
+    <dashboard-all-postings-table />
     <dashboard-postings />
+    <dashboard-my-postings-table />
+    <dashboard-payment />
     <!--
     <dashboard-table />
     <dashboard-charts />
@@ -31,6 +33,8 @@ import DashboardTabs from './DashboardTabs'
 import DashboardMap from './DashboardMap'
 import DashboardPostings from './DashboardPostings'
 import DashboardMyPostingsTable from './DashboardMyPostingsTable'
+import DashboardAllPostingsTable from './DashboardAllPostingsTable'
+import DashboardPayment from './DashboardPayment'
 
 export default {
   name: 'dashboard',
@@ -42,6 +46,8 @@ export default {
     DashboardMap,
     DashboardPostings,
     DashboardMyPostingsTable,
+    DashboardAllPostingsTable,
+    DashboardPayment,
   },
   methods: {
     addAddressToMap ({ city, country }) {

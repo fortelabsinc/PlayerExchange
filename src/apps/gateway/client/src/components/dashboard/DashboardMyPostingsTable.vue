@@ -32,7 +32,7 @@
           class="ma-0"
           @click="resolveUser(props.rowData)"
         >
-        Details
+        Manage
         <!--
           {{ $t('dashboard.table.resolve') }}
         -->

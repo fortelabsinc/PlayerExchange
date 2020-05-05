@@ -4,13 +4,13 @@ import store from '../../store';
 
 export default {
   postings(cb) {
-    axios.get('/portal/commands/v1/work/postings', {
+    axios.get('/portal/commands/v1/work/posting', {
       headers: { 'access-token': store.getters.authToken }
     })
       .then(function(response) {
-        if (undefined != response.data) {
+        if (undefined != response.data.ok) {
           //store.commit('setWorkPostings', response.data);
-          cb(true, response.data);
+          cb(true, response.data.ok);
         }
         else {
           cb(false, response.data.error);
@@ -88,6 +88,28 @@ export default {
       .catch((err) => {
         cb(false, err);
       })
-  }
+  },
+
+  payment(data, cb) {
+    axios.post('/portal/commands/v1/work/posting/payment',
+      // Body
+      data,
+      // Headers
+      {
+        headers: { 'access-token': store.getters.authToken }
+      }
+    )
+      .then(function(response) {
+        if (undefined != response.data.ok) {
+          cb(true, response.data.ok);
+        }
+        else {
+          cb(false, response.data.error);
+        }
+      })
+      .catch((err) => {
+        cb(false, err);
+      })
+  },
 
 }

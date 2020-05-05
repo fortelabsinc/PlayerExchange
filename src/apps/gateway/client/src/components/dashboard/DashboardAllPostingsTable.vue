@@ -1,6 +1,5 @@
 <template>
-  <va-card :title="$t('postings.table.mine.title')">
-
+  <va-card :title="$t('postings.table.all.title')">
     <va-data-table
       :fields="fields"
       :data="postings"
@@ -80,9 +79,14 @@ export default {
         width: '5%',
       },
       {
+        name: 'user_id',
+        title: 'From', //this.$t('tables.headings.payid'),
+        width: '10%',
+      },
+      {
         name: 'details',
         title: 'Details',//'this.$t('tables.headings.status'),
-        width: '50%',
+        width: '40%',
         //sortField: 'status',
       },
       {
