@@ -25,6 +25,7 @@ defmodule Storage.Work.Posting do
   """
   require Logger
   use Ecto.Schema
+  import Ecto.Query
 
   # ----------------------------------------------------------------------------
   # Public API
@@ -280,151 +281,67 @@ defmodule Storage.Work.Posting do
     }
   end
 
+  ## ----------------------------------------------------------------------------
+  ## Write Operations
+  ## ----------------------------------------------------------------------------
+
+  @doc """
+  Write the specific posting to the database
+  """
   @spec write(Storage.Work.Posting.t()) :: {:ok, Storage.Work.Posting.t()} | {:error, any()}
   def write(posting), do: Storage.Repo.insert(posting)
+
+  @doc """
+  Delete all posting from a user
+  """
+  @spec delete(String.t()) :: :ok
+  def delete(user_id) do
+    from(p in Storage.Work.Posting, where: p.user_id == ^user_id)
+    |> Storage.Repo.delete_all()
+
+    :ok
+  end
+
+  @doc """
+  Delete a posting from a user
+  """
+  @spec delete(String.t(), String.t()) :: :ok
+  def delete(user_id, post_id) do
+    from(p in Storage.Work.Posting, where: p.user_id == ^user_id and p.post_id == ^post_id)
+    |> Storage.Repo.delete_all()
+
+    :ok
+  end
 
   ## ----------------------------------------------------------------------------
   ## Query Operations
   ## ----------------------------------------------------------------------------
 
-  # @doc """
-  # Pull all the users from the system.  The cost of this call will grow with the
-  # total number of users in the system.  It will require a DB read
-  # """
-  # @spec queryAll :: [Storage.Auth.User.t()]
-  # def queryAll() do
-  #  Storage.Repo.all(Storage.Auth.User)
-  # end
+  @doc """
+  Pull all the users from the system.  The cost of this call will grow with the
+  total number of users in the system.  It will require a DB read
+  """
+  @spec queryAll :: [Storage.Work.Posting.t()]
+  def queryAll() do
+    Storage.Repo.all(Storage.Work.Posting)
+  end
 
-  # @doc """
-  # Pulls a User recorded based on the given name.  This will require a DB operation
-  # however it will only pull the one record
-  # """
-  # @spec queryByName(String.t()) :: nil | Storage.Auth.User.t()
-  # def queryByName(name) do
-  #  Storage.Repo.get_by(Storage.Auth.User, username: name)
-  # end
+  @doc """
+  Pulls a User recorded based on the given name.  This will require a DB operation
+  however it will only pull the one record
+  """
+  @spec queryByUser(String.t()) :: nil | [Storage.Work.Posting.t()]
+  def queryByUser(user_id) do
+    from(p in Storage.Work.Posting, where: p.user_id == ^user_id)
+    |> Storage.Repo.all()
+  end
 
-  # @doc """
-  # Pulls a User recorded based on the given email address.  This will require a
-  # DB operation however it will only pull the one record
-  # """
-  # @spec queryByEmail(String.t()) :: nil | Storage.Auth.User.t()
-  # def queryByEmail(email) do
-  #  Storage.Repo.get_by(Storage.Auth.User, email: email)
-  # end
-
-  # @doc """
-  # Pulls a User recorded based on the given user id.  This will require a
-  # DB operation however it will only pull the one record
-  # """
-  # @spec queryById(String.t()) :: nil | Storage.Auth.User.t()
-  # def queryById(id) do
-  #  Storage.Repo.get_by(Storage.Auth.User, user_id: id)
-  # end
-
-  # @doc """
-  # Read the Meta data field from the users database who matches the given username
-
-  # Note: You should use this API if you are sure the user exists.  Otherwise
-  #      you will just get back an empty map and not know if the map was empty
-  #      due to the player not existing OR if the user just has an empty map
-
-  ## Arguments:
-
-  # name = The string username of record to pull meta
-
-  ## Returns
-
-  # %{} map of the meta field
-
-  # TODO:
-  # This is currently pulling the full record when really I just
-  # want the meta field.  Need to profile and see if it is actually
-  # more performant to eat the network bandwidth and serialization
-  # time verses say just asking for the single field
-  # """
-  # @spec queryMetaByName(String.t()) :: %{}
-  # def queryMetaByName(name) do
-  #  Storage.Repo.get_by(Storage.Auth.User, username: name)
-  #  |> getMeta()
-  # end
-
-  # @doc """
-  # Read the Meta data field from the users database who matches the given email
-
-  # Note: You should use this API if you are sure the user exists.  Otherwise
-  #      you will just get back an empty map and not know if the map was empty
-  #      due to the player not existing OR if the user just has an empty map
-
-  ## Arguments:
-
-  # name = The string email of record to pull meta
-
-  ## Returns
-
-  # %{} map of the meta field.  Empty map if not found
-
-  # TODO:
-  # This is currently pulling the full record when really I just
-  # want the meta field.  Need to profile and see if it is actually
-  # more performant to eat the network bandwidth and serialization
-  # time verses say just asking for the single field
-  # """
-  # @spec queryMetaByEmail(String.t()) :: %{}
-  # def queryMetaByEmail(email) do
-  #  Storage.Repo.get_by(Storage.Auth.User, email: email)
-  #  |> getMeta()
-  # end
-
-  # @doc """
-  # Read the Meta data field from the users database who matches the given user ID
-
-  ## Arguments:
-
-  # id = The string id of record to pull meta
-
-  # Note: You should use this API if you are sure the user exists.  Otherwise
-  #      you will just get back an empty map and not know if the map was empty
-  #      due to the player not existing OR if the user just has an empty map
-
-  ## Returns
-
-  # %{} map of the meta field
-
-  # TODO:
-  # This is currently pulling the full record when really I just
-  # want the meta field.  Need to profile and see if it is actually
-  # more performant to eat the network bandwidth and serialization
-  # time verses say just asking for the single field
-  # """
-  # @spec queryMetaById(String.t()) :: Storage.Auth.User.t()
-  # def queryMetaById(id) do
-  #  Storage.Repo.get_by(Storage.Auth.User, user_id: id)
-  #  |> getMeta()
-  # end
-
-  ## ----------------------------------------------------------------------------
-  ## Write Operations
-  ## ----------------------------------------------------------------------------
-  # @doc """
-  # Write a record back to the database.  This is a wholistic write the idea being
-  # you read the whole record, modify some fields and write the data back to
-  # the system.
-
-  # ```
-  # Storage.Auth.User.queryById(id)
-  # |> Storage.Auth.User.setMeta(%{:name => "hello"})
-  # |> Storage.Auth.User.write
-  # ```
-  # """
-  # @spec write(Storage.Auth.User.t()) ::
-  #        {:ok, Storage.Auth.User.t()} | {:error, any()}
-  # def write(user), do: Storage.Repo.insert(user)
-
-  ## ----------------------------------------------------------------------------
-  ## Private Helpers
-  ## ----------------------------------------------------------------------------
-  # defp getMeta(nil), do: %{}
-  # defp getMeta(map), do: Map.get(map, "meta", %{})
+  @doc """
+  Pulls a Post recorded based on the given post id.  This will require a
+  DB operation however it will only pull the one record
+  """
+  @spec queryByPostId(String.t()) :: nil | Storage.Work.Posting.t()
+  def queryByPostId(id) do
+    Storage.Repo.get_by(Storage.Work.Posting, post_id: id)
+  end
 end

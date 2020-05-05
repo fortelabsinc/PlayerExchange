@@ -30,6 +30,20 @@ defmodule Auth do
   # ----------------------------------------------------------------------------
 
   @doc """
+  Check to see if an access token is valid.
+
+  Returns:
+
+  {:ok, map} where map is
+  ```
+  %{
+    email: <string email address>
+    email_confirmed: <boolean>
+    meta: map
+    user_id: <string user_id>
+    username: <string username>
+  }
+  ```
   """
   @spec check(String.t()) :: {:error, <<_::160>>} | {:ok, map}
   def check(accessToken), do: Storage.Auth.User.check(accessToken)
@@ -69,7 +83,11 @@ defmodule Auth do
           Blockchain.Ripple.PayID.create("#{userName}$forte.playerexchange.io", wallet["address"])
 
         # Save the wallet info
-        {:ok, _} = Storage.Wallet.XRP.write(wallet)
+
+        {:ok, _} =
+          Storage.Wallet.XRP.new(wallet)
+          |> Storage.Wallet.XRP.write()
+
         rsp
 
       rsp ->

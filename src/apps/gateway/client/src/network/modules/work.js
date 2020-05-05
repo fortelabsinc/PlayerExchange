@@ -27,10 +27,11 @@ export default {
       // Headers
       {
         headers: { 'access-token': store.getters.authToken }
-      })
+      }
+    )
       .then(function(response) {
-        if (undefined != response.data) {
-          cb(true, response.data);
+        if (undefined != response.data.ok) {
+          cb(true, response.data.ok);
         }
         else {
           cb(false, response.data.error);

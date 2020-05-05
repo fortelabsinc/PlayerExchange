@@ -49,26 +49,26 @@ const mutations = {
     state.isLoading = isLoading
   },
 
-  setAuthToken(token) {
+  setAuthToken(state, token) {
     state.authToken = token
   },
 
-  setAuthRefreshToken(token) {
-    state.authToken = token
+  setAuthRefreshToken(state, token) {
+    state.authRefreshToken = token
   },
 
-  setAuthUserName(name) {
+  setAuthUserName(state, name) {
     state.authUserName = name
   },
 
-  setAuthEmail(email) {
+  setAuthEmail(state, email) {
     state.authEmail = email
   },
 
-  setAuthMeta(meta) {
+  setAuthMeta(state, meta) {
     state.authMeta = meta
   },
-  setWorkPostings(postings) {
+  setWorkPostings(state, postings) {
     state.workPostings = postings
   },
 }

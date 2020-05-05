@@ -27,7 +27,10 @@
         "bonus_type": "Currency Payout Type",
         "bonus_req": "Describe what will trigger the bonus payout",
         "description": "Describe what you need help with",
-        "button_submit": "Post Work"
+        "button_submit": "Post Work",
+        "submit_title": "Your posting has been submitted",
+        "submit_message": "Thankyou for posting a help request.  People should be able to see it now.",
+        "submit_confirm": "OK"
       }
     }
   },
