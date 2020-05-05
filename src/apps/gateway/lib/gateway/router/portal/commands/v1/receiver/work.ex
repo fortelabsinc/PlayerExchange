@@ -51,6 +51,12 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
   # ----------------------------------------------------------------------------
 
   # ----------------------------------------------------------------------------
+  # Ping Route Test
+  get "/ping" do
+    send_resp(conn, 200, "pong")
+  end
+
+  # ----------------------------------------------------------------------------
   # Pull all the postings from the system
   get "/posting" do
     case getHeaderValue(conn, "access-token") do
@@ -60,8 +66,8 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
       token ->
         case Auth.check(token) do
           {:ok, _meta} ->
-            {:ok, postings} = Gateway.Router.Portal.Commands.Handler.Work.postings()
-            jsonRsp(conn, 200, postings)
+            postings = Gateway.Router.Portal.Commands.Handler.Work.postings()
+            jsonRsp(conn, 200, %{ok: postings})
 
           {:error, errorMessage} ->
             Logger.error("Error Checking Token #{inspect(errorMessage)}")
@@ -70,43 +76,151 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
     end
   end
 
-  ## ----------------------------------------------------------------------------
-  ## Create a new Job posting
-  # post "/posting" do
-  #  # case getHeaderValue(conn, "refresh-token") do
-  #  #  nil ->
-  #  #    send_resp(conn, 422, "Missing request parameters: refresh-token")
+  # ----------------------------------------------------------------------------
+  # Get all the postings for a specific user
+  get "/posting/:user_id" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
 
-  #  #  token ->
-  #  #    case Gateway.Router.Portal.Commands.Handler.Auth.refresh(token) do
-  #  #      {:ok, meta} ->
-  #  #        jsonRsp(conn, 200, %{ok: meta})
+      token ->
+        case Auth.check(token) do
+          {:ok, _info} ->
+            postings = Gateway.Router.Portal.Commands.Handler.Work.postings(user_id)
+            jsonRsp(conn, 200, %{ok: postings})
 
-  #  #      {:error, errorMessage} ->
-  #  #        Logger.error("Error Refreshing Token #{inspect(errorMessage)}")
-  #  #        jsonRsp(conn, 401, %{error: "unauthorized"})
-  #  #    end
-  #  # end
-  # end
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
 
-  ## ----------------------------------------------------------------------------
-  ## Lookup
-  # get "/posting/:posting_id" do
-  #  # case getHeaderValue(conn, "refresh-token") do
-  #  #  nil ->
-  #  #    send_resp(conn, 422, "Missing request parameters: refresh-token")
+  # ----------------------------------------------------------------------------
+  # Delete a specific posting.  It is assumed that the user who matches the
+  # token owns it
+  delete "/posting/:posting_id" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
 
-  #  #  token ->
-  #  #    case Gateway.Router.Portal.Commands.Handler.Auth.refresh(token) do
-  #  #      {:ok, meta} ->
-  #  #        jsonRsp(conn, 200, %{ok: meta})
+      token ->
+        case Auth.check(token) do
+          {:ok, info} ->
+            postings =
+              Gateway.Router.Portal.Commands.Handler.Work.deletePosting(info.username, posting_id)
 
-  #  #      {:error, errorMessage} ->
-  #  #        Logger.error("Error Refreshing Token #{inspect(errorMessage)}")
-  #  #        jsonRsp(conn, 401, %{error: "unauthorized"})
-  #  #    end
-  #  # end
-  # end
+            jsonRsp(conn, 200, %{ok: postings})
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
+  # ----------------------------------------------------------------------------
+  # Delete all postings ownd by this user
+  delete "/posting" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, info} ->
+            postings = Gateway.Router.Portal.Commands.Handler.Work.deletePosting(info.username)
+            jsonRsp(conn, 200, %{ok: postings})
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
+  # ----------------------------------------------------------------------------
+  # Create a new posting
+  post "/posting" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case conn.body_params do
+          nil ->
+            send_resp(conn, 422, "Missing boday parameters")
+
+          params ->
+            case Auth.check(token) do
+              {:ok, info} ->
+                {:ok, _} =
+                  Gateway.Router.Portal.Commands.Handler.Work.addPosting(info.username, params)
+
+                jsonRsp(conn, 200, %{ok: "ok"})
+
+              {:error, errorMessage} ->
+                Logger.error("Error Checking Token #{inspect(errorMessage)}")
+                jsonRsp(conn, 401, %{error: "unauthorized"})
+            end
+        end
+    end
+  end
+
+  get "/posting/payconfirm/:postId/:username/:payId" do
+    case Gateway.Router.Portal.Commands.Handler.Work.payPostingConfirm(postId, username, payId) do
+      {:ok, info} ->
+        jsonRsp(conn, 200, %{ok: "ok"})
+
+      {:error, errorMessage} ->
+        jsonRsp(conn, 401, %{error: errorMessage})
+    end
+  end
+
+  get "/posting/paycomplete/:postId/:username/:payId" do
+    case Gateway.Router.Portal.Commands.Handler.Work.payPostingConfirm(postId, username, payId) do
+      {:ok, info} ->
+        jsonRsp(conn, 200, %{ok: "ok"})
+
+      {:error, errorMessage} ->
+        jsonRsp(conn, 401, %{error: errorMessage})
+    end
+  end
+
+  get "/posting/paybonus/:postId/:username/:payId" do
+    case Gateway.Router.Portal.Commands.Handler.Work.payPostingConfirm(postId, username, payId) do
+      {:ok, info} ->
+        jsonRsp(conn, 200, %{ok: "ok"})
+
+      {:error, errorMessage} ->
+        jsonRsp(conn, 401, %{error: errorMessage})
+    end
+  end
+
+  # ----------------------------------------------------------------------------
+  # Lookup
+  get "/posting/:post_id" do
+    case getHeaderValue(conn, "refresh-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: refresh-token")
+
+      token ->
+        case Gateway.Router.Portal.Commands.Handler.Auth.refresh(token) do
+          {:ok, _meta} ->
+            case Gateway.Router.Portal.Commands.Handler.Work.posting(post_id) do
+              {:ok, post} ->
+                jsonRsp(conn, 200, %{ok: post})
+
+              {:error, _err} ->
+                jsonRsp(conn, 404, %{error: "not found"})
+            end
+
+          {:error, errorMessage} ->
+            Logger.error("Error Refreshing Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
 
   # ----------------------------------------------------------------------------
   # Fallback
