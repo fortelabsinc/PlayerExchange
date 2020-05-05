@@ -13,7 +13,24 @@
     "reset_password": "Reset password"
   },
   "postings": {
+    "table": {
+      "mine": {
+        "title": "My Postings"
+      },
+      "all": {
+        "title": "Help Wanted"
+      }
+    },
     "forms": {
+      "payment": {
+        "title": "Make a payment",
+        "payid": "To PayID",
+        "amount": "Amount",
+        "type": "Currency",
+        "button_submit": "Pay!",
+        "submit_message": "Your payment is being sent.  It might take a few seconds to complete.",
+        "submit_confirm": "OK"
+      },
       "create": {
         "title": "Create Help Wanted",
         "game_select": "Game Name",

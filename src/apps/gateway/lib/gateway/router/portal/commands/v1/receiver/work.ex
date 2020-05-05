@@ -167,6 +167,38 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
     end
   end
 
+  # ----------------------------------------------------------------------------
+  # Temp Routes for Demo
+  post "/posting/payment" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case conn.body_params do
+          nil ->
+            send_resp(conn, 422, "Missing boday parameters")
+
+          params ->
+            case Auth.check(token) do
+              {:ok, info} ->
+                {:ok, _} =
+                  Gateway.Router.Portal.Commands.Handler.Work.payment(
+                    params["amt"],
+                    info.username,
+                    params["pay_id"]
+                  )
+
+                jsonRsp(conn, 200, %{ok: "ok"})
+
+              {:error, errorMessage} ->
+                Logger.error("Error Checking Token #{inspect(errorMessage)}")
+                jsonRsp(conn, 401, %{error: "unauthorized"})
+            end
+        end
+    end
+  end
+
   get "/posting/payconfirm/:postId/:username/:payId" do
     case Gateway.Router.Portal.Commands.Handler.Work.payPostingConfirm(postId, username, payId) do
       {:ok, info} ->
