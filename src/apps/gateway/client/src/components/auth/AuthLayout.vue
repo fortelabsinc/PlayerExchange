@@ -1,8 +1,9 @@
 <template>
   <div class="auth-layout row align-content--center">
     <div class="flex xs12 pa-3 flex-center">
-      <router-link class="py-5 flex-center" to="/">
-        <va-icon-vuestic />
+      <router-link class="auth-layout__logo py-5 flex-center" to="/">
+        <!-- <va-icon-vuestic /> -->
+        Player Exchange
       </router-link>
     </div>
 
@@ -61,7 +62,8 @@ export default {
 <style lang="scss">
 .auth-layout {
   min-height: 100vh;
-  background-image: linear-gradient(to right, #0e4ac4, #002c85);
+  // background-image: linear-gradient(to right, #0e4ac4, #002c85);
+  background-color: #eeeeee;
 
   &__card {
     width: 100%;
@@ -72,6 +74,12 @@ export default {
     @include media-breakpoint-down(xs) {
       flex-direction: column;
     }
+  }
+
+  &__logo {
+    font-size: 30px;
+    font-weight: bold;
+    color: rgb(108, 127, 238);
   }
 }
 </style>
