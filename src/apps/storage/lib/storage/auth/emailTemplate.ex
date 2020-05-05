@@ -34,7 +34,7 @@ defmodule Storage.Auth.EmailTemplate do
   if_prod do
     @schema "https"
     @port "443"
-    @server "playerexchange.io"
+    @server "forte.playerexchange.io"
   else
     @schema "http"
     @port "8180"
