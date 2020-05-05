@@ -13,6 +13,12 @@
     "reset_password": "Reset password"
   },
   "postings": {
+    "table": {
+      "mine": {
+        "title": "My Postings"
+      },
+      "all": {}
+    },
     "forms": {
       "create": {
         "title": "Create Help Wanted",

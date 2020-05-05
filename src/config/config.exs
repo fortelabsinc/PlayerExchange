@@ -27,6 +27,9 @@ config :access_pass, AccessPass.Mailer,
 
 config :access_pass,
   repo: Storage.Repo,
-  from: "forte@playerexchange.io"
+  from: "forte@playerexchange.io",
+  # You got one day.  I should use the refresh token but
+  # don't have time right now
+  access_expire_in: 1440
 
 config :access_pass, overrides_module: Storage.Auth.EmailTemplate

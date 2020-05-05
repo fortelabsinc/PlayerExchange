@@ -119,15 +119,11 @@
 </template>
 
 <script>
-import { getDonutChartData } from '../../data/charts/DonutChartData'
-import { getLineChartData } from '../../data/charts/LineChartData'
-import DashboardContributorsChart from './DashboardContributorsList'
 import store from '@/store';
 import Network from '../../network'
 
 export default {
   name: 'dashboard-postings',
-  components: { DashboardContributorsChart },
   data () {
     return {
       game: '',
@@ -168,13 +164,13 @@ export default {
           game_id: this.game,
           details: this.description,
           conf_type: this.confirm_type,
-          conf_amt: this.confirm_amt,
+          conf_amt: String(this.confirm_amt),
           comp_type: this.complete_type,
-          comp_amt: this.complete_amt,
+          comp_amt: String(this.complete_amt),
           bonus_type: this.bonus_type,
-          bonus_amt: this.bonus_amt,
+          bonus_amt: String(this.bonus_amt),
           bonus_req: this.bonus_req,
-          user_count: this.player_count,
+          user_count: Number(this.player_count),
           type: this.type
       };
       Network.work.createPosting(data, (success, data) => {

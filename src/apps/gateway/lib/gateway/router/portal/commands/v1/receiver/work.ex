@@ -167,6 +167,8 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
     end
   end
 
+  # ----------------------------------------------------------------------------
+  # Temp Routes for Demo
   get "/posting/payconfirm/:postId/:username/:payId" do
     case Gateway.Router.Portal.Commands.Handler.Work.payPostingConfirm(postId, username, payId) do
       {:ok, info} ->

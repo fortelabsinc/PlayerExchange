@@ -9,8 +9,24 @@ export default {
     })
       .then(function(response) {
         if (undefined != response.data) {
-          store.commit('setWorkPostings', response.data);
+          //store.commit('setWorkPostings', response.data);
           cb(true, response.data);
+        }
+        else {
+          cb(false, response.data.error);
+        }
+      })
+      .catch((err) => {
+        cb(false, err);
+      })
+  },
+  userPostings(cb) {
+    axios.get('/portal/commands/v1/work/posting/' + store.getters.authUserName, {
+      headers: { 'access-token': store.getters.authToken }
+    })
+      .then(function(response) {
+        if (undefined != response.data.ok) {
+          cb(true, response.data.ok);
         }
         else {
           cb(false, response.data.error);
@@ -29,6 +45,38 @@ export default {
         headers: { 'access-token': store.getters.authToken }
       }
     )
+      .then(function(response) {
+        if (undefined != response.data.ok) {
+          cb(true, response.data.ok);
+        }
+        else {
+          cb(false, response.data.error);
+        }
+      })
+      .catch((err) => {
+        cb(false, err);
+      })
+  },
+  deletePosting(postingId, cb) {
+    axios.delete('/portal/commands/v1/work/posting/' + postingId, {
+      headers: { 'access-token': store.getters.authToken }
+    })
+      .then(function(response) {
+        if (undefined != response.data.ok) {
+          cb(true, response.data.ok);
+        }
+        else {
+          cb(false, response.data.error);
+        }
+      })
+      .catch((err) => {
+        cb(false, err);
+      })
+  },
+  deletePosting(cb) {
+    axios.delete('/portal/commands/v1/work/posting', {
+      headers: { 'access-token': store.getters.authToken }
+    })
       .then(function(response) {
         if (undefined != response.data.ok) {
           cb(true, response.data.ok);
