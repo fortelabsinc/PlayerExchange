@@ -103,19 +103,23 @@ export default {
     }
   },
   mounted() {
-    var self = this;
-    Network.work.postings((success, data) => {
-      if(success)
-      {
-        self.postings = data;
-      }
-      else
-      {
-        console.log("Failed to load the postings: " + data)
-      }
-    });
+    this.loadPostings()
   },
   methods: {
+    loadPostings() {
+      var self = this;
+      Network.work.postings((success, data) => {
+        if(success)
+        {
+          self.postings = data;
+        }
+        else
+        {
+
+          console.log("Failed to load the postings: " + data)
+        }
+      });
+    }
   },
 }
 </script>
