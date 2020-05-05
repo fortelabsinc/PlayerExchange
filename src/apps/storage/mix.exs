@@ -32,7 +32,8 @@ defmodule Storage.MixProject do
       {:access_pass, git: "https://github.com/AppDoctorIo/accesspass.git"},
       {:utils, in_umbrella: true},
       {:ecto, "3.3.4"},
-      {:ecto_cockroachdb, "~> 1.0.0"}
+      {:ecto_cockroachdb, "~> 1.0.0"},
+      {:uuid, "~> 1.1"}
     ]
   end
 end

@@ -16,7 +16,21 @@
     "forms": {
       "create": {
         "title": "Create Help Wanted",
-        "game_select": "Game Name"
+        "game_select": "Game Name",
+        "player_count": "Number of Players",
+        "player_type": "Players Type",
+        "confirm_amount": "Amount to Pay on Confirmation",
+        "confirm_type": "Currency Payout Type",
+        "complete_amount": "Amount to Pay on Completion",
+        "complete_type": "Currency Payout Type",
+        "bonus_amount": "Currency Payout for Bonus",
+        "bonus_type": "Currency Payout Type",
+        "bonus_req": "Describe what will trigger the bonus payout",
+        "description": "Describe what you need help with",
+        "button_submit": "Post Work",
+        "submit_title": "Your posting has been submitted",
+        "submit_message": "Thankyou for posting a help request.  People should be able to see it now.",
+        "submit_confirm": "OK"
       }
     }
   },

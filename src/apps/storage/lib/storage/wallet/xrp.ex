@@ -133,6 +133,14 @@ defmodule Storage.Wallet.XRP do
   ## Query Operations
   ## ----------------------------------------------------------------------------
 
+  @doc """
+  Pulls an address info out of the DB.
+  """
+  @spec queryByAddress(String.t()) :: nil | Storage.Wallet.XRP.t()
+  def queryByAddress(address) do
+    Storage.Repo.get_by(Storage.Wallet.XRP, address: address)
+  end
+
   # @doc """
   # Pull all the users from the system.  The cost of this call will grow with the
   # total number of users in the system.  It will require a DB read

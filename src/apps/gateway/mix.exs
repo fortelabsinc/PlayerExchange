@@ -33,7 +33,8 @@ defmodule Gateway.MixProject do
       {:storage, in_umbrella: true},
       {:blockchain, in_umbrella: true},
       {:cowboy, "~> 2.7", override: true},
-      {:plug_cowboy, "~> 2.2"}
+      {:plug_cowboy, "~> 2.2"},
+      {:uuid, "~> 1.1"}
     ]
   end
 end
