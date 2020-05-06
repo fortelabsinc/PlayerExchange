@@ -73,7 +73,7 @@ export default {
         cb(false, err);
       })
   },
-  deletePosting(cb) {
+  deleteAllPosting(cb) {
     axios.delete('/portal/commands/v1/work/posting', {
       headers: { 'access-token': store.getters.authToken }
     })

@@ -4,7 +4,7 @@ defmodule Storage.Repo.Migrations.Users do
   def change do
     create table(:users) do
       add(:user_id, :string)
-      add(:username, :string, size: 20)
+      add(:username, :string, size: 30)
       add(:meta, :map)
       add(:email, :string)
       add(:password_hash, :string)

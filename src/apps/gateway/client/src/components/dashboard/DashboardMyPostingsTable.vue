@@ -30,9 +30,9 @@
           outline
           color="success"
           class="ma-0"
-          @click="resolveUser(props.rowData)"
+          @click="removePosting(props.rowData)"
         >
-        Manage
+        Remove
         <!--
           {{ $t('dashboard.table.resolve') }}
         -->
@@ -103,19 +103,28 @@ export default {
     }
   },
   mounted() {
-    var self = this;
-    Network.work.userPostings((success, data) => {
-      if(success)
-      {
-        self.postings = data;
-      }
-      else
-      {
-        console.log("Failed to load the postings: " + data)
-      }
-    });
+    this.loadPostings();
   },
   methods: {
+    loadPostings() {
+      var self = this;
+      Network.work.userPostings((success, data) => {
+        if(success)
+        {
+          self.postings = data;
+        }
+        else
+        {
+          console.log("Failed to load the postings: " + data)
+        }
+      });
+    },
+    removePosting(data) {
+      Network.work.deletePosting(data["post_id"], (success, data) =>
+      {
+        loadPostings();
+      });
+    }
   },
 }
 </script>
