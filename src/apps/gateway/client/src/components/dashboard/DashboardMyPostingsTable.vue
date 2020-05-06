@@ -133,7 +133,6 @@ export default {
   },
   methods: {
     payConfirm(data) {
-      console.log(JSON.stringify(data));
       this.pay({
         "amt": data["confirm_pay_amt"],
         "type": data["confirm_pay_type"],
