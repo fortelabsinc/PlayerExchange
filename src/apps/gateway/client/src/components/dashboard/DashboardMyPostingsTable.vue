@@ -1,45 +1,51 @@
 <template>
-  <va-card :title="$t('postings.table.mine.title')">
+  <div>
+    <va-card :title="$t('postings.table.mine.title')">
 
-    <va-data-table
-      :fields="fields"
-      :data="postings"
-      :loading="loading"
-      hoverable
-    >
-      <!--
-      <template slot="icon">
-        <va-icon name="fa fa-user" color="secondary" />
-      </template>
-      <template v-slot:starred="props">
-        <va-icon
-          v-if="props.rowData.starred"
-          name="fa fa-star"
-          color="warning"
-        />
-      </template>
-      <template v-slot:status="props">
-        <va-badge :color="getStatusColor(props.rowData.status)">
-          {{ props.rowData.status }}
-        </va-badge>
-      </template>
-      -->
-      <template v-slot:actions="props">
-        <va-button
-          small
-          outline
-          color="success"
-          class="ma-0"
-          @click="removePosting(props.rowData)"
-        >
-        Remove
-        <!--
-          {{ $t('dashboard.table.resolve') }}
-        -->
-        </va-button>
-      </template>
-    </va-data-table>
-  </va-card>
+      <va-input
+      :label="$t('postings.forms.payment.title')"
+      v-model="payId"
+      />
+      <va-data-table
+        :fields="fields"
+        :data="postings"
+        :loading="loading"
+        hoverable
+      >
+        <template v-slot:pay="props">
+          <va-button-group>
+            <va-button small @click="payConfirm(props.rowData)">Confirm</va-button>
+            <va-button small @click="payComplete(props.rowData)">Complete</va-button>
+            <va-button small @click="payBonus(props.rowData)">Bonus</va-button>
+          </va-button-group>
+        </template>
+        <template v-slot:remove="props">
+          <va-button
+            small
+            outline
+            color="danger"
+            class="ma-0"
+            @click="removePosting(props.rowData)"
+          >
+          Remove
+          <!--
+            {{ $t('dashboard.table.resolve') }}
+          -->
+          </va-button>
+        </template>
+      </va-data-table>
+    </va-card>
+    <va-modal
+      v-model="showModal"
+      size="small"
+      :title=" $t('postings.forms.payment.submit_title')"
+      cancelClass="none"
+      :message=" $t('postings.forms.payment.submit_message') "
+      :okText=" $t('postings.forms.payment.submit_confirm') "
+      noOutsideDismiss
+      noEscDismiss
+    />
+  </div>
 </template>
 
 <script>
@@ -64,6 +70,8 @@ export default {
       loading: false,
       term: null,
       mode: 0,
+      payId: '',
+      showModal: false,
     }
   },
   computed: {
@@ -86,18 +94,36 @@ export default {
         //sortField: 'status',
       },
       {
-        name: 'complete_pay_amt',
+        name: 'confirm_pay_amt',
         title: 'Complete',//'this.$t('tables.headings.status'),
-        width: '10%',
-        //sortField: 'status',
-      }, {
-        name: 'complete_pay_type',
-        title: 'Type',//'this.$t('tables.headings.status'),
-        width: '10%',
+        width: '5%',
         //sortField: 'status',
       },
       {
-        name: '__slot:actions',
+        name: 'complete_pay_amt',
+        title: 'Complete',//'this.$t('tables.headings.status'),
+        width: '5%',
+        //sortField: 'status',
+      },
+      {
+        name: 'bonus_pay_amt',
+        title: 'Complete',//'this.$t('tables.headings.status'),
+        width: '5%',
+        //sortField: 'status',
+      },
+      {
+        name: 'bonus_pay_type',
+        title: 'Type',//'this.$t('tables.headings.status'),
+        width: '5%',
+        //sortField: 'status',
+      },
+      {
+        title: "Pay",
+        name: '__slot:pay',
+        dataClass: 'text-right',
+      },
+      {
+        name: '__slot:remove',
         dataClass: 'text-right',
       }]
     }
@@ -106,6 +132,34 @@ export default {
     this.loadPostings();
   },
   methods: {
+    payConfirm(data) {
+      console.log(JSON.stringify(data));
+      this.pay({
+        "amt": data["confirm_pay_amt"],
+        "type": data["confirm_pay_type"],
+        "pay_id": this.payId
+      });
+    },
+    payComplete(data) {
+      this.pay({
+        "amt": data["complete_pay_amt"],
+        "type": data["complete_pay_type"],
+        "pay_id": this.payId
+      });
+    },
+    payBonus(data) {
+      this.pay({
+        "amt": data["bonus_pay_amt"],
+        "type": data["bonus_pay_type"],
+        "pay_id": this.payId
+      });
+    },
+    pay(data) {
+      this.showModal = true;
+      Network.wallet.payment(data, (success, data) =>{
+        console.log(JSON.stringify(data));
+      });
+    },
     loadPostings() {
       var self = this;
       Network.work.userPostings((success, data) => {
