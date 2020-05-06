@@ -76,6 +76,7 @@ import VaIconMenu from '../../../iconset/VaIconMenu'
 import VaIconMenuCollapsed from '../../../iconset/VaIconMenuCollapsed'
 import AppNavbarActions from './components/AppNavbarActions'
 import { colorShiftHsl, ColorThemeMixin } from '../../../services/vuestic-ui'
+import store from '@/store';
 
 export default {
   name: 'app-navbar',
@@ -99,8 +100,11 @@ export default {
   },
   data () {
     return {
-      userName: 'Vasili S',
+      userName: '',
     }
+  },
+  mounted() {
+    this.userName = store.getters.authUserName;
   },
   computed: {
     isTopBarProxy: {

@@ -21,9 +21,15 @@ const state = {
   // Login State Info
   authToken: '',
   authRefreshToken: '',
-  authUserName: '',
-  authEmail: '',
+  authUserName: 'Michael Scott',
+  authEmail: 'michael_scarn@office.the',
+  authPayId: 'prison_mike$office.the',
   authMeta: {},
+  authBalance: [
+    { id: 'XRP', balance: 123 },
+    { id: 'BTC', balance: 0.1234 },
+    { id: 'ETH', balance: 1.23 }
+  ],
   workPostings: [],
   games: [
     "World of Warcraft",
