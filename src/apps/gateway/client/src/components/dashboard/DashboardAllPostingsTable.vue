@@ -135,6 +135,12 @@ export default {
   mounted() {
     this.loadPostings()
   },
+  created() {
+    this.$eventHub.$on('refresh-postings', this.loadPostings);
+  },
+  beforeDestroy() {
+    this.$eventHub.$off('refresh-postings');
+  },
   methods: {
     loadPostings() {
       var self = this;
