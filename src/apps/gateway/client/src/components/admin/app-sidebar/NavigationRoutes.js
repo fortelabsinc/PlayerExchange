@@ -29,7 +29,7 @@ export const navigationRoutes = {
         },
       ],
     },
-    {
+    /*{
       name: 'forms',
       displayName: 'menu.forms',
       meta: {
@@ -215,6 +215,6 @@ export const navigationRoutes = {
           displayName: '404 Pages',
         },
       ],
-    },
+    }, */
   ],
 }

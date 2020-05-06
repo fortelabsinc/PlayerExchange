@@ -51,6 +51,26 @@
       }
     }
   },
+  "postingDetails": {
+    "modal": {
+      "title": "Post Details",
+      "close": "Close",
+      "post_id": "Post Id",
+      "user_id": "User Name",
+      "game_id": "Game Name",
+      "details": "Description",
+      "state": "State",
+      "confirm_pay_amt": "Payout on Confirmation",
+      "confirm_pay_type": "Confirmation Payout Currency",
+      "complete_pay_amt": "Payout on Completion",
+      "complete_pay_type": "Completion Payout Currency",
+      "bonus_pay_amt": "Payout for Bonus",
+      "bonus_pay_type": "Bonus Payout Currency",
+      "bonus_req": "Bonus Requirements",
+      "user_count_req": "Number Of Players",
+      "type_req": "Players Type"
+    }
+  },
   "profile": {
     "account": {
       "title": "My Profile",
