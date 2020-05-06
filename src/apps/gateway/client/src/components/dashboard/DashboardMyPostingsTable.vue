@@ -131,6 +131,12 @@ export default {
   mounted() {
     this.loadPostings();
   },
+  created() {
+    this.$eventHub.$on('refresh-postings', this.loadPostings);
+  },
+  beforeDestroy() {
+    this.$eventHub.$off('refresh-postings');
+  },
   methods: {
     payConfirm(data) {
       this.pay({
@@ -182,7 +188,10 @@ export default {
     removePosting(data) {
       Network.work.deletePosting(data["post_id"], (success, data) =>
       {
-        loadPostings();
+        if(success)
+        {
+          this.$eventHub.$emit('refresh-postings');
+        }
       });
     }
   },

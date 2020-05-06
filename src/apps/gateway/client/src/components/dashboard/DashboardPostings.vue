@@ -176,6 +176,7 @@ export default {
       Network.work.createPosting(data, (success, data) => {
         if(success)
         {
+          this.$eventHub.$emit('refresh-postings');
           //this.game = '';
           //this.player_count = 1;
           //this.type = "Individual";
