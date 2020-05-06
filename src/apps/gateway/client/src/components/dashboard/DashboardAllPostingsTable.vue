@@ -29,13 +29,33 @@
           outline
           color="success"
           class="ma-0"
-          @click="resolveUser(props.rowData)"
+          @click="showDetailsModal(props.rowData)"
         >
         Details
         <!--
           {{ $t('dashboard.table.resolve') }}
         -->
         </va-button>
+
+        <va-modal
+          v-model="isModalVisible"
+          size="large"
+          position="top"
+          hideDefaultActions
+          :title=" $t('postingDetails.modal.title') "
+          class="flex"
+        >
+          <dashboard-posting-details :posting="selectedPosting" />
+          <div class="mt-3 mb-3 va-modal__actions">
+            <va-button
+              flat
+              color="gray"
+              @click="isModalVisible = false"
+            >
+              {{ $t('postingDetails.modal.close') }}
+            </va-button>
+          </div>
+        </va-modal>
       </template>
     </va-data-table>
   </va-card>
@@ -45,9 +65,13 @@
 import store from '@/store';
 import Network from '@/network'
 import auth from '../../network/modules/auth';
+import DashboardPostingDetails from './DashboardPostingDetails'
 
 export default {
   name: 'dashboard-all-postings-table',
+  components: {
+    DashboardPostingDetails,
+  },
   data () {
     return {
       postings: [
@@ -58,11 +82,13 @@ export default {
         //  details: "Need help to finish thing",
         //  complete_pay_amt: "100",
         //  complete_pay_type: "XRP",
-        //} 
+        //}
       ],
       loading: false,
       term: null,
       mode: 0,
+      isModalVisible: false,
+      selectedPosting: {}
     }
   },
   computed: {
@@ -119,10 +145,13 @@ export default {
         }
         else
         {
-
           console.log("Failed to load the postings: " + data)
         }
       });
+    },
+    showDetailsModal(data) {
+      this.selectedPosting = data;
+      this.isModalVisible = true;
     }
   },
 }
