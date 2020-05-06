@@ -157,7 +157,14 @@ export default {
     pay(data) {
       this.showModal = true;
       Network.wallet.payment(data, (success, data) =>{
-        console.log(JSON.stringify(data));
+        if(success)
+        {
+          console.log("Payment success")
+        }
+        else
+        {
+          console.log("Failed to load the postings: " + data)
+        }
       });
     },
     loadPostings() {
