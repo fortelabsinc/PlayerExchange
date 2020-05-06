@@ -77,7 +77,7 @@ export default {
           amt: String(this.amt),
           type: this.type
       };
-      Network.work.payment(data, (success, data) => {
+      Network.wallet.payment(data, (success, data) => {
         if(success)
         {
           self.payId = '';

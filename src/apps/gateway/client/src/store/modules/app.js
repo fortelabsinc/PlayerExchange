@@ -77,6 +77,9 @@ const mutations = {
   setWorkPostings(state, postings) {
     state.workPostings = postings
   },
+  setAuthPayId(state, payId) {
+    state.authPayId = payId
+  },
 }
 
 const actions = {
