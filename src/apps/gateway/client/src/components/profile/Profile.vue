@@ -79,7 +79,7 @@
 
 <script>
 import store from '@/store';
-
+import Network from '../../network'
 export default {
   data () {
     return {
@@ -90,10 +90,27 @@ export default {
     }
   },
   mounted() {
+
     this.username = store.getters.authUserName;
     this.email = store.getters.authEmail;
     this.pay_id = store.getters.authPayId;
-    this.balance = store.getters.authBalance;
+    this.getBalances();
+  },
+  methods: {
+    getBalances(){
+      var self = this;
+      Network.wallet.balances((success, data) => {
+        if(success) {
+          console.log("success: " + JSON.stringify(data));
+          this.balance = data;
+        }
+        else
+        {
+          console.log("ERROR: " + JSON.stringify(data));
+        }
+      })
+    }
   }
+
 }
 </script>

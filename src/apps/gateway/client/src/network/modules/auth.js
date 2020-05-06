@@ -13,7 +13,8 @@ export default {
           store.commit('setAuthEmail', email)
           store.commit('setAuthToken', response.data.ok.access_token);
           store.commit('setAuthRefreshToken', response.data.ok.refresh_token);
-          store.commit('setAuthMeta', response.data.ok.meta)
+          store.commit('setAuthMeta', response.data.ok.meta);
+          store.commit('setAuthPayId', response.data.ok.payId);
           cb(true, response.data.ok);
         }
         else {
