@@ -19,7 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
+defmodule Gateway.Router.Portal.Commands.V1.Receiver.Wallet do
   @moduledoc ~S"""
   Processes the HTTP based requests and sends them to the correct handler.
 
@@ -58,48 +58,7 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
 
   # ----------------------------------------------------------------------------
   # Pull all the postings from the system
-  get "/posting" do
-    case getHeaderValue(conn, "access-token") do
-      nil ->
-        send_resp(conn, 422, "Missing request parameters: access-token")
-
-      token ->
-        case Auth.check(token) do
-          {:ok, _meta} ->
-            postings = Gateway.Router.Portal.Commands.Handler.Work.postings()
-            jsonRsp(conn, 200, %{ok: postings})
-
-          {:error, errorMessage} ->
-            Logger.error("Error Checking Token #{inspect(errorMessage)}")
-            jsonRsp(conn, 401, %{error: "unauthorized"})
-        end
-    end
-  end
-
-  # ----------------------------------------------------------------------------
-  # Get all the postings for a specific user
-  get "/posting/:user_id" do
-    case getHeaderValue(conn, "access-token") do
-      nil ->
-        send_resp(conn, 422, "Missing request parameters: access-token")
-
-      token ->
-        case Auth.check(token) do
-          {:ok, _info} ->
-            postings = Gateway.Router.Portal.Commands.Handler.Work.postings(user_id)
-            jsonRsp(conn, 200, %{ok: postings})
-
-          {:error, errorMessage} ->
-            Logger.error("Error Checking Token #{inspect(errorMessage)}")
-            jsonRsp(conn, 401, %{error: "unauthorized"})
-        end
-    end
-  end
-
-  # ----------------------------------------------------------------------------
-  # Delete a specific posting.  It is assumed that the user who matches the
-  # token owns it
-  delete "/posting/:posting_id" do
+  get "/balance" do
     case getHeaderValue(conn, "access-token") do
       nil ->
         send_resp(conn, 422, "Missing request parameters: access-token")
@@ -107,30 +66,13 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
       token ->
         case Auth.check(token) do
           {:ok, info} ->
-            postings =
-              Gateway.Router.Portal.Commands.Handler.Work.deletePosting(info.username, posting_id)
+            case Gateway.Router.Portal.Commands.Handler.Wallet.balances(info.username) do
+              {:ok, data} ->
+                jsonRsp(conn, 200, %{ok: data})
 
-            jsonRsp(conn, 200, %{ok: postings})
-
-          {:error, errorMessage} ->
-            Logger.error("Error Checking Token #{inspect(errorMessage)}")
-            jsonRsp(conn, 401, %{error: "unauthorized"})
-        end
-    end
-  end
-
-  # ----------------------------------------------------------------------------
-  # Delete all postings ownd by this user
-  delete "/posting" do
-    case getHeaderValue(conn, "access-token") do
-      nil ->
-        send_resp(conn, 422, "Missing request parameters: access-token")
-
-      token ->
-        case Auth.check(token) do
-          {:ok, info} ->
-            postings = Gateway.Router.Portal.Commands.Handler.Work.deletePosting(info.username)
-            jsonRsp(conn, 200, %{ok: postings})
+              {:error, msg} ->
+                jsonRsp(conn, 500, %{error: msg})
+            end
 
           {:error, errorMessage} ->
             Logger.error("Error Checking Token #{inspect(errorMessage)}")
@@ -140,8 +82,8 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
   end
 
   # ----------------------------------------------------------------------------
-  # Create a new posting
-  post "/posting" do
+  # Temp Routes for Demo
+  post "/payment" do
     case getHeaderValue(conn, "access-token") do
       nil ->
         send_resp(conn, 422, "Missing request parameters: access-token")
@@ -155,7 +97,11 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
             case Auth.check(token) do
               {:ok, info} ->
                 {:ok, _} =
-                  Gateway.Router.Portal.Commands.Handler.Work.addPosting(info.username, params)
+                  Gateway.Router.Portal.Commands.Handler.Wallet.payment(
+                    params["amt"],
+                    info.username,
+                    params["pay_id"]
+                  )
 
                 jsonRsp(conn, 200, %{ok: "ok"})
 
@@ -167,11 +113,41 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
     end
   end
 
+  get "/posting/payconfirm/:postId/:username/:payId" do
+    case Gateway.Router.Portal.Commands.Handler.Wallet.payPostingConfirm(postId, username, payId) do
+      {:ok, _info} ->
+        jsonRsp(conn, 200, %{ok: "ok"})
+
+      {:error, errorMessage} ->
+        jsonRsp(conn, 401, %{error: errorMessage})
+    end
+  end
+
+  get "/posting/paycomplete/:postId/:username/:payId" do
+    case Gateway.Router.Portal.Commands.Handler.Wallet.payPostingConfirm(postId, username, payId) do
+      {:ok, _info} ->
+        jsonRsp(conn, 200, %{ok: "ok"})
+
+      {:error, errorMessage} ->
+        jsonRsp(conn, 401, %{error: errorMessage})
+    end
+  end
+
+  get "/posting/paybonus/:postId/:username/:payId" do
+    case Gateway.Router.Portal.Commands.Handler.Wallet.payPostingConfirm(postId, username, payId) do
+      {:ok, _info} ->
+        jsonRsp(conn, 200, %{ok: "ok"})
+
+      {:error, errorMessage} ->
+        jsonRsp(conn, 401, %{error: errorMessage})
+    end
+  end
+
   # ----------------------------------------------------------------------------
   # Fallback
   match _ do
     Logger.error(
-      "[Gateway.Router.Portal.Commands.V1.Receiver.Work] Unknown Request: #{
+      "[Gateway.Router.Portal.Commands.V1.Receiver.Wallet] Unknown Request: #{
         inspect(conn.body_params)
       }"
     )

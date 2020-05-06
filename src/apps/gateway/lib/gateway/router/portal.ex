@@ -61,6 +61,9 @@ defmodule Gateway.Router.Portal do
   # route all profile to the receiver
   forward("/portal/commands/v1/profile/", to: Gateway.Router.Portal.Commands.V1.Receiver.Profile)
 
+  # route all wallet to the receiver
+  forward("/portal/commands/v1/wallet/", to: Gateway.Router.Portal.Commands.V1.Receiver.Wallet)
+
   # ----------------------------------------------------------------------------
   # Public API
   # ----------------------------------------------------------------------------

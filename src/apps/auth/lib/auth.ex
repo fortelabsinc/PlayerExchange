@@ -98,7 +98,16 @@ defmodule Auth do
   @doc """
   """
   @spec login(String.t(), String.t()) :: {:error, <<_::200, _::_*64>>} | {:ok, map}
-  def login(username, password), do: Storage.Auth.User.login(username, password)
+  def login(username, password) do
+    case Storage.Auth.User.login(username, password) do
+      {:ok, res} ->
+        payIdName = Blockchain.Ripple.PayID.format(username)
+        {:ok, Map.put(res, "payId", "#{payIdName}$forte.playerexchange.io")}
+
+      err ->
+        err
+    end
+  end
 
   @doc """
   """
