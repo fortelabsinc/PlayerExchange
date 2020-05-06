@@ -103,6 +103,11 @@ export default new Router({
           beforeEnter: requireAuth
         },
         {
+          name: 'profile',
+          path: 'profile',
+          component: () => import('../components/profile/Profile.vue'),
+        },
+        {
           name: 'statistics',
           path: 'statistics',
           component: EmptyParentComponent,

@@ -51,6 +51,17 @@
       }
     }
   },
+  "profile": {
+    "account": {
+      "title": "My Profile",
+      "username": "Username",
+      "email": "Email",
+      "pay_id": "PayID"
+    },
+    "balance": {
+      "title": "My Balance"
+    }
+  },
   "404": {
     "title": "This page’s gone fishing.",
     "text": "If you feel that it’s not right, please send us a message at ",
