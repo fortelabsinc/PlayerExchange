@@ -4,33 +4,10 @@
     <dashboard-postings />
     <dashboard-my-postings-table />
     <dashboard-payment />
-    <!--
-    <dashboard-table />
-    <dashboard-charts />
-    <dashboard-info-block />
-    <div class="row">
-      <div class="flex xs12">
-        <dashboard-table />
-      </div>
-    </div>
-    <div class="row row-equal">
-      <div class="flex xs12 lg6">
-        <dashboard-tabs @submit="addAddressToMap"/>
-      </div>
-      <div class="flex xs12 lg6">
-        <dashboard-map ref="dashboardMap"/>
-      </div>
-    </div>
-    -->
   </div>
 </template>
 
 <script>
-import DashboardCharts from './DashboardCharts'
-import DashboardInfoBlock from './DashboardInfoBlock'
-import DashboardTable from './DashboardTable'
-import DashboardTabs from './DashboardTabs'
-import DashboardMap from './DashboardMap'
 import DashboardPostings from './DashboardPostings'
 import DashboardMyPostingsTable from './DashboardMyPostingsTable'
 import DashboardAllPostingsTable from './DashboardAllPostingsTable'
@@ -39,11 +16,6 @@ import DashboardPayment from './DashboardPayment'
 export default {
   name: 'Dashboard',
   components: {
-    DashboardCharts,
-    DashboardInfoBlock,
-    DashboardTable,
-    DashboardTabs,
-    DashboardMap,
     DashboardPostings,
     DashboardMyPostingsTable,
     DashboardAllPostingsTable,
