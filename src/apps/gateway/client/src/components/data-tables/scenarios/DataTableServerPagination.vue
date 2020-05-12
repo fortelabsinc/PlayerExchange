@@ -4,12 +4,15 @@
       :fields="fields"
       :data="items"
       :loading="loading"
-      :totalPages="totalPages"
-      @page-selected="readItems"
+      :total-pages="totalPages"
       api-mode
+      @page-selected="readItems"
     >
       <template slot="avatar" slot-scope="props">
-        <img :src="props.rowData.avatar" class="data-table-server-pagination---avatar">
+        <img
+          :src="props.rowData.avatar"
+          class="data-table-server-pagination---avatar"
+        />
       </template>
     </va-data-table>
   </va-card>
@@ -19,7 +22,7 @@
 import axios from 'axios'
 
 export default {
-  data () {
+  data() {
     return {
       perPage: 3,
       totalPages: 0,
@@ -28,29 +31,34 @@ export default {
     }
   },
   computed: {
-    fields () {
-      return [{
-        name: '__slot:avatar',
-        width: '60px',
-      }, {
-        name: 'first_name',
-        title: this.$t('tables.headings.firstName'),
-        width: '20%',
-      }, {
-        name: 'last_name',
-        title: this.$t('tables.headings.lastName'),
-        width: '20%',
-      }, {
-        name: 'email',
-        title: this.$t('tables.headings.email'),
-      }]
+    fields() {
+      return [
+        {
+          name: '__slot:avatar',
+          width: '60px',
+        },
+        {
+          name: 'first_name',
+          title: this.$t('tables.headings.firstName'),
+          width: '20%',
+        },
+        {
+          name: 'last_name',
+          title: this.$t('tables.headings.lastName'),
+          width: '20%',
+        },
+        {
+          name: 'email',
+          title: this.$t('tables.headings.email'),
+        },
+      ]
     },
   },
-  created () {
+  created() {
     this.readItems()
   },
   methods: {
-    readItems (page = 0) {
+    readItems(page = 0) {
       this.loading = true
 
       const params = {
@@ -58,21 +66,20 @@ export default {
         page: page,
       }
 
-      axios.get('https://reqres.in/api/users', { params })
-        .then(response => {
-          this.items = response.data.data
-          this.totalPages = response.data.total_pages
-          this.loading = false
-        })
+      axios.get('https://reqres.in/api/users', { params }).then((response) => {
+        this.items = response.data.data
+        this.totalPages = response.data.total_pages
+        this.loading = false
+      })
     },
   },
 }
 </script>
 
 <style lang="scss">
-  .data-table-server-pagination---avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-  }
+.data-table-server-pagination---avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
 </style>

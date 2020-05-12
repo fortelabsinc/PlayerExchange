@@ -2,9 +2,9 @@
   <div class="not-found-pages">
     <div class="row">
       <div
-        class="flex xs12 sm6 lg4 xl3"
         v-for="item in items"
         :key="item.$index"
+        class="flex xs12 sm6 lg4 xl3"
       >
         <va-card
           class="not-found-pages__cards text--center"
@@ -12,8 +12,7 @@
         >
           {{ item.label }}
           <div class="not-found-pages__button-container pt-3 mb-0">
-            <va-button
-              :to="{ name: item.buttonTo }">
+            <va-button :to="{ name: item.buttonTo }">
               {{ 'View Example' }}
             </va-button>
           </div>
@@ -25,8 +24,8 @@
 
 <script>
 export default {
-  name: 'not-found-pages',
-  data () {
+  name: 'NotFoundPages',
+  data() {
     return {
       items: [
         {

@@ -1,7 +1,7 @@
 <template>
   <VbDemo>
     <VbCard>
-      <chat v-model="chatMessages"/>
+      <chat v-model="chatMessages" />
     </VbCard>
   </VbDemo>
 </template>
@@ -11,11 +11,12 @@ import Chat from './Chat'
 
 export default {
   components: { Chat },
-  data () {
+  data() {
     return {
       chatMessages: [
         {
-          text: 'Hello! So glad you liked my work. Do you want me to shoot you?',
+          text:
+            'Hello! So glad you liked my work. Do you want me to shoot you?',
           yours: false,
         },
         {
@@ -31,11 +32,12 @@ export default {
           yours: true,
         },
         {
-          text: 'No, thanks. There is no need. Can we set up a meeting earlier?',
+          text:
+            'No, thanks. There is no need. Can we set up a meeting earlier?',
           yours: false,
         },
         {
-          text: 'I\'m working on Vuestic, so let\'s meet at 3pm. Thanks!',
+          text: "I'm working on Vuestic, so let's meet at 3pm. Thanks!",
           yours: true,
         },
       ],
@@ -44,6 +46,4 @@ export default {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

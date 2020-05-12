@@ -8,10 +8,14 @@
           </va-list-label>
 
           <template v-for="(customer, i) in customers">
-            <va-item :key="'item' + customer.id" clickable @click="notify(customer.name)">
+            <va-item
+              :key="'item' + customer.id"
+              clickable
+              @click="notify(customer.name)"
+            >
               <va-item-section avatar>
                 <va-avatar>
-                  <img :src="customer.picture" :alt="customer.name">
+                  <img :src="customer.picture" :alt="customer.name" />
                 </va-avatar>
               </va-item-section>
 
@@ -30,7 +34,10 @@
               </va-item-section>
             </va-item>
 
-            <va-list-separator v-if="i < customers.length - 1" :key="'separator' + customer.id" />
+            <va-list-separator
+              v-if="i < customers.length - 1"
+              :key="'separator' + customer.id"
+            />
           </template>
         </va-list>
 
@@ -40,14 +47,22 @@
           </va-list-label>
 
           <template v-for="(customer, i) in customers">
-            <va-item :key="'item' + customer.id" clickable @click="toggleStar(customer)">
+            <va-item
+              :key="'item' + customer.id"
+              clickable
+              @click="toggleStar(customer)"
+            >
               <va-item-section side>
-                <va-icon v-if="customer.starred" name="fa fa-star" color="warning" />
+                <va-icon
+                  v-if="customer.starred"
+                  name="fa fa-star"
+                  color="warning"
+                />
               </va-item-section>
 
               <va-item-section avatar>
                 <va-avatar>
-                  <img :src="customer.picture" :alt="customer.name">
+                  <img :src="customer.picture" :alt="customer.name" />
                 </va-avatar>
               </va-item-section>
 
@@ -65,7 +80,10 @@
               </va-item-section>
             </va-item>
 
-            <va-list-separator v-if="i < customers.length - 1" :key="'separator' + customer.id" />
+            <va-list-separator
+              v-if="i < customers.length - 1"
+              :key="'separator' + customer.id"
+            />
           </template>
 
           <va-list-separator fit spaced />
@@ -77,12 +95,16 @@
           <template v-for="(customer, i) in archived">
             <va-item :key="'item' + customer.id">
               <va-item-section side>
-                <va-icon v-if="customer.starred" name="fa fa-star" color="warning" />
+                <va-icon
+                  v-if="customer.starred"
+                  name="fa fa-star"
+                  color="warning"
+                />
               </va-item-section>
 
               <va-item-section avatar>
                 <va-avatar>
-                  <img :src="customer.picture" :alt="customer.name">
+                  <img :src="customer.picture" :alt="customer.name" />
                 </va-avatar>
               </va-item-section>
 
@@ -93,7 +115,10 @@
               </va-item-section>
             </va-item>
 
-            <va-list-separator v-if="i < archived.length - 1" :key="'separator' + customer.id" />
+            <va-list-separator
+              v-if="i < archived.length - 1"
+              :key="'separator' + customer.id"
+            />
           </template>
         </va-list>
       </div>
@@ -223,7 +248,7 @@
 import data from './data.json'
 
 export default {
-  data () {
+  data() {
     return {
       customers: data.slice(0, 5),
       archived: data.slice(5, 8),
@@ -233,18 +258,18 @@ export default {
     }
   },
   methods: {
-    getGenderIcon (gender) {
+    getGenderIcon(gender) {
       return gender === 'male' ? 'fa fa-mars' : 'fa fa-venus'
     },
-    getGenderColor (gender) {
+    getGenderColor(gender) {
       return gender === 'male' ? 'blue' : 'pink'
     },
-    notify (name) {
+    notify(name) {
       this.showToast(`Clicked ${name}`, {
         position: 'bottom-right',
       })
     },
-    toggleStar (customer) {
+    toggleStar(customer) {
       customer.starred = !customer.starred
     },
   },

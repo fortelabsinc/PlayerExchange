@@ -6,18 +6,18 @@
           class="ma-0"
           :value="term"
           :placeholder="$t('tables.searchByName')"
-          @input="search"
           removable
+          @input="search"
         >
-          <va-icon name="fa fa-search" slot="prepend" />
+          <va-icon slot="prepend" name="fa fa-search" />
         </va-input>
       </div>
 
       <div class="flex xs12 sm6">
         <div class="d-flex justify--end">
           <va-button-toggle
-            outline
             v-model="mode"
+            outline
             :options="modeOptions"
             style="max-width: 100%;"
           />
@@ -68,7 +68,7 @@ import debounce from 'lodash/debounce'
 import data from '../markup-tables/data.json'
 
 export default {
-  data () {
+  data() {
     return {
       users: data.slice(),
       loading: false,
@@ -77,84 +77,97 @@ export default {
     }
   },
   computed: {
-    fields () {
-      return [{
-        name: '__slot:icon',
-        width: '30px',
-        dataClass: 'text-center',
-      }, {
-        name: 'name',
-        title: this.$t('tables.headings.name'),
-        width: '30%',
-      }, {
-        name: 'payid',
-        title: this.$t('tables.headings.payid'),
-        width: '30%',
-      }, {
-        name: '__slot:status',
-        title: this.$t('tables.headings.status'),
-        width: '20%',
-        sortField: 'status',
-      }, {
-        name: '__slot:actions',
-        dataClass: 'text-right',
-      }]
+    fields() {
+      return [
+        {
+          name: '__slot:icon',
+          width: '30px',
+          dataClass: 'text-center',
+        },
+        {
+          name: 'name',
+          title: this.$t('tables.headings.name'),
+          width: '30%',
+        },
+        {
+          name: 'payid',
+          title: this.$t('tables.headings.payid'),
+          width: '30%',
+        },
+        {
+          name: '__slot:status',
+          title: this.$t('tables.headings.status'),
+          width: '20%',
+          sortField: 'status',
+        },
+        {
+          name: '__slot:actions',
+          dataClass: 'text-right',
+        },
+      ]
     },
-    detailedFields () {
-      return [{
-        name: '__slot:icon',
-        width: '30px',
-        dataClass: 'text-center',
-      }, {
-        name: 'name',
-        title: this.$t('tables.headings.name'),
-        width: '20%',
-      }, {
-        name: 'payid',
-        title: this.$t('tables.headings.payid'),
-        width: '20%',
-      },
-      {
-        name: 'country',
-        title: this.$t('tables.headings.location'),
-        with: '20%',
-      },
-      {
-        name: '__slot:starred',
-        width: '20px',
-      },
-      {
-        name: '__slot:status',
-        title: this.$t('tables.headings.status'),
-        width: '20%',
-        sortField: 'status',
-      },
-      {
-        name: '__slot:actions',
-        dataClass: 'text-right',
-      }]
+    detailedFields() {
+      return [
+        {
+          name: '__slot:icon',
+          width: '30px',
+          dataClass: 'text-center',
+        },
+        {
+          name: 'name',
+          title: this.$t('tables.headings.name'),
+          width: '20%',
+        },
+        {
+          name: 'payid',
+          title: this.$t('tables.headings.payid'),
+          width: '20%',
+        },
+        {
+          name: 'country',
+          title: this.$t('tables.headings.location'),
+          with: '20%',
+        },
+        {
+          name: '__slot:starred',
+          width: '20px',
+        },
+        {
+          name: '__slot:status',
+          title: this.$t('tables.headings.status'),
+          width: '20%',
+          sortField: 'status',
+        },
+        {
+          name: '__slot:actions',
+          dataClass: 'text-right',
+        },
+      ]
     },
-    modeOptions () {
-      return [{
-        value: 0,
-        label: this.$t('dashboard.table.brief'),
-      }, {
-        value: 1,
-        label: this.$t('dashboard.table.detailed'),
-      }]
+    modeOptions() {
+      return [
+        {
+          value: 0,
+          label: this.$t('dashboard.table.brief'),
+        },
+        {
+          value: 1,
+          label: this.$t('dashboard.table.detailed'),
+        },
+      ]
     },
-    filteredData () {
+    filteredData() {
       if (!this.term || this.term.length < 1) {
         return this.users
       }
 
-      return this.users.filter(item => {
+      return this.users.filter((item) => {
         return item.name.toLowerCase().startsWith(this.term.toLowerCase())
       })
     },
   },
   methods: {
-    getStatusColor (status) {
+    getStatusColor(status) {
       if (status === 'paid') {
         return 'success'
       }
@@ -165,11 +178,11 @@ export default {
 
       return 'danger'
     },
-    resolveUser (user) {
+    resolveUser(user) {
       this.loading = true
 
       setTimeout(() => {
-        const idx = this.users.findIndex(u => u.id === user.id)
+        const idx = this.users.findIndex((u) => u.id === user.id)
         this.users.splice(idx, 1)
         this.loading = false
 
@@ -187,5 +200,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

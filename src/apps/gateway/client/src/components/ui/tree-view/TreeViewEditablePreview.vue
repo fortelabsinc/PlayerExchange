@@ -1,19 +1,15 @@
 <template>
   <va-tree-root>
-
     <va-tree-category label="Electronics">
       <va-tree-node v-for="electronic in electronics" :key="electronic.id">
-        <va-input v-model="electronic.name" class="mb-0"/>
+        <va-input v-model="electronic.name" class="mb-0" />
       </va-tree-node>
     </va-tree-category>
 
-    <va-tree-category isOpen label="Products">
-      <va-tree-node
-        v-for="product in products"
-        :key="product.id"
-      >
+    <va-tree-category is-open label="Products">
+      <va-tree-node v-for="product in products" :key="product.id">
         <div class="flex row align--center">
-          <va-input v-model="product.name" class="mb-0"/>
+          <va-input v-model="product.name" class="mb-0" />
           <va-icon
             name="ion ion-md-close"
             color="info"
@@ -29,14 +25,13 @@
         </va-button>
       </va-tree-node>
     </va-tree-category>
-
   </va-tree-root>
 </template>
 
 <script>
 export default {
-  name: 'tree-view-editable-preview',
-  data () {
+  name: 'TreeViewEditablePreview',
+  data() {
     return {
       electronics: [
         { id: 1, name: 'Cellphones' },
@@ -51,14 +46,16 @@ export default {
     }
   },
   methods: {
-    addProduct () {
+    addProduct() {
       this.products.push({
         id: Math.floor(Math.random() * 100000),
         name: 'New product',
       })
     },
-    removeProduct (product) {
-      this.products = this.products.filter(productToFilter => productToFilter !== product)
+    removeProduct(product) {
+      this.products = this.products.filter(
+        (productToFilter) => productToFilter !== product
+      )
     },
   },
 }

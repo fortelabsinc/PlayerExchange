@@ -12,7 +12,7 @@
 import VaPageNotFound from './VaPageNotFound'
 
 export default {
-  name: 'va-page-not-found-custom',
+  name: 'VaPageNotFoundCustom',
   components: {
     VaPageNotFound,
   },

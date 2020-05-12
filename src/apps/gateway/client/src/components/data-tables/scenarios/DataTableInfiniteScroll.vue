@@ -1,14 +1,17 @@
 <template>
   <va-card :title="$t('tables.infiniteScroll')">
-    <div class="data-table-infinite-scroll--container" ref="scrollable" @scroll="onScroll">
-      <va-data-table
-        :fields="fields"
-        :data="users"
-        api-mode
-        no-pagination
-      >
+    <div
+      ref="scrollable"
+      class="data-table-infinite-scroll--container"
+      @scroll="onScroll"
+    >
+      <va-data-table :fields="fields" :data="users" api-mode no-pagination>
         <template slot="marker" slot-scope="props">
-          <va-icon name="fa fa-circle" :color="props.rowData.color" size="8px" />
+          <va-icon
+            name="fa fa-circle"
+            :color="props.rowData.color"
+            size="8px"
+          />
         </template>
       </va-data-table>
 
@@ -32,7 +35,7 @@ export default {
   components: {
     SpringSpinner,
   },
-  data () {
+  data() {
     return {
       users: [],
       loading: false,
@@ -40,44 +43,48 @@ export default {
     }
   },
   computed: {
-    fields () {
-      return [{
-        name: '__slot:marker',
-        width: '30px',
-        dataClass: 'text-center',
-      }, {
-        name: 'fullName',
-        title: this.$t('tables.headings.name'),
-      }, {
-        name: 'email',
-        title: this.$t('tables.headings.email'),
-      }, {
-        name: 'country',
-        title: this.$t('tables.headings.country'),
-      }]
+    fields() {
+      return [
+        {
+          name: '__slot:marker',
+          width: '30px',
+          dataClass: 'text-center',
+        },
+        {
+          name: 'fullName',
+          title: this.$t('tables.headings.name'),
+        },
+        {
+          name: 'email',
+          title: this.$t('tables.headings.email'),
+        },
+        {
+          name: 'country',
+          title: this.$t('tables.headings.country'),
+        },
+      ]
     },
   },
-  created () {
+  created() {
     this.loadMore()
   },
   methods: {
-    loadMore () {
+    loadMore() {
       this.loading = true
 
-      this.readUsers()
-        .then(users => {
-          this.users = this.users.concat(users)
-          this.loading = false
-        })
+      this.readUsers().then((users) => {
+        this.users = this.users.concat(users)
+        this.loading = false
+      })
     },
-    readUsers () {
+    readUsers() {
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           resolve(users.slice(0, 10))
         }, 600)
       })
     },
-    onScroll (e) {
+    onScroll(e) {
       if (this.loading) {
         return
       }
@@ -93,8 +100,8 @@ export default {
 </script>
 
 <style lang="scss">
-  .data-table-infinite-scroll--container {
-    height: 300px;
-    overflow-y: auto;
-  }
+.data-table-infinite-scroll--container {
+  height: 300px;
+  overflow-y: auto;
+}
 </style>

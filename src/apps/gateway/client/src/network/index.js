@@ -5,5 +5,5 @@ import wallet from './modules/wallet'
 export default {
   auth,
   work,
-  wallet
+  wallet,
 }

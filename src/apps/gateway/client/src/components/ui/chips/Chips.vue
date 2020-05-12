@@ -28,7 +28,9 @@
             <div class="row">
               <div class="flex xs12">
                 <va-badge class="mb-2" color="primary">Primary badge</va-badge>
-                <va-badge class="mb-2" color="secondary">Secondary badge</va-badge>
+                <va-badge class="mb-2" color="secondary"
+                >Secondary badge</va-badge
+                >
                 <va-badge class="mb-2" color="success">Success badge</va-badge>
                 <va-badge class="mb-2" color="info">Info badge</va-badge>
                 <va-badge class="mb-2" color="danger">Danger badge</va-badge>
@@ -39,14 +41,30 @@
             </div>
             <div class="row">
               <div class="flex xs12">
-                <va-badge class="mb-2" color="primary" outline>Primary badge</va-badge>
-                <va-badge class="mb-2" color="secondary" outline>Secondary badge</va-badge>
-                <va-badge class="mb-2" color="success" outline>Success badge</va-badge>
-                <va-badge class="mb-2" color="info" outline>Info badge</va-badge>
-                <va-badge class="mb-2" color="danger" outline>Danger badge</va-badge>
-                <va-badge class="mb-2" color="warning" outline>Warning badge</va-badge>
-                <va-badge class="mb-2" color="gray" outline>Gray badge</va-badge>
-                <va-badge class="mb-2" color="dark" outline>Dark badge</va-badge>
+                <va-badge class="mb-2" color="primary" outline
+                >Primary badge</va-badge
+                >
+                <va-badge class="mb-2" color="secondary" outline
+                >Secondary badge</va-badge
+                >
+                <va-badge class="mb-2" color="success" outline
+                >Success badge</va-badge
+                >
+                <va-badge class="mb-2" color="info" outline
+                >Info badge</va-badge
+                >
+                <va-badge class="mb-2" color="danger" outline
+                >Danger badge</va-badge
+                >
+                <va-badge class="mb-2" color="warning" outline
+                >Warning badge</va-badge
+                >
+                <va-badge class="mb-2" color="gray" outline
+                >Gray badge</va-badge
+                >
+                <va-badge class="mb-2" color="dark" outline
+                >Dark badge</va-badge
+                >
               </div>
             </div>
           </div>
@@ -58,6 +76,6 @@
 
 <script>
 export default {
-  name: 'chips',
+  name: 'Chips',
 }
 </script>

@@ -6,11 +6,13 @@
 import * as GoogleMapsLoader from 'google-maps'
 
 export default {
-  name: 'google-map',
+  name: 'GoogleMap',
 
-  mounted () {
+  mounted() {
     if (!process.env.VUE_APP_GOOGLE_MAPS_API_KEY) {
-      throw new Error('Please provide google maps api key from env (VUE_APP_GOOGLE_MAPS_API_KEY)')
+      throw new Error(
+        'Please provide google maps api key from env (VUE_APP_GOOGLE_MAPS_API_KEY)'
+      )
     }
 
     GoogleMapsLoader.KEY = process.env.VUE_APP_GOOGLE_MAPS_API_KEY

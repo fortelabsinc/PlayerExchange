@@ -11,7 +11,7 @@
         avatar_50x50.jpg
       </va-tree-node>
     </va-tree-category>
-    <va-tree-category label="Music" isOpen icon="ion ion-md-star-outline">
+    <va-tree-category label="Music" is-open icon="ion ion-md-star-outline">
       <va-tree-node icon="ion ion-md-musical-notes">
         Taylor_swift_hello.mp3
       </va-tree-node>
@@ -38,6 +38,6 @@
 
 <script>
 export default {
-  name: 'tree-view-icons-preview',
+  name: 'TreeViewIconsPreview',
 }
 </script>

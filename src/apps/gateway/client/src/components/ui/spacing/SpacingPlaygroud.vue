@@ -3,8 +3,8 @@
     <div class="row">
       <div class="flex xs12 sm6 md4">
         <va-select
-          :options="directionList"
           v-model="selectedMarginDirection"
+          :options="directionList"
           :label="$t('spacingPlayground.margin')"
           :max-height="null"
           no-clear
@@ -12,8 +12,8 @@
       </div>
       <div class="flex xs12 sm6 md2">
         <va-select
-          :options="sizesList"
           v-model="selectedMarginSize"
+          :options="sizesList"
           :label="$t('spacingPlayground.value')"
           :max-height="null"
           no-clear
@@ -21,8 +21,8 @@
       </div>
       <div class="flex xs12 sm6 md4">
         <va-select
-          :options="directionList"
           v-model="selectedPaddingDirection"
+          :options="directionList"
           :label="$t('spacingPlayground.padding')"
           :max-height="null"
           no-clear
@@ -30,8 +30,8 @@
       </div>
       <div class="flex xs12 sm6 md2">
         <va-select
-          :options="sizesList"
           v-model="selectedPaddingSize"
+          :options="sizesList"
           :label="$t('spacingPlayground.value')"
           :max-height="null"
           no-clear
@@ -39,19 +39,24 @@
       </div>
     </div>
 
-    <div
-      v-if="selectedMarginClass || selectedPaddingClass"
-      class="row"
-    >
+    <div v-if="selectedMarginClass || selectedPaddingClass" class="row">
       <div class="flex xs12 content">
-        <pre class="code">class="{{ (selectedMarginClass + ' ' +  selectedPaddingClass).trim() }}"</pre>
+        <pre class="code">
+class="{{ (selectedMarginClass + ' ' + selectedPaddingClass).trim() }}"</pre
+        >
       </div>
     </div>
     <div class="row">
       <div class="flex xs12">
         <div class="playground-component">
-          <div class="playground-component__margin" :class="selectedMarginClass">
-            <div class="playground-component__padding" :class="selectedPaddingClass" >
+          <div
+            class="playground-component__margin"
+            :class="selectedMarginClass"
+          >
+            <div
+              class="playground-component__padding"
+              :class="selectedPaddingClass"
+            >
               <div class="playground-component__inner"></div>
             </div>
           </div>
@@ -61,10 +66,16 @@
 
     <div class="row">
       <div class="flex xs12 sm6">
-        <color-presentation color="#ffd093" :name="$t('spacingPlayground.margin')"/>
+        <color-presentation
+          color="#ffd093"
+          :name="$t('spacingPlayground.margin')"
+        />
       </div>
       <div class="flex xs12 sm6">
-        <color-presentation color="#c9f7db" :name="$t('spacingPlayground.padding')"/>
+        <color-presentation
+          color="#c9f7db"
+          :name="$t('spacingPlayground.padding')"
+        />
       </div>
     </div>
   </div>
@@ -74,9 +85,9 @@
 import ColorPresentation from '../colors/color-presentation/ColorPresentation'
 
 export default {
-  name: 'spacing-playgroud',
+  name: 'SpacingPlaygroud',
   components: { ColorPresentation },
-  data () {
+  data() {
     return {
       directionList: ['a', 'y', 'x', 't', 'r', 'b', 'l'],
       sizesList: ['1', '2', '3', '4', '5', 'auto'],
@@ -87,13 +98,13 @@ export default {
     }
   },
   computed: {
-    selectedMarginClass () {
-      return (this.selectedMarginDirection && this.selectedMarginSize)
+    selectedMarginClass() {
+      return this.selectedMarginDirection && this.selectedMarginSize
         ? `m${this.selectedMarginDirection}-${this.selectedMarginSize}`
         : ''
     },
-    selectedPaddingClass () {
-      return (this.selectedPaddingDirection && this.selectedPaddingSize)
+    selectedPaddingClass() {
+      return this.selectedPaddingDirection && this.selectedPaddingSize
         ? `p${this.selectedPaddingDirection}-${this.selectedPaddingSize}`
         : ''
     },
@@ -102,7 +113,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .spacing-playground {
   .playground-component {
     display: flex;

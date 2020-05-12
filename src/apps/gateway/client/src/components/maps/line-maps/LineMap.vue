@@ -14,16 +14,10 @@ import 'ammap3'
 import 'ammap3/ammap/maps/js/worldLow'
 
 export default {
-  name: 'line-map',
+  name: 'LineMap',
 
   props: ['mapData'],
-  watch: {
-    mapData () {
-      this.addDataToMap()
-      this.map.validateData()
-    },
-  },
-  data () {
+  data() {
     return {
       dataProvider: {
         mapVar: AmCharts.maps.worldLow,
@@ -31,12 +25,21 @@ export default {
     }
   },
   computed: {
-    map () {
+    map() {
       return new AmCharts.AmMap()
     },
   },
+  watch: {
+    mapData() {
+      this.addDataToMap()
+      this.map.validateData()
+    },
+  },
+  mounted() {
+    this.drawMap()
+  },
   methods: {
-    drawMap () {
+    drawMap() {
       /* global AmCharts */
       this.map.areasSettings = {
         unlistedAreasColor: '#eee',
@@ -60,13 +63,10 @@ export default {
 
       this.map.write(this.$el)
     },
-    addDataToMap () {
+    addDataToMap() {
       this.dataProvider.linkToObject = this.mapData.mainCity
       this.dataProvider.images = this.mapData.cities
     },
-  },
-  mounted () {
-    this.drawMap()
   },
 }
 </script>

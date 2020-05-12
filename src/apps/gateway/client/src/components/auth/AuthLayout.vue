@@ -10,18 +10,15 @@
     <div class="flex xs12 pa-3">
       <div class="d-flex justify--center">
         <va-card class="auth-layout__card">
-          <va-tabs
-            v-model="tabIndex"
-            center
-          >
+          <va-tabs v-model="tabIndex" center>
             <va-tab>{{ $t('auth.login') }}</va-tab>
             <va-tab>{{ $t('auth.createNewAccount') }}</va-tab>
           </va-tabs>
 
-          <va-separator/>
+          <va-separator />
 
           <div class="pa-3">
-            <router-view/>
+            <router-view />
           </div>
         </va-card>
       </div>
@@ -32,15 +29,12 @@
 <script>
 import VaIconVuestic from '../../iconset/VaIconVuestic'
 
-const tabs = [
-  'login',
-  'signup',
-]
+const tabs = ['login', 'signup']
 
 export default {
   name: 'AuthLayout',
   components: { VaIconVuestic },
-  data () {
+  data() {
     return {
       selectedTabIndex: 0,
       tabTitles: ['login', 'createNewAccount'],
@@ -48,10 +42,10 @@ export default {
   },
   computed: {
     tabIndex: {
-      set (tabIndex) {
+      set(tabIndex) {
         this.$router.push({ name: tabs[tabIndex] })
       },
-      get () {
+      get() {
         return tabs.indexOf(this.$route.name)
       },
     },

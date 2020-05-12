@@ -1,13 +1,13 @@
 <template>
   <div>
-    <data-table-actions class="mb-4"/>
-    <data-table-sorting-pagination class="mb-4"/>
-    <data-table-filter class="mb-4"/>
-    <data-table-infinite-scroll class="mb-4"/>
-    <data-table-select class="mb-4"/>
-    <data-table-server-pagination class="mb-4"/>
-    <data-table-empty class="mb-4"/>
-    <data-table-loading/>
+    <data-table-actions class="mb-4" />
+    <data-table-sorting-pagination class="mb-4" />
+    <data-table-filter class="mb-4" />
+    <data-table-infinite-scroll class="mb-4" />
+    <data-table-select class="mb-4" />
+    <data-table-server-pagination class="mb-4" />
+    <data-table-empty class="mb-4" />
+    <data-table-loading />
   </div>
 </template>
 
@@ -35,5 +35,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

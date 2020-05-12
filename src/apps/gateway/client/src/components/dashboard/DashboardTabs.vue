@@ -1,18 +1,18 @@
 <template>
   <va-card :title="$t('dashboard.setupRemoteConnections')">
-    <va-tabs grow v-model="tabsState">
+    <va-tabs v-model="tabsState" grow>
       <va-tab>
-        {{$t('dashboard.tabs.overview.title')}}
+        {{ $t('dashboard.tabs.overview.title') }}
       </va-tab>
       <va-tab>
-        {{$t('dashboard.tabs.billingAddress.title')}}
+        {{ $t('dashboard.tabs.billingAddress.title') }}
       </va-tab>
       <va-tab>
-        {{$t('dashboard.tabs.bankDetails.title')}}
+        {{ $t('dashboard.tabs.bankDetails.title') }}
       </va-tab>
     </va-tabs>
-    <va-separator/>
-    <component :is="tabs[tabsState]" @submit="submit"/>
+    <va-separator />
+    <component :is="tabs[tabsState]" @submit="submit" />
   </va-card>
 </template>
 
@@ -28,18 +28,14 @@ export default {
     BillingAddressTab,
     BankDetailsTab,
   },
-  data () {
+  data() {
     return {
       tabsState: 1,
-      tabs: [
-        'OverviewTab',
-        'BillingAddressTab',
-        'BankDetailsTab',
-      ],
+      tabs: ['OverviewTab', 'BillingAddressTab', 'BankDetailsTab'],
     }
   },
   methods: {
-    submit (data) {
+    submit(data) {
       this.$emit('submit', data)
     },
   },

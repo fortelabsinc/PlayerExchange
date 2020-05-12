@@ -1,10 +1,7 @@
 <template>
-  <div class="vuestic-layout"
-    v-resize
-    :class="classObject"
-  >
+  <div v-resize class="vuestic-layout" :class="classObject">
     <slot></slot>
-    <div class="content-wrap" id="content-wrap">
+    <div id="content-wrap" class="content-wrap">
       <slot name="content"></slot>
     </div>
     <div class="made-by-footer">
@@ -16,15 +13,15 @@
 <script>
 import Resize from '../../../directives/ResizeHandler'
 export default {
-  name: 'vuestic-layout',
+  name: 'VuesticLayout',
+  directives: {
+    resize: Resize,
+  },
   props: {
     fixed: {
       type: Boolean,
       default: false,
     },
-  },
-  directives: {
-    resize: Resize,
   },
   computed: {
     classObject: function () {

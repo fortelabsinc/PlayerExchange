@@ -2,10 +2,7 @@
   <div class="modals">
     <div class="row">
       <div class="flex md12">
-        <va-card
-          class="modals-list larger-padding"
-          :title="$t('modal.title')"
-        >
+        <va-card class="modals-list larger-padding" :title="$t('modal.title')">
           <va-button color="danger" @click="showSmallModal = true">
             {{ $t('modal.small') }}
           </va-button>
@@ -47,74 +44,74 @@
     <va-modal
       v-model="showSmallModal"
       size="small"
-      :title=" $t('modal.smallTitle')"
-      :message=" $t('modal.message') "
-      :okText=" $t('modal.confirm') "
-      :cancelText=" $t('modal.cancel') "
+      :title="$t('modal.smallTitle')"
+      :message="$t('modal.message')"
+      :ok-text="$t('modal.confirm')"
+      :cancel-text="$t('modal.cancel')"
     />
     <va-modal
       v-model="showMediumModal"
-      :title=" $t('modal.mediumTitle') "
-      :okText=" $t('modal.confirm') "
-      :cancelText=" $t('modal.cancel') "
-      :message=" $t('modal.message') "
+      :title="$t('modal.mediumTitle')"
+      :ok-text="$t('modal.confirm')"
+      :cancel-text="$t('modal.cancel')"
+      :message="$t('modal.message')"
     />
     <va-modal
       v-model="showLargeModal"
       size="large"
-      :title=" $t('modal.largeTitle') "
-      :message=" $t('modal.message') "
-      :okText=" $t('modal.confirm') "
-      :cancelText=" $t('modal.cancel') "
+      :title="$t('modal.largeTitle')"
+      :message="$t('modal.message')"
+      :ok-text="$t('modal.confirm')"
+      :cancel-text="$t('modal.cancel')"
     />
     <va-modal
       v-model="showTopModal"
       position="top"
-      :title=" $t('modal.top')"
-      :message=" $t('modal.message') "
-      :okText=" $t('modal.confirm') "
-      :cancelText=" $t('modal.cancel') "
+      :title="$t('modal.top')"
+      :message="$t('modal.message')"
+      :ok-text="$t('modal.confirm')"
+      :cancel-text="$t('modal.cancel')"
     />
     <va-modal
       v-model="showRightModal"
       position="right"
-      :title=" $t('modal.right') "
-      :okText=" $t('modal.confirm') "
-      :cancelText=" $t('modal.cancel') "
-      :message=" $t('modal.message') "
+      :title="$t('modal.right')"
+      :ok-text="$t('modal.confirm')"
+      :cancel-text="$t('modal.cancel')"
+      :message="$t('modal.message')"
     />
     <va-modal
       v-model="showBottomModal"
       position="bottom"
-      :title=" $t('modal.bottom') "
-      :message=" $t('modal.message') "
-      :okText=" $t('modal.confirm') "
-      :cancelText=" $t('modal.cancel') "
+      :title="$t('modal.bottom')"
+      :message="$t('modal.message')"
+      :ok-text="$t('modal.confirm')"
+      :cancel-text="$t('modal.cancel')"
     />
     <va-modal
       v-model="showLeftModal"
       position="left"
-      :title=" $t('modal.left') "
-      cancelClass="none"
-      :okText=" $t('modal.close') "
-      :message=" $t('modal.staticMessage') "
+      :title="$t('modal.left')"
+      cancel-class="none"
+      :ok-text="$t('modal.close')"
+      :message="$t('modal.staticMessage')"
     />
     <va-modal
       v-model="showStaticModal"
-      :title=" $t('modal.staticTitle') "
-      cancelClass="none"
-      :okText=" $t('modal.close') "
-      :message=" $t('modal.staticMessage') "
-      noOutsideDismiss
-      noEscDismiss
+      :title="$t('modal.staticTitle')"
+      cancel-class="none"
+      :ok-text="$t('modal.close')"
+      :message="$t('modal.staticMessage')"
+      no-outside-dismiss
+      no-esc-dismiss
     />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'modals',
-  data () {
+  name: 'Modals',
+  data() {
     return {
       show: true,
       showSmallModal: false,

@@ -4,43 +4,35 @@
       <div class="flex xs12">
         <va-card :title="$t('fileUpload.advancedMediaGallery')">
           <va-file-upload
+            v-model="advancedGallery"
             type="gallery"
             file-types=".png, .jpg, .jpeg, .gif"
             dropzone
-            v-model="advancedGallery"
           />
         </va-card>
       </div>
       <div class="flex xs12">
         <va-card :title="$t('fileUpload.advancedUploadList')">
-          <va-file-upload
-            dropzone
-            v-model="advancedList"
-          />
+          <va-file-upload v-model="advancedList" dropzone />
         </va-card>
       </div>
       <div class="flex xs12">
         <va-card :title="$t('fileUpload.single')">
-          <va-file-upload
-            type="single"
-            v-model="single"
-          />
+          <va-file-upload v-model="single" type="single" />
         </va-card>
       </div>
       <div class="flex xs12">
         <va-card :title="$t('fileUpload.mediaGallery')">
           <va-file-upload
+            v-model="gallery"
             type="gallery"
             file-types=".png, .jpg, .jpeg, .gif"
-            v-model="gallery"
           />
         </va-card>
       </div>
       <div class="flex xs12">
         <va-card :title="$t('fileUpload.uploadList')">
-          <va-file-upload
-            v-model="list"
-          />
+          <va-file-upload v-model="list" />
         </va-card>
       </div>
     </div>
@@ -49,8 +41,8 @@
 
 <script>
 export default {
-  name: 'file-upload',
-  data () {
+  name: 'FileUpload',
+  data() {
     return {
       advancedGallery: [],
       advancedList: [],

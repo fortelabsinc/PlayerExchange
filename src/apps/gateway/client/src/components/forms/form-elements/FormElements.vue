@@ -6,16 +6,10 @@
           <form>
             <div class="row">
               <div class="flex md4 sm6 xs12">
-                <va-input
-                  v-model="simple"
-                  placeholder="Text Input"
-                />
+                <va-input v-model="simple" placeholder="Text Input" />
               </div>
               <div class="flex md4 sm6 xs12">
-                <va-input
-                  v-model="withIcon"
-                  placeholder="Input With Icon"
-                >
+                <va-input v-model="withIcon" placeholder="Input With Icon">
                   <va-icon
                     slot="prepend"
                     color="gray"
@@ -24,10 +18,7 @@
                 </va-input>
               </div>
               <div class="flex md4 sm6 xs12">
-                <va-input
-                  v-model="withButton"
-                  placeholder="Input With Button"
-                >
+                <va-input v-model="withButton" placeholder="Input With Button">
                   <va-button slot="append" style="margin-right: 0;" small>
                     UPLOAD
                   </va-button>
@@ -38,7 +29,8 @@
                   v-model="successfulEmail"
                   type="email"
                   label="Email (Validated with success)"
-                  success>
+                  success
+                >
                 </va-input>
               </div>
               <div class="flex md4 sm6 xs12">
@@ -54,7 +46,8 @@
                   type="email"
                   label="Email (Validated)"
                   error
-                  :error-messages="errorMessages">
+                  :error-messages="errorMessages"
+                >
                 </va-input>
               </div>
               <div class="flex md4 sm6 xs12">
@@ -77,44 +70,44 @@
                 <div class="row row-inside">
                   <div class="flex xs12 sm6">
                     <va-date-picker
-                      :label="$t('forms.dateTimePicker.basic')"
                       v-model="datepicker.simple"
+                      :label="$t('forms.dateTimePicker.basic')"
                     />
                   </div>
                   <div class="flex xs12 sm6">
                     <va-date-picker
-                      :label="$t('forms.dateTimePicker.time')"
-                      :config="{enableTime: true}"
                       v-model="datepicker.time"
+                      :label="$t('forms.dateTimePicker.time')"
+                      :config="{ enableTime: true }"
                     />
                   </div>
                   <div class="flex xs12 sm6">
                     <va-date-picker
-                      :label="$t('forms.dateTimePicker.customFirstDay')"
-                      :config="{locale: {firstDayOfWeek: 1}}"
                       v-model="datepicker.customFirstDay"
-                      weekDays
+                      :label="$t('forms.dateTimePicker.customFirstDay')"
+                      :config="{ locale: { firstDayOfWeek: 1 } }"
+                      week-days
                     />
                   </div>
                   <div class="flex xs12 sm6">
                     <va-date-picker
+                      v-model="datepicker.disabled"
                       :label="$t('forms.dateTimePicker.disabled')"
                       disabled
-                      v-model="datepicker.disabled"
                     />
                   </div>
                   <div class="flex xs12 sm6">
                     <va-date-picker
-                      :label="$t('forms.dateTimePicker.multiple')"
-                      :config="{mode: 'multiple'}"
                       v-model="datepicker.multiple"
+                      :label="$t('forms.dateTimePicker.multiple')"
+                      :config="{ mode: 'multiple' }"
                     />
                   </div>
                   <div class="flex xs12 sm6">
                     <va-date-picker
-                      :label="$t('forms.dateTimePicker.customDateFormat')"
-                      :config="{dateFormat: 'Y-M-d'}"
                       v-model="datepicker.customDate"
+                      :label="$t('forms.dateTimePicker.customDateFormat')"
+                      :config="{ dateFormat: 'Y-M-d' }"
                     />
                   </div>
                 </div>
@@ -122,9 +115,9 @@
 
               <div class="flex xs12 md4">
                 <va-date-picker
-                  :label="$t('forms.dateTimePicker.range')"
-                  :config="{mode: 'range', inline: true}"
                   v-model="datepicker.range"
+                  :label="$t('forms.dateTimePicker.range')"
+                  :config="{ mode: 'range', inline: true }"
                 />
               </div>
             </div>
@@ -138,50 +131,50 @@
             <div class="row">
               <div class="flex md6 xs12">
                 <va-select
-                  :label="$t('forms.selects.simple')"
                   v-model="simpleSelectModel"
-                  textBy="description"
+                  :label="$t('forms.selects.simple')"
+                  text-by="description"
                   :options="simpleOptions"
                 />
               </div>
               <div class="flex md6 xs12">
                 <va-select
-                  :label="$t('forms.selects.multi')"
                   v-model="multiSelectModel"
-                  textBy="description"
+                  :label="$t('forms.selects.multi')"
+                  text-by="description"
                   multiple
                   :options="simpleOptions"
                 />
               </div>
               <div class="flex md6 xs12">
                 <va-select
-                  :label="$t('forms.selects.country')"
                   v-model="chosenCountry"
+                  :label="$t('forms.selects.country')"
                   :options="countriesList"
                 />
               </div>
               <div class="flex md6 xs12">
                 <va-select
-                  :label="$t('forms.selects.countryMulti')"
                   v-model="multiSelectCountriesModel"
+                  :label="$t('forms.selects.countryMulti')"
                   multiple
                   :options="countriesList"
                 />
               </div>
               <div class="flex md6 xs12">
                 <va-select
-                  :label="$t('forms.selects.searchable')"
                   v-model="searchableSelectModel"
+                  :label="$t('forms.selects.searchable')"
                   searchable
-                  textBy="description"
+                  text-by="description"
                   :options="simpleOptions"
                 />
               </div>
               <div class="flex md6 xs12">
                 <va-select
-                  :label="$t('forms.selects.searchableMulti')"
                   v-model="multiSearchableSelectModel"
-                  textBy="description"
+                  :label="$t('forms.selects.searchableMulti')"
+                  text-by="description"
                   searchable
                   multiple
                   :options="countriesList"
@@ -199,60 +192,60 @@
               <div class="flex md3">
                 <fieldset>
                   <va-checkbox
-                    :label="$t('forms.controls.unselected')"
                     v-model="checkbox.unselected"
+                    :label="$t('forms.controls.unselected')"
                   />
                   <va-checkbox
-                    :label="$t('forms.controls.selected')"
                     v-model="checkbox.selected"
+                    :label="$t('forms.controls.selected')"
                   />
                   <va-checkbox
-                    :label="$t('forms.controls.readonly')"
                     v-model="checkbox.readonly"
+                    :label="$t('forms.controls.readonly')"
                     :readonly="true"
                   />
                   <va-checkbox
+                    v-model="checkbox.disabled"
                     :label="$t('forms.controls.disabled')"
                     :disabled="true"
-                    v-model="checkbox.disabled"
                   />
                   <va-checkbox
+                    v-model="checkbox.error"
                     :label="$t('forms.controls.error')"
                     error
-                    v-model="checkbox.error"
                   />
                   <va-checkbox
+                    v-model="checkbox.errorMessages"
                     :label="$t('forms.controls.errorMessage')"
                     :error-messages="errorMessages"
-                    :errorCount="2"
-                    v-model="checkbox.errorMessages"
+                    :error-count="2"
                   />
                 </fieldset>
               </div>
               <div class="flex md3">
                 <fieldset>
                   <va-radio-button
-                    option="option1"
                     v-model="radioSelectedOption"
+                    option="option1"
                     label="Radio"
                   />
                   <va-radio-button
-                    option="option2"
                     v-model="radioSelectedOption"
+                    option="option2"
                     label="Radio"
                   />
                 </fieldset>
                 <fieldset>
                   <va-radio-button
+                    v-model="radioSelectedDisableOption"
                     option="option1"
                     disabled
-                    v-model="radioSelectedDisableOption"
                     label="Disabled Radio"
                   />
                   <va-radio-button
+                    v-model="radioSelectedDisableOption"
                     option="option2"
                     disabled
-                    v-model="radioSelectedDisableOption"
                     label="Disabled Radio"
                   />
                 </fieldset>
@@ -296,8 +289,8 @@
 import CountriesList from '../../../data/CountriesList'
 
 export default {
-  name: 'form-elements',
-  data () {
+  name: 'FormElements',
+  data() {
     return {
       isMale: true,
       countriesList: CountriesList,
@@ -309,8 +302,10 @@ export default {
       clearableText: 'Vasili Savitski',
       successfulEmail: 'andrei@dreamsupport.io',
       wrongEmail: 'andrei@dreamsupport',
-      messages: ['Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ' +
-        'incididunt ut labore et dolore magna aliqua.'],
+      messages: [
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ' +
+          'incididunt ut labore et dolore magna aliqua.',
+      ],
       errorMessages: ['Field should contain a valid email'],
       simpleOptions: [
         {
@@ -360,7 +355,7 @@ export default {
     }
   },
   methods: {
-    clear (field) {
+    clear(field) {
       this[field] = ''
     },
   },
@@ -368,7 +363,7 @@ export default {
 </script>
 
 <style>
-  .row.row-inside {
-    max-width: none;
-  }
+.row.row-inside {
+  max-width: none;
+}
 </style>

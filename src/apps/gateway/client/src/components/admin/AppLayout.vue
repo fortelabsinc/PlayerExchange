@@ -10,26 +10,23 @@
       :is-top-bar.sync="isTopBar"
       :minimized.sync="minimized"
     />
-    <app-topbar
-      class="app-layout__topbar"
-      v-if="isTopBar"
-    />
+    <app-topbar v-if="isTopBar" class="app-layout__topbar" />
     <div class="app-layout__container">
       <app-sidebar
-        class="app-layout__sidebar"
         v-if="!isTopBar"
+        class="app-layout__sidebar"
         :minimized="minimized"
       />
       <div
         class="app-layout__main"
-        :class="{'app-layout__main--top': isTopBar}"
+        :class="{ 'app-layout__main--top': isTopBar }"
       >
         <main
-          class="app-layout__main-layout layout fluid gutter--xl"
           slot="content"
+          class="app-layout__main-layout layout fluid gutter--xl"
           role="main"
         >
-          <router-view/>
+          <router-view />
         </main>
       </div>
     </div>
@@ -48,14 +45,15 @@ import {
 } from '../../services/vuestic-ui'
 
 export default {
-  name: 'app-layout',
+  name: 'AppLayout',
   components: {
     AppPageLayout,
     AppNavbar,
     AppTopbar,
     AppSidebar,
   },
-  data () {
+  mixins: [ColorThemeActionsMixin, ColorThemeMixin],
+  data() {
     return {
       isTopBar: false,
       minimized: false,
@@ -63,21 +61,20 @@ export default {
     }
   },
   inject: ['contextConfig'],
-  mixins: [ColorThemeActionsMixin, ColorThemeMixin],
-  created () {
+  created() {
     if (this.$route.query && this.$route.query.theme === 'corporate') {
       this.setTheme('corporate')
     }
     this.$root.$on('change-theme', this.setTheme)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     this.$root.$off('change-theme', this.setTheme)
   },
   methods: {
-    setTheme (themeName) {
+    setTheme(themeName) {
       const theme = themeName === 'corporate' ? corporateTheme : originalTheme
       this.setColors(theme.colors)
-      Object.keys(theme.context).forEach((key) => {
+      Object.keys(theme.context).forEach(key => {
         this.contextConfig[key] = theme.context[key]
       })
     },

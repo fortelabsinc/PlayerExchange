@@ -6,8 +6,8 @@
 
 <script>
 export default {
-  name: 'app',
-  data () {
+  name: 'App',
+  data() {
     return {
       // Temporary config for 2.1.
       contextConfig: {
@@ -17,14 +17,14 @@ export default {
       },
     }
   },
-  provide () {
+  provide() {
     return {
       contextConfig: this.contextConfig,
     }
   },
   watch: {
     // Temporary colors fix for 2.1.
-    'contextConfig.invertedColor' (val) {
+    'contextConfig.invertedColor'(val) {
       const invertedColorClass = 'va-inverted-color'
       if (val) {
         document.body.classList.add(invertedColorClass)

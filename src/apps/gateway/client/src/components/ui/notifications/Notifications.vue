@@ -83,19 +83,24 @@
             <div class="flex xs12 md6">
               <div class="row">
                 <div class="flex xs12">
-                  <toast-position-picker v-model="toastPosition"/>
+                  <toast-position-picker v-model="toastPosition" />
                 </div>
                 <div class="flex xs12">
                   <va-checkbox
-                    :label="$t('notificationsPage.toasts.fullWidthLabel')"
                     :id="'toast-fullwidth'"
                     v-model="isToastFullWidth"
+                    :label="$t('notificationsPage.toasts.fullWidthLabel')"
                   />
                 </div>
               </div>
             </div>
             <div class="flex xs12">
-              <va-button class="ma-0" color="primary" slot="trigger" @click="launchToast">
+              <va-button
+                slot="trigger"
+                class="ma-0"
+                color="primary"
+                @click="launchToast"
+              >
                 {{ $t('notificationsPage.toasts.launchToast') }}
               </va-button>
             </div>
@@ -110,9 +115,9 @@
 import ToastPositionPicker from './ToastPositionPicker.vue'
 
 export default {
-  name: 'notifications',
+  name: 'Notifications',
   components: { ToastPositionPicker },
-  data () {
+  data() {
     return {
       toastText: 'This toast is awesome!',
       toastDuration: 2500,
@@ -122,21 +127,18 @@ export default {
     }
   },
   computed: {
-    isToastContentPresent () {
+    isToastContentPresent() {
       return !!(this.toastText || this.toastIcon)
     },
   },
   methods: {
-    launchToast () {
-      this.showToast(
-        this.toastText,
-        {
-          icon: this.toastIcon,
-          position: this.toastPosition,
-          duration: this.toastDuration,
-          fullWidth: this.isToastFullWidth,
-        },
-      )
+    launchToast() {
+      this.showToast(this.toastText, {
+        icon: this.toastIcon,
+        position: this.toastPosition,
+        duration: this.toastDuration,
+        fullWidth: this.isToastFullWidth,
+      })
     },
   },
 }

@@ -1,31 +1,31 @@
 <template>
   <div class="pt-2">
-    <div class="title text-dark mb-1" :style="{color: $themes.primary}">
-      {{$t('dashboard.tabs.bankDetails.detailsFields')}}
+    <div class="title text-dark mb-1" :style="{ color: $themes.primary }">
+      {{ $t('dashboard.tabs.bankDetails.detailsFields') }}
     </div>
     <div class="row">
       <div class="flex xs12 md6">
         <va-input
-          :label="$t('dashboard.tabs.bankDetails.bankName')"
           v-model="form.bankName"
+          :label="$t('dashboard.tabs.bankDetails.bankName')"
         />
         <va-input
-          :label="$t('dashboard.tabs.bankDetails.accountName')"
           v-model="form.accountName"
+          :label="$t('dashboard.tabs.bankDetails.accountName')"
         />
         <va-input
-          :label="$t('dashboard.tabs.bankDetails.sortCode')"
           v-model="form.sortCode"
+          :label="$t('dashboard.tabs.bankDetails.sortCode')"
         />
       </div>
       <div class="flex xs12 md6">
         <va-input
-          :label="$t('dashboard.tabs.bankDetails.accountNumber')"
           v-model="form.accountNumber"
+          :label="$t('dashboard.tabs.bankDetails.accountNumber')"
         />
         <va-input
-          :label="$t('dashboard.tabs.bankDetails.notes')"
           v-model="form.notes"
+          :label="$t('dashboard.tabs.bankDetails.notes')"
         />
       </div>
     </div>
@@ -39,8 +39,8 @@
 
 <script>
 export default {
-  name: 'bank-details-tab',
-  data () {
+  name: 'BankDetailsTab',
+  data() {
     return {
       form: {
         bankName: 'Raiffeisen Bank',
@@ -52,7 +52,7 @@ export default {
     }
   },
   methods: {
-    sendDetails () {
+    sendDetails() {
       this.showToast('Saved!')
     },
   },

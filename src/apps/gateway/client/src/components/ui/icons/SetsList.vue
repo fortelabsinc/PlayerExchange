@@ -2,49 +2,57 @@
   <va-card class="sets-list" :title="$t('icons.title')">
     <div class="row">
       <div
-        class="flex lg6 xs12 mb-4 sets-list__set fill-height"
         v-for="(set, index) in sets"
         :key="index"
+        class="flex lg6 xs12 mb-4 sets-list__set fill-height"
       >
-        <router-link :to="{path: set.href}" style="color: inherit;">
+        <router-link :to="{ path: set.href }" style="color: inherit;">
           <div class="sets-list__set__content">
-            <div class="sets-list__set__content__overlay flex-center pa-3 fill-height">
-              <va-button :to="{path: set.href}" append>
-                {{set.name.toUpperCase()}}
+            <div
+              class="sets-list__set__content__overlay flex-center pa-3 fill-height"
+            >
+              <va-button :to="{ path: set.href }" append>
+                {{ set.name.toUpperCase() }}
               </va-button>
             </div>
 
             <template v-for="(filteredList, index) in set.filteredLists">
               <div
-                class="row pa-3"
-                :key="index"
                 v-if="filteredList.length !== 2"
+                :key="index"
+                class="row pa-3"
               >
                 <div
-                  class="flex xs2 flex-center"
                   v-for="(icon, index) in filteredList"
                   :key="index"
+                  class="flex xs2 flex-center"
                 >
                   <div class="sets-list__icon pa-3 flex-center vuestic-icon">
-                    <va-icon :name="iconClass(set, icon)">{{iconData(set, icon)}}</va-icon>
+                    <va-icon :name="iconClass(set, icon)">{{
+                      iconData(set, icon)
+                    }}</va-icon>
                   </div>
                 </div>
               </div>
               <div
+                v-if="filteredList.length === 2"
+                :key="index"
                 class="row pa-3"
                 :class="index === 1 ? 'sets-list__set__content--middle' : ''"
-                :key="index"
-                v-if="filteredList.length === 2"
               >
                 <div class="flex xs2 flex-center">
                   <div class="sets-list__icon pa-3 flex-center vuestic-icon">
-                    <va-icon :name="iconClass(set, filteredList[0])">{{iconData(set, filteredList[0])}}</va-icon>
+                    <va-icon :name="iconClass(set, filteredList[0])">{{
+                      iconData(set, filteredList[0])
+                    }}</va-icon>
                   </div>
                 </div>
-                <div class="flex xs8"/>
+                <div class="flex xs8" />
                 <div class="flex xs2 flex-center">
                   <div class="sets-list__icon pa-3 flex-center vuestic-icon">
-                    <va-icon :name="iconClass(set, filteredList[1])">{{iconData(set, filteredList[1])}}</va-icon>
+                    <va-icon :name="iconClass(set, filteredList[1])">{{
+                      iconData(set, filteredList[1])
+                    }}</va-icon>
                   </div>
                 </div>
               </div>
@@ -58,13 +66,15 @@
 
 <script>
 export default {
-  name: 'iconsList',
+  name: 'IconsList',
   props: ['sets'],
   methods: {
-    iconClass (set, icon) {
-      return set.prefix === 'material-icons' ? set.prefix : set.prefix + ' ' + set.prefix + '-' + icon
+    iconClass(set, icon) {
+      return set.prefix === 'material-icons'
+        ? set.prefix
+        : set.prefix + ' ' + set.prefix + '-' + icon
     },
-    iconData (set, icon) {
+    iconData(set, icon) {
       return set.prefix === 'material-icons' ? icon : ''
     },
   },

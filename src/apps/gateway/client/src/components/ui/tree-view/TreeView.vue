@@ -4,13 +4,13 @@
       <div class="row">
         <div class="small-set flex lg6 xs12">
           <va-card :title="$t('treeView.basic')">
-            <tree-view-basic-preview/>
+            <tree-view-basic-preview />
           </va-card>
         </div>
 
         <div class="small-set flex lg6 xs12">
           <va-card :title="$t('treeView.icons')">
-            <tree-view-icons-preview/>
+            <tree-view-icons-preview />
           </va-card>
         </div>
       </div>
@@ -18,13 +18,13 @@
       <div class="row">
         <div class="small-set flex lg6 xs12">
           <va-card :title="$t('treeView.advanced')">
-            <tree-view-advanced-preview/>
+            <tree-view-advanced-preview />
           </va-card>
         </div>
 
         <div class="small-set flex lg6 xs12">
           <va-card :title="$t('treeView.editable')">
-            <tree-view-editable-preview/>
+            <tree-view-editable-preview />
           </va-card>
         </div>
       </div>
@@ -32,7 +32,7 @@
       <div class="row">
         <div class="small-set flex lg6 xs12">
           <va-card :title="$t('treeView.selectable')">
-            <tree-view-selectable-preview/>
+            <tree-view-selectable-preview />
           </va-card>
         </div>
       </div>
@@ -48,7 +48,7 @@ import TreeViewAdvancedPreview from './TreeViewAdvancedPreview'
 import TreeViewEditablePreview from './TreeViewEditablePreview'
 
 export default {
-  name: 'tree-view',
+  name: 'TreeView',
   components: {
     TreeViewEditablePreview,
     TreeViewAdvancedPreview,
@@ -56,7 +56,7 @@ export default {
     TreeViewIconsPreview,
     TreeViewBasicPreview,
   },
-  data () {
+  data() {
     return {
       treeViewData: {},
     }

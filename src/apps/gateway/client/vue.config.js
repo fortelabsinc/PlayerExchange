@@ -6,7 +6,8 @@ const version = require('./package.json').version
 const timeStamp = new Date().toUTCString()
 
 const getLastCommitHash = () => {
-  const hash = require('child_process').execSync('git rev-parse HEAD')
+  const hash = require('child_process')
+    .execSync('git rev-parse HEAD')
     .toString()
 
   return hash.slice(0, 6)
@@ -15,13 +16,10 @@ const getLastCommitHash = () => {
 const lintOnSave = true
 
 module.exports = {
-  publicPath: "/portal/client/v1",
-  outputDir: path.resolve(__dirname, "../priv/static/client/v1"),
+  publicPath: '/portal/client/v1',
+  outputDir: path.resolve(__dirname, '../priv/static/client/v1'),
   lintOnSave,
-  transpileDependencies: [
-    'vuestic-ui',
-    'epic-spinners',
-  ],
+  transpileDependencies: ['vuestic-ui', 'epic-spinners'],
   pages: {
     index: {
       // entry for the page
@@ -46,11 +44,13 @@ module.exports = {
       },
     },
     plugins: [
-      ...(
-        (!lintOnSave && process.env.NODE_ENV === 'development') ? [] : [new StylelintPlugin({
-          files: ['src/**/*.{vue,htm,html,css,sss,less,scss}'],
-        })]
-      ),
+      ...(!lintOnSave && process.env.NODE_ENV === 'development'
+        ? []
+        : [
+            new StylelintPlugin({
+              files: ['src/**/*.{vue,htm,html,css,sss,less,scss}'],
+            }),
+          ]),
       new webpack.DefinePlugin({
         VERSION: JSON.stringify(version),
         TIMESTAMP: JSON.stringify(timeStamp),
@@ -62,7 +62,8 @@ module.exports = {
     loaderOptions: {
       sass: {
         // Preload vuestic-ui variables and mixins for every component
-        data: '@import "~vuestic-ui/src/components/vuestic-sass/resources/resources.scss";',
+        data:
+          '@import "~vuestic-ui/src/components/vuestic-sass/resources/resources.scss";',
       },
     },
   },

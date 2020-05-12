@@ -2,19 +2,23 @@
   <div class="yandex-maps-page">
     <div class="row">
       <div class="flex md12 xs12">
-        <va-card
-          class="yandex-maps-page__widget"
-          title="Yandex Maps"
-        >
+        <va-card class="yandex-maps-page__widget" title="Yandex Maps">
           <yandex-map
             :use-object-manager:="true"
             :coords="[55.2, 38.8]"
             :zoom="8"
             style="width: 100%; height: 65vh;"
             :behaviors="['default']"
-            :controls="['trafficControl','zoomControl', 'geolocationControl','fullscreenControl', 'searchControl']"
+            :controls="[
+              'trafficControl',
+              'zoomControl',
+              'geolocationControl',
+              'fullscreenControl',
+              'searchControl',
+            ]"
             :placemarks="placemarks"
-            map-type="hybrid">
+            map-type="hybrid"
+          >
           </yandex-map>
         </va-card>
       </div>
@@ -23,15 +27,14 @@
 </template>
 
 <script>
-
 import { yandexMap } from 'vue-yandex-maps'
 
 export default {
-  name: 'yandex-maps-page',
+  name: 'YandexMapsPage',
   components: {
     yandexMap,
   },
-  data () {
+  data() {
     return {
       placemarks: [
         {
@@ -41,8 +44,7 @@ export default {
           clusterName: '1',
           balloonTemplate: '<div>"Your custom template"</div>',
           callbacks: {
-            click () {
-            },
+            click() {},
           },
         },
       ],

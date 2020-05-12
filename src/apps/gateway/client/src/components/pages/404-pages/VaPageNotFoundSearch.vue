@@ -2,23 +2,25 @@
   <va-page-not-found without-button class="va-page-not-found-search">
     <template>
       <va-input
-        placeholder="Search on the menu"
-        :style="{'align-items': 'flex-start'}"
         v-model="inputValue"
+        placeholder="Search on the menu"
+        :style="{ 'align-items': 'flex-start' }"
         class="va-page-not-found-search__input mb-4"
         removable
       />
       <div class="row va-page-not-found-search__links">
         <ul
-          class="va-page-not-found-search__list flex xs3 lg1 mx-2 mb-2"
           v-for="(category, index) in filterItems"
           :key="index"
+          class="va-page-not-found-search__list flex xs3 lg1 mx-2 mb-2"
         >
-          {{ category.categoryName }}
+          {{
+            category.categoryName
+          }}
           <li
-            class="va-page-not-found-search__list-element"
             v-for="(item, index) in category.items"
             :key="index"
+            class="va-page-not-found-search__list-element"
           >
             <router-link :to="{ path: item.itemLink }" class="link">
               {{ item.itemName }}
@@ -35,28 +37,32 @@ import CategoriesConfig from './CategoriesConfig'
 import VaPageNotFound from './VaPageNotFound'
 
 export default {
-  name: 'va-page-not-found-search',
+  name: 'VaPageNotFoundSearch',
   components: {
     VaPageNotFound,
   },
-  data () {
+  data() {
     return {
       categories: CategoriesConfig,
       inputValue: '',
     }
   },
   computed: {
-    filterItems () {
+    filterItems() {
       if (this.inputValue.length >= 1) {
-        return this.categories.map(
-          category => {
+        return this.categories
+          .map((category) => {
             return {
               categoryName: category.categoryName,
-              items: category.items.filter(item => item.itemName.toUpperCase()
-                .search(this.inputValue.toUpperCase()) !== -1),
+              items: category.items.filter(
+                (item) =>
+                  item.itemName
+                    .toUpperCase()
+                    .search(this.inputValue.toUpperCase()) !== -1
+              ),
             }
-          },
-        ).filter(category => category.items.length >= 1)
+          })
+          .filter((category) => category.items.length >= 1)
       } else {
         return this.categories
       }

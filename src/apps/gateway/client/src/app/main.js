@@ -23,7 +23,13 @@ if (process.env.VUE_APP_BUILD_VERSION) {
   // eslint-disable-next-line
   console.info(
     message,
-    'color: blue;', 'color: red;', 'color: blue;', 'color: red;', 'color: blue;', 'color: red;', 'color: blue;',
+    'color: blue;',
+    'color: red;',
+    'color: blue;',
+    'color: red;',
+    'color: blue;',
+    'color: red;',
+    'color: blue;'
   )
 }
 
@@ -44,12 +50,12 @@ router.afterEach((to, from) => {
   store.commit('setLoading', false)
 })
 
-Vue.prototype.$eventHub = new Vue(); // Global event bus
+Vue.prototype.$eventHub = new Vue() // Global event bus
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(App),
+  render: (h) => h(App),
 })

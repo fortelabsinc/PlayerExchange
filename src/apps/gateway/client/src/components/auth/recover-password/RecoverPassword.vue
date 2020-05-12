@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="onsubmit" class="login">
+  <form class="login" @submit.prevent="onsubmit">
     <div class="row mb-2">
       <va-input
         v-model="email"
@@ -10,22 +10,24 @@
       />
     </div>
     <div class="row justify--center">
-      <va-button type="submit" class="my-0">{{ $t('auth.reset_password') }}</va-button>
+      <va-button type="submit" class="my-0">{{
+        $t('auth.reset_password')
+      }}</va-button>
     </div>
   </form>
 </template>
 
 <script>
 export default {
-  name: 'recover-password',
-  data () {
+  name: 'RecoverPassword',
+  data() {
     return {
       email: '',
       emailErrors: [],
     }
   },
   methods: {
-    onsubmit () {
+    onsubmit() {
       if (!this.email) {
         this.emailErrors = ['Email is required']
       } else {
@@ -36,5 +38,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

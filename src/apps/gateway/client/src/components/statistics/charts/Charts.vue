@@ -2,59 +2,41 @@
   <div class="charts">
     <div class="row">
       <div class="flex md6 xs12">
-        <va-card
-          class="chart-widget"
-          :title="$t('charts.verticalBarChart')"
-        >
-          <va-chart :data="verticalBarChartData" type="vertical-bar"/>
+        <va-card class="chart-widget" :title="$t('charts.verticalBarChart')">
+          <va-chart :data="verticalBarChartData" type="vertical-bar" />
         </va-card>
       </div>
       <div class="flex md6 xs12">
-        <va-card
-          class="chart-widget"
-          :title="$t('charts.horizontalBarChart')"
-        >
-          <va-chart :data="horizontalBarChartData" type="horizontal-bar"/>
+        <va-card class="chart-widget" :title="$t('charts.horizontalBarChart')">
+          <va-chart :data="horizontalBarChartData" type="horizontal-bar" />
         </va-card>
       </div>
     </div>
 
     <div class="row">
       <div class="flex md12 xs12">
-        <va-card
-          class="chart-widget"
-          :title="$t('charts.lineChart')"
-        >
-          <va-chart :data="lineChartData" type="line"/>
+        <va-card class="chart-widget" :title="$t('charts.lineChart')">
+          <va-chart :data="lineChartData" type="line" />
         </va-card>
       </div>
     </div>
 
     <div class="row">
       <div class="flex md6 xs12">
-        <va-card
-          class="chart-widget"
-          :title="$t('charts.pieChart')"
-        >
-          <va-chart :data="pieChartData" type="pie"/>
+        <va-card class="chart-widget" :title="$t('charts.pieChart')">
+          <va-chart :data="pieChartData" type="pie" />
         </va-card>
       </div>
       <div class="flex md6 xs12">
-        <va-card
-          class="chart-widget"
-          :title="$t('charts.donutChart')"
-        >
-          <va-chart :data="donutChartData" type="donut"/>
+        <va-card class="chart-widget" :title="$t('charts.donutChart')">
+          <va-chart :data="donutChartData" type="donut" />
         </va-card>
       </div>
     </div>
     <div class="row">
       <div class="flex md12 xs12">
-        <va-card
-          class="chart-widget"
-          :title="$t('charts.bubbleChart')"
-        >
-          <va-chart :data="bubbleChartData" type="bubble"/>
+        <va-card class="chart-widget" :title="$t('charts.bubbleChart')">
+          <va-chart :data="bubbleChartData" type="bubble" />
         </va-card>
       </div>
     </div>
@@ -70,8 +52,8 @@ import { getVerticalBarChartData } from '../../../data/charts/VerticalBarChartDa
 import { getHorizontalBarChartData } from '../../../data/charts/HorizontalBarChartData'
 
 export default {
-  name: 'charts',
-  data () {
+  name: 'Charts',
+  data() {
     return {
       bubbleChartData: getBubbleChartData(this.$themes),
       lineChartData: getLineChartData(this.$themes),
@@ -82,7 +64,7 @@ export default {
     }
   },
   methods: {
-    refreshData () {
+    refreshData() {
       this.lineChartData = getLineChartData(this.$themes)
     },
   },

@@ -15,7 +15,7 @@
         <va-tree-node>Camera Body Kits</va-tree-node>
         <va-tree-node>External HDDs</va-tree-node>
       </va-tree-category>
-      <va-tree-category isOpen label="Products">
+      <va-tree-category is-open label="Products">
         <va-tree-category label="Cables">
           <va-tree-node>Audio</va-tree-node>
           <va-tree-node>Video</va-tree-node>
@@ -35,19 +35,19 @@
 
 <script>
 export default {
-  name: 'tree-view-advanced-preview',
+  name: 'TreeViewAdvancedPreview',
 }
 </script>
 
 <style lang="scss">
-  .tree-view-advanced-preview {
-    &__buttons {
-      margin-bottom: 1rem;
-      display: flex;
+.tree-view-advanced-preview {
+  &__buttons {
+    margin-bottom: 1rem;
+    display: flex;
 
-      @include media-breakpoint-down(xs) {
-        flex-flow: column;
-      }
+    @include media-breakpoint-down(xs) {
+      flex-flow: column;
     }
   }
+}
 </style>

@@ -6,21 +6,9 @@
   >
     <defs />
     <title>overview_icon_6</title>
-    <g
-      id="Layer_2"
-      data-name="Layer 2"
-    >
-      <g
-        id="Layer_1-2"
-        data-name="Layer 1"
-      >
-        <rect
-          class="cls-1"
-          x="10.31"
-          y="30.5"
-          width="37.33"
-          height="23"
-        />
+    <g id="Layer_2" data-name="Layer 2">
+      <g id="Layer_1-2" data-name="Layer 1">
+        <rect class="cls-1" x="10.31" y="30.5" width="37.33" height="23" />
         <path
           class="cls-2"
           d="M57,41.18l-7.85-16V24H8.81v1.11L0,41.11l2.63,1.45L8.81,31.33V55H49.15V32L54.3,42.5ZM46.15,52H11.81V27H46.15Z"

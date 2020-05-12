@@ -1,8 +1,5 @@
 <template>
-  <va-card
-    class="bars-state"
-    :title="$t('progressBars.state')"
-  >
+  <va-card class="bars-state" :title="$t('progressBars.state')">
     <div class="row">
       <div class="flex md4 xs12">
         <va-progress-bar :value="value2">66%</va-progress-bar>
@@ -23,8 +20,8 @@
 
 <script>
 export default {
-  name: 'bars-state',
-  data () {
+  name: 'BarsState',
+  data() {
     return {
       value2: 66,
       bufferValues: {
@@ -33,17 +30,17 @@ export default {
       },
     }
   },
-  mounted () {
+  mounted() {
     this.animateValue()
     this.animateBufferValues()
   },
   methods: {
-    animateValue () {
+    animateValue() {
       setTimeout(() => {
         this.value = 100
       })
     },
-    animateBufferValues () {
+    animateBufferValues() {
       const interval = setInterval(() => {
         this.bufferValues.value += 2 + Math.floor(Math.random() * 2)
         this.bufferValues.buffer += 2 + Math.floor(Math.random() * 4)

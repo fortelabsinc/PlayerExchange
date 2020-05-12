@@ -8,19 +8,15 @@
   >
     <defs>
       <linearGradient :id="'ORIGINAL'" x1="0%" y1="50%" y2="50%">
-        <stop offset="0%" stop-color="#4AE387"/>
-        <stop offset="100%" stop-color="#C8EA13"/>
+        <stop offset="0%" stop-color="#4AE387" />
+        <stop offset="100%" stop-color="#C8EA13" />
       </linearGradient>
       <linearGradient :id="'CORPORATE'" x1="0%" y1="50%" y2="50%">
-        <stop offset="0%" stop-color="#74BBFF"/>
-        <stop offset="100%" stop-color="#6E85E8"/>
+        <stop offset="0%" stop-color="#74BBFF" />
+        <stop offset="100%" stop-color="#6E85E8" />
       </linearGradient>
     </defs>
-    <g
-      fill="none"
-      fill-rule="evenodd"
-      transform="scale(2)"
-    >
+    <g fill="none" fill-rule="evenodd" transform="scale(2)">
       <path
         :fill="`url(#${themeGradientId})`"
         fill-rule="nonzero"
@@ -34,15 +30,14 @@
   </svg>
 </template>
 <script>
-
 export default {
   name: 'VaIconVuestic',
   inject: ['contextConfig'],
   computed: {
-    themeGradientId () {
+    themeGradientId() {
       return this.contextConfig.invertedColor ? 'CORPORATE' : 'ORIGINAL'
     },
-    textColor () {
+    textColor() {
       return this.contextConfig.invertedColor ? '#6E85E8' : '#E4FF32'
     },
   },

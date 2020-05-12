@@ -4,8 +4,9 @@
     class="d-flex dashboard-contributors-list"
   >
     <va-button
-      flat small
       slot="actions"
+      flat
+      small
       class="mr-0"
       :disabled="contributors.length <= step"
       @click="showNext"
@@ -13,11 +14,7 @@
       {{ $t('dashboard.charts.showNextFive') }}
     </va-button>
     <va-inner-loading :loading="loading">
-      <div
-        class="mb-3"
-        v-for="(contributor, idx) in visibleList"
-        :key="idx"
-      >
+      <div v-for="(contributor, idx) in visibleList" :key="idx" class="mb-3">
         <va-progress-bar
           :value="getPercent(contributor.contributions)"
           :color="getRandomColor()"
@@ -35,7 +32,7 @@ import axios from 'axios'
 
 export default {
   name: 'DashboardContributorsList',
-  data () {
+  data() {
     return {
       contributors: [],
       loading: false,
@@ -44,27 +41,31 @@ export default {
       step: 5,
     }
   },
-  mounted () {
+  mounted() {
     this.loadContributorsList()
   },
   methods: {
-    async loadContributorsList () {
+    async loadContributorsList() {
       this.loading = true
-      const { data } = await axios.get('https://api.github.com/repos/epicmaxco/vuestic-admin/contributors')
+      const { data } = await axios.get(
+        'https://api.github.com/repos/epicmaxco/vuestic-admin/contributors'
+      )
       this.contributors = data
-      this.progressMax = Math.max(...this.contributors.map(({ contributions }) => contributions))
+      this.progressMax = Math.max(
+        ...this.contributors.map(({ contributions }) => contributions)
+      )
       this.showNext()
       this.loading = false
     },
-    getPercent (val) {
+    getPercent(val) {
       return (val / this.progressMax) * 100
     },
-    showNext () {
+    showNext() {
       this.visibleList = this.contributors.splice(0, this.step)
     },
-    getRandomColor () {
+    getRandomColor() {
       const keys = Object.keys(this.$themes)
-      return this.$themes[keys[keys.length * Math.random() << 0]]
+      return this.$themes[keys[(keys.length * Math.random()) << 0]]
     },
   },
 }

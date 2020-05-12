@@ -8,25 +8,28 @@
       <div
         class="color-presentation__color"
         :style="computedStyle"
-        @click="colorCopy(), notify()">
-      </div>
+        @click="colorCopy(), notify()"
+      ></div>
     </va-popover>
 
-    <div class="color-presentation__description" v-if="name || description">
-      <div class="color-presentation__name">{{name}}</div>
-      <div class="color-presentation__text">{{description}}</div>
+    <div v-if="name || description" class="color-presentation__description">
+      <div class="color-presentation__name">{{ name }}</div>
+      <div class="color-presentation__text">{{ description }}</div>
     </div>
   </div>
 </template>
 
 <script>
-import { ColorThemeMixin, getGradientBackground } from '../../../../services/vuestic-ui'
+import {
+  ColorThemeMixin,
+  getGradientBackground,
+} from '../../../../services/vuestic-ui'
 
 // NOTE This component is a tad weird.
 // It's not part of presentation nor is it UI component.
 // Could be seen as `playground` of sorts.
 export default {
-  name: 'color-presentation',
+  name: 'ColorPresentation',
   mixins: [ColorThemeMixin],
   inject: ['contextConfig'],
   props: {
@@ -50,7 +53,7 @@ export default {
       default: '',
     },
   },
-  data () {
+  data() {
     return {
       popoverOptions: {
         content: 'Click to copy the color to clipboard',
@@ -59,10 +62,14 @@ export default {
     }
   },
   computed: {
-    computedStyle () {
+    computedStyle() {
       const calcFilter = () => {
-        if (this.variant.includes('hovered')) return 'brightness(115%)'
-        if (this.variant.includes('pressed')) return 'brightness(85%)'
+        if (this.variant.includes('hovered')) {
+          return 'brightness(115%)'
+        }
+        if (this.variant.includes('pressed')) {
+          return 'brightness(85%)'
+        }
       }
 
       return {
@@ -73,15 +80,15 @@ export default {
     },
   },
   methods: {
-    colorCopy () {
+    colorCopy() {
       this.$copyText(this.calcBackground())
     },
-    notify () {
+    notify() {
       this.showToast("The color's copied to your clipboard", {
         position: 'bottom-right',
       })
     },
-    calcBackground () {
+    calcBackground() {
       if (this.variant.includes('gradient') && this.contextConfig) {
         return getGradientBackground(this.colorComputed)
       }

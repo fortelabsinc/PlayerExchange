@@ -2,22 +2,22 @@
   <div class="progress-bars">
     <div class="row">
       <div class="flex xs12">
-        <horizontal-bars/>
+        <horizontal-bars />
       </div>
     </div>
     <div class="row">
       <div class="flex xs12">
-        <bars-state/>
+        <bars-state />
       </div>
     </div>
     <div class="row">
       <div class="flex xs12">
-        <circle-bars/>
+        <circle-bars />
       </div>
     </div>
     <div class="row">
       <div class="flex xs12">
-        <colorful-bars/>
+        <colorful-bars />
       </div>
     </div>
   </div>
@@ -30,7 +30,7 @@ import BarsState from './Widgets/BarsState'
 import ColorfulBars from './Widgets/ColorfulBars'
 
 export default {
-  name: 'progress-bars',
+  name: 'ProgressBars',
   components: { HorizontalBars, CircleBars, BarsState, ColorfulBars },
 }
 </script>

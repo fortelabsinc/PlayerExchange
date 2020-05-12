@@ -2,19 +2,13 @@
   <va-tree-root>
     <va-tree-category label="Products">
       <va-tree-node v-for="product in products" :key="product.id">
-        <va-checkbox
-          slot="checkbox"
-          v-model="product.selected"
-        />
+        <va-checkbox slot="checkbox" v-model="product.selected" />
         {{ product.name }}
       </va-tree-node>
     </va-tree-category>
-    <va-tree-category isOpen label="Electronics">
+    <va-tree-category is-open label="Electronics">
       <va-tree-node v-for="electronic in electronics" :key="electronic.id">
-        <va-checkbox
-          slot="checkbox"
-          v-model="electronic.selected"
-        />
+        <va-checkbox slot="checkbox" v-model="electronic.selected" />
         {{ electronic.name }}
       </va-tree-node>
     </va-tree-category>
@@ -23,8 +17,8 @@
 
 <script>
 export default {
-  name: 'tree-view-selectable-preview',
-  data () {
+  name: 'TreeViewSelectablePreview',
+  data() {
     return {
       electronics: [
         { id: 1, name: 'Cellphones', selected: false },

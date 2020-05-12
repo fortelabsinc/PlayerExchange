@@ -28,26 +28,22 @@ const state = {
   authBalance: [
     { id: 'XRP', balance: 123 },
     { id: 'BTC', balance: 0.1234 },
-    { id: 'ETH', balance: 1.23 }
+    { id: 'ETH', balance: 1.23 },
   ],
   workPostings: [],
   games: [
-    "World of Warcraft",
-    "Fortnite",
-    "Call of Duty: Warzone",
-    "7 Days to Die!",
-    "Overwatch",
-    "Apex Legends",
-    "PUBG",
-    "Destiny",
-    "Destiny 2",
-    "Counter-Strike: G.O."
+    'World of Warcraft',
+    'Fortnite',
+    'Call of Duty: Warzone',
+    '7 Days to Die!',
+    'Overwatch',
+    'Apex Legends',
+    'PUBG',
+    'Destiny',
+    'Destiny 2',
+    'Counter-Strike: G.O.',
   ],
-  currencies: [
-    "XRP",
-    "BTC",
-    "ETH"
-  ]
+  currencies: ['XRP', 'BTC', 'ETH'],
 }
 
 const mutations = {
@@ -82,8 +78,7 @@ const mutations = {
   },
 }
 
-const actions = {
-}
+const actions = {}
 
 export default {
   state,

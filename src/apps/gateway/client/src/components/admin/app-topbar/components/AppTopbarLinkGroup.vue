@@ -1,13 +1,10 @@
 <template>
-  <li
-    class="app-topbar-link-group"
-    :class="computedClass"
-  >
+  <li class="app-topbar-link-group" :class="computedClass">
     <va-dropdown
+      ref="dropdown"
       position="bottom"
       fixed
-      :preventOverflow="false"
-      ref="dropdown"
+      :prevent-overflow="false"
       @click.native="handleDropdownClick"
       @clickOutside="handleOutsideClick"
     >
@@ -15,20 +12,17 @@
         slot="anchor"
         target="_self"
         class="app-topbar-link-group__item"
-        @mouseenter="updateHoverState"
-        @mouseleave="updateHoverState"
         :class="computedLinkClass"
         :icon="icon"
         :icon-right="isOpen ? 'fa fa-angle-up' : 'fa fa-angle-down'"
         :is-active="isActive"
+        @mouseenter="updateHoverState"
+        @mouseleave="updateHoverState"
       >
-        {{title}}
+        {{ title }}
       </app-topbar-link>
-      <ul
-        class="app-topbar-link-group__submenu"
-        :class="computedSubMenuClass"
-      >
-        <slot/>
+      <ul class="app-topbar-link-group__submenu" :class="computedSubMenuClass">
+        <slot />
       </ul>
     </va-dropdown>
   </li>
@@ -38,7 +32,7 @@
 import AppTopbarLink from './AppTopbarLink'
 
 export default {
-  name: 'topbar-link-group',
+  name: 'TopbarLinkGroup',
   inject: ['contextConfig'],
   components: {
     AppTopbarLink,
@@ -56,23 +50,50 @@ export default {
       defaul: false,
     },
   },
-  data () {
+  data() {
     return {
       isHovered: false,
       isOpen: false,
     }
   },
+  computed: {
+    computedLinkClass() {
+      return {
+        'app-topbar-link--open': this.isOpen,
+        'app-topbar-link--active': this.isActive,
+      }
+    },
+    computedSubMenuClass() {
+      return {
+        'app-topbar-link-group__submenu--multi-row': this.isMultiRow,
+      }
+    },
+    computedClass() {
+      return {
+        'app-topbar-link-group--minimized': this.minimized,
+      }
+    },
+    computedIconStyles() {
+      return {
+        backgroundColor: this.contextConfig.invertedColor
+          ? this.$themes[this.color]
+          : 'white',
+      }
+    },
+  },
   watch: {
-    $route () {
+    $route() {
       this.$refs.dropdown.hide()
     },
   },
   methods: {
-    updateHoverState () {
+    updateHoverState() {
       this.isHovered = !this.isHovered
     },
-    handleDropdownClick () {
-      const hasDropdownContent = this.$refs.dropdown.$el.getElementsByClassName('va-dropdown__content').length > 0
+    handleDropdownClick() {
+      const hasDropdownContent =
+        this.$refs.dropdown.$el.getElementsByClassName('va-dropdown__content')
+          .length > 0
 
       if (hasDropdownContent) {
         this.isOpen = true
@@ -80,38 +101,14 @@ export default {
         this.isOpen = false
       }
     },
-    handleOutsideClick () {
+    handleOutsideClick() {
       this.isOpen = false
-    },
-  },
-  computed: {
-    computedLinkClass () {
-      return {
-        'app-topbar-link--open': this.isOpen,
-        'app-topbar-link--active': this.isActive,
-      }
-    },
-    computedSubMenuClass () {
-      return {
-        'app-topbar-link-group__submenu--multi-row': this.isMultiRow,
-      }
-    },
-    computedClass () {
-      return {
-        'app-topbar-link-group--minimized': this.minimized,
-      }
-    },
-    computedIconStyles () {
-      return {
-        backgroundColor: this.contextConfig.invertedColor ? this.$themes[this.color] : 'white',
-      }
     },
   },
 }
 </script>
 
 <style lang="scss">
-
 .app-topbar-link-group {
   flex-direction: column;
 

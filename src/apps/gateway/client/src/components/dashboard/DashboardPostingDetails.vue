@@ -13,7 +13,7 @@
         </va-item-section>
       </va-item>
 
-      <va-item >
+      <va-item>
         <va-item-section>
           <va-item-label caption>
             {{ $t('postingDetails.modal.user_id') }}
@@ -27,7 +27,7 @@
 
       <div class="row">
         <div class="flex 12 md6 lg6">
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('postingDetails.modal.game_id') }}
@@ -41,7 +41,7 @@
         </div>
 
         <div class="flex xs12 md6 lg6">
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('postingDetails.modal.state') }}
@@ -62,7 +62,7 @@
 
       <div class="row">
         <div class="flex xs12 md6 lg6">
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('postingDetails.modal.user_count_req') }}
@@ -76,7 +76,7 @@
         </div>
 
         <div class="flex xs12 md6 lg6">
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('postingDetails.modal.type_req') }}
@@ -90,13 +90,13 @@
         </div>
       </div>
 
-      <va-item >
+      <va-item>
         <va-item-section>
           <va-item-label caption>
             {{ $t('postingDetails.modal.details') }}
           </va-item-label>
 
-          <va-item-label :style="{whiteSpace: 'pre-wrap'}">
+          <va-item-label :style="{ whiteSpace: 'pre-wrap' }">
             {{ posting.details }}
           </va-item-label>
         </va-item-section>
@@ -105,7 +105,7 @@
     <div class="flex xs12 lg6">
       <div class="row">
         <div class="flex xs12 md6 lg6">
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('postingDetails.modal.confirm_pay_amt') }}
@@ -117,7 +117,7 @@
             </va-item-section>
           </va-item>
 
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('postingDetails.modal.complete_pay_amt') }}
@@ -129,7 +129,7 @@
             </va-item-section>
           </va-item>
 
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('postingDetails.modal.bonus_pay_amt') }}
@@ -142,7 +142,7 @@
           </va-item>
         </div>
         <div class="flex xs12 md6 lg6">
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('postingDetails.modal.confirm_pay_type') }}
@@ -154,7 +154,7 @@
             </va-item-section>
           </va-item>
 
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('postingDetails.modal.complete_pay_type') }}
@@ -166,7 +166,7 @@
             </va-item-section>
           </va-item>
 
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('postingDetails.modal.bonus_pay_type') }}
@@ -181,13 +181,13 @@
       </div>
       <div class="row">
         <div class="flex xs12 lg12">
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('postingDetails.modal.bonus_req') }}
               </va-item-label>
 
-              <va-item-label :style="{whiteSpace: 'pre-wrap'}">
+              <va-item-label :style="{ whiteSpace: 'pre-wrap' }">
                 {{ posting.bonus_req }}
               </va-item-label>
             </va-item-section>
@@ -200,10 +200,9 @@
 
 <script>
 export default {
-  name: 'dashboard-posting-details',
+  name: 'DashboardPostingDetails',
   props: ['posting'],
 }
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

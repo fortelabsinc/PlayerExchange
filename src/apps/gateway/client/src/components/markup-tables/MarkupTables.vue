@@ -58,13 +58,13 @@
 import data from './data.json'
 
 export default {
-  data () {
+  data() {
     return {
       users: data.slice(0, 8),
     }
   },
   methods: {
-    getStatusColor (status) {
+    getStatusColor(status) {
       if (status === 'paid') {
         return 'success'
       }
@@ -80,13 +80,13 @@ export default {
 </script>
 
 <style lang="scss">
-  .markup-tables {
-    .va-table {
-      width: 100%;
-    }
-
-    .va-card {
-      max-width: 1200px;
-    }
+.markup-tables {
+  .va-table {
+    width: 100%;
   }
+
+  .va-card {
+    max-width: 1200px;
+  }
+}
 </style>

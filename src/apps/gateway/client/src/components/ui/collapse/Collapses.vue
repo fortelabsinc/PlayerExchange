@@ -33,7 +33,7 @@
       <div class="flex xs12">
         <va-card :title="$t('collapse.collapseWithBackground')">
           <va-accordion>
-            <va-collapse withBackground>
+            <va-collapse with-background>
               <span slot="header"> Expand This Block </span>
               <div slot="body">
                 <p class="display-3">Great Things</p>
@@ -44,7 +44,7 @@
                 </div>
               </div>
             </va-collapse>
-            <va-collapse withBackground>
+            <va-collapse with-background>
               <span slot="header"> Another Block </span>
               <div slot="body">
                 <p class="display-3">Great Things</p>
@@ -62,7 +62,7 @@
       <div class="flex xs12">
         <va-card :title="$t('collapse.collapseWithCustomHeader')">
           <va-accordion>
-            <va-collapse customHeader>
+            <va-collapse custom-header>
               <span slot="header">
                 <va-button style="width: 100%;">
                   Expand This Block
@@ -77,7 +77,7 @@
                 </div>
               </div>
             </va-collapse>
-            <va-collapse customHeader>
+            <va-collapse custom-header>
               <span slot="header">
                 <va-button style="width: 100%;">
                   Another Block
@@ -101,6 +101,6 @@
 
 <script>
 export default {
-  name: 'collapses',
+  name: 'Collapses',
 }
 </script>

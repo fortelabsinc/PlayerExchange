@@ -5,8 +5,8 @@
         <div class="d-flex flex xs12 lg4 align--center">
           <span class="shrink pr-3 spinners__size-smaller">A</span>
           <va-slider
-            value-visible
             v-model="config.size"
+            value-visible
             :label-value="`${config.size}px`"
             :min="sliderSize.min"
             :max="sliderSize.max"
@@ -15,44 +15,36 @@
         </div>
 
         <div class="d-flex flex xs12 lg4 align--center">
-          <va-icon-slower class="shrink pr-3 spinners__duration-slower"/>
+          <va-icon-slower class="shrink pr-3 spinners__duration-slower" />
           <va-slider
-            value-visible
             v-model="currentDuration"
+            value-visible
             :min="sliderDuration.min"
             :max="sliderDuration.max"
           />
-          <va-icon-faster class="shrink pl-3 spinners__duration-faster"/>
+          <va-icon-faster class="shrink pl-3 spinners__duration-faster" />
         </div>
 
         <div class="d-flex flex justify--center xs12 lg4">
           <va-palette-custom
-            :palette="paletteArray"
             v-model="spinnersColor"
+            :palette="paletteArray"
             class="justify--center"
           />
         </div>
       </div>
 
       <div class="content">
-        <hr class="separator">
+        <hr class="separator" />
       </div>
 
-      <div
-        v-for="(group, i) in groups"
-        :key="i"
-        class="row"
-      >
-        <div
-          v-for="item in group"
-          :key="item"
-          class="flex sm6 lg3"
-        >
+      <div v-for="(group, i) in groups" :key="i" class="row">
+        <div v-for="item in group" :key="item" class="flex sm6 lg3">
           <div class="text--center pb-4">
             <div class="flex-center spinner-box">
               <component
-                :animation-duration="speed"
                 :is="item"
+                :animation-duration="speed"
                 :color="spinnersColor"
                 :size="config.size"
               >
@@ -78,7 +70,7 @@ export default {
     VaIconFaster,
     VaIconSlower,
   },
-  data () {
+  data() {
     return {
       config: {
         size: 80,
@@ -88,7 +80,7 @@ export default {
       spinnersColor: this.$themes.primary,
       currentDuration: 1500,
       sliderSize: {
-        formatter: v => `${v}px`,
+        formatter: (v) => `${v}px`,
         min: 40,
         max: 100,
       },
@@ -101,27 +93,32 @@ export default {
   computed: {
     ...mapGetters(['palette']),
 
-    speed () {
-      return this.sliderDuration.min + this.sliderDuration.max - this.currentDuration
+    speed() {
+      return (
+        this.sliderDuration.min + this.sliderDuration.max - this.currentDuration
+      )
     },
 
-    groups () {
+    groups() {
       return this.groupItems(Object.keys(spinners), this.config.group)
     },
 
-    paletteArray () {
+    paletteArray() {
       const t = this.$themes
       return [t.primary, t.warning, t.danger]
     },
   },
 
   filters: {
-    displayName (name) {
-      return name.replace('Spinner', '').match(/[A-Z][a-z]+/g).join(' ')
+    displayName(name) {
+      return name
+        .replace('Spinner', '')
+        .match(/[A-Z][a-z]+/g)
+        .join(' ')
     },
   },
   methods: {
-    groupItems (items, groupSize) {
+    groupItems(items, groupSize) {
       const grouped = []
 
       for (let i = 0; i < items.length; i += groupSize) {

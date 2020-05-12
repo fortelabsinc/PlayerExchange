@@ -1,31 +1,33 @@
 <template>
   <div class="va-chat">
     <div
-      class="va-chat__body"
-      :style="{'height': height}"
       v-sticky-scroll="{
         animate: true,
-        duration: 500
+        duration: 500,
       }"
+      class="va-chat__body"
+      :style="{ height: height }"
     >
       <div
-        class="va-chat__message"
-        :style="{backgroundColor: message.yours ? $themes.primary : undefined}"
         v-for="(message, index) in value"
         :key="index"
-        :class="{'va-chat__message--yours': message.yours}"
+        class="va-chat__message"
+        :style="{
+          backgroundColor: message.yours ? $themes.primary : undefined,
+        }"
+        :class="{ 'va-chat__message--yours': message.yours }"
       >
         <span class="va-chat__message-text">
-          {{message.text}}
+          {{ message.text }}
         </span>
       </div>
     </div>
     <div class="va-chat__controls">
       <va-input
         v-model="inputMessage"
-        @keypress.enter="sendMessage"
         placeholder="Type your message..."
         class="va-chat__input"
+        @keypress.enter="sendMessage"
       />
       <va-button @click="sendMessage()">
         Send
@@ -38,19 +40,15 @@
 import { StickyScroll } from '../../../services/vuestic-ui/components'
 
 export default {
-  name: 'chat',
+  name: 'Chat',
   directives: { StickyScroll },
-  data () {
-    return {
-      inputMessage: '',
-    }
-  },
   props: {
     value: {
       type: Array,
       default: () => [
         {
-          text: 'Hello! So glad you liked my work. Do you want me to shoot you?',
+          text:
+            'Hello! So glad you liked my work. Do you want me to shoot you?',
           yours: false,
         },
         {
@@ -66,11 +64,12 @@ export default {
           yours: true,
         },
         {
-          text: 'No, thanks. There is no need. Can we set up a meeting earlier?',
+          text:
+            'No, thanks. There is no need. Can we set up a meeting earlier?',
           yours: false,
         },
         {
-          text: 'I\'m working on Vuestic, so let\'s meet at 3pm. Thanks!',
+          text: "I'm working on Vuestic, so let's meet at 3pm. Thanks!",
           yours: true,
         },
       ],
@@ -80,22 +79,30 @@ export default {
       type: String,
     },
   },
+  data() {
+    return {
+      inputMessage: '',
+    }
+  },
   methods: {
-    sendMessage () {
+    sendMessage() {
       if (!this.inputMessage) {
         return
       }
-      this.$emit('input', this.value.concat({
-        text: this.inputMessage,
-        yours: true,
-      }))
+      this.$emit(
+        'input',
+        this.value.concat({
+          text: this.inputMessage,
+          yours: true,
+        })
+      )
       this.inputMessage = ''
     },
   },
 }
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 .chat {
   &__content {
     @include va-flex-center();

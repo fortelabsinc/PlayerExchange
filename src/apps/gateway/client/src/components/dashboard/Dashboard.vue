@@ -37,7 +37,7 @@ import DashboardAllPostingsTable from './DashboardAllPostingsTable'
 import DashboardPayment from './DashboardPayment'
 
 export default {
-  name: 'dashboard',
+  name: 'Dashboard',
   components: {
     DashboardCharts,
     DashboardInfoBlock,
@@ -50,7 +50,7 @@ export default {
     DashboardPayment,
   },
   methods: {
-    addAddressToMap ({ city, country }) {
+    addAddressToMap({ city, country }) {
       this.$refs.dashboardMap.addAddress({ city: city.text, country })
     },
   },
@@ -58,15 +58,15 @@ export default {
 </script>
 
 <style lang="scss">
-  .row-equal .flex {
-    .va-card {
-      height: 100%;
-    }
+.row-equal .flex {
+  .va-card {
+    height: 100%;
   }
+}
 
-  .dashboard {
-    .va-card {
-      margin-bottom: 0 !important;
-    }
+.dashboard {
+  .va-card {
+    margin-bottom: 0 !important;
   }
+}
 </style>

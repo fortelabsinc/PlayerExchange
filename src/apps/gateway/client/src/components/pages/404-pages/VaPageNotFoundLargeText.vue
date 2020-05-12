@@ -1,6 +1,6 @@
 <template>
   <va-page-not-found class="va-page-not-found-large-text">
-    <div class="va-page-not-found-large-text__number" slot="image">404</div>
+    <div slot="image" class="va-page-not-found-large-text__number">404</div>
   </va-page-not-found>
 </template>
 
@@ -8,7 +8,7 @@
 import VaPageNotFound from './VaPageNotFound'
 
 export default {
-  name: 'va-page-not-found-large-text',
+  name: 'VaPageNotFoundLargeText',
   components: {
     VaPageNotFound,
   },

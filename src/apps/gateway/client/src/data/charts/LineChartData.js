@@ -23,7 +23,20 @@ let firstMonthIndex = 0
 
 export const getLineChartData = (themes, firstMonth) => {
   const size = getSize()
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
   const yLabels = generateYLabels()
 
   if (generatedData) {

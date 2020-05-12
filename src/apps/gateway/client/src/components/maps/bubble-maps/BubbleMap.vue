@@ -12,12 +12,16 @@ import 'ammap3'
 import 'ammap3/ammap/maps/js/worldLow'
 
 export default {
-  name: 'bubble-map',
+  name: 'BubbleMap',
 
   props: ['mapData'],
 
+  mounted() {
+    this.drawMap()
+  },
+
   methods: {
-    drawMap () {
+    drawMap() {
       /* global AmCharts */
       const minBulletSize = 3
       const maxBulletSize = 70
@@ -49,7 +53,8 @@ export default {
         outlineThickness: 2,
       }
       map.imagesSettings = {
-        balloonText: '<span style="font-size:14px"><b>[[title]]</b>: [[value]]</span>',
+        balloonText:
+          '<span style="font-size:14px"><b>[[title]]</b>: [[value]]</span>',
         alpha: 0.75,
       }
 
@@ -67,7 +72,8 @@ export default {
       this.mapData.data.forEach((dataItem) => {
         const value = dataItem.value
         // calculate size of a bubble
-        let square = (value - min) / (max - min) * (maxSquare - minSquare) + minSquare
+        let square =
+          ((value - min) / (max - min)) * (maxSquare - minSquare) + minSquare
         if (square < minSquare) {
           square = minSquare
         }
@@ -88,10 +94,6 @@ export default {
       map.dataProvider = dataProvider
       map.write(this.$el)
     },
-  },
-
-  mounted () {
-    this.drawMap()
   },
 }
 </script>

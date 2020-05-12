@@ -1,7 +1,7 @@
 <template>
   <div class="spacing flex xs12 md12">
     <va-card title="Spacing">
-      <spacing-playgroud :title="''"/>
+      <spacing-playgroud :title="''" />
     </va-card>
   </div>
 </template>
@@ -10,7 +10,7 @@
 import SpacingPlaygroud from './SpacingPlaygroud'
 
 export default {
-  name: 'spacing',
+  name: 'Spacing',
   components: { SpacingPlaygroud },
 }
 </script>

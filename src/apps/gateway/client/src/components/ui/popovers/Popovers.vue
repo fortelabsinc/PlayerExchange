@@ -4,28 +4,20 @@
       <div class="flex xs12 md6">
         <va-card :title="$t('popovers.popoverStyle')">
           <va-select
+            v-model="popover.color"
             class="mb-4"
             label="color scheme"
-            v-model="popover.color"
             :options="colors"
           />
           <va-select
+            v-model="popover.icon"
             class="mb-4"
             label="icon (font-awesome)"
-            v-model="popover.icon"
             :options="icons"
             key-by="icon"
           />
-          <va-input
-            class="mb-4"
-            v-model="popover.title"
-            label="Title"
-          />
-          <va-input
-            class="mb-4"
-            v-model="popover.message"
-            label="Message"
-          />
+          <va-input v-model="popover.title" class="mb-4" label="Title" />
+          <va-input v-model="popover.message" class="mb-4" label="Message" />
           <div class="row popover-example mt-5">
             <va-popover
               :icon="popover.icon.icon"
@@ -47,39 +39,25 @@
         <va-card :title="$t('popovers.popoverPlacement')">
           <p class="my-2 mx-2">
             Any text can be used for
-            <va-popover
-              placement="bottom"
-              message="Bottom tooltip"
-            >
+            <va-popover placement="bottom" message="Bottom tooltip">
               <a class="link">
                 {{ $t('notificationsPage.popovers.bottomTooltip') }}
               </a>
             </va-popover>
             tooltip showcase. Just anything you can possibly imagine to test
-            <va-popover
-              placement="right"
-              message="Right tooltip"
-            >
+            <va-popover placement="right" message="Right tooltip">
               <a class="link">
                 {{ $t('notificationsPage.popovers.rightTooltip') }}
               </a>
             </va-popover>
-            tooltip.
-            But it can appear on the
-            <va-popover
-              placement="left"
-              message="Left tooltip"
-            >
+            tooltip. But it can appear on the
+            <va-popover placement="left" message="Left tooltip">
               <a class="link">
-                {{$t('notificationsPage.popovers.leftTooltip')}}
+                {{ $t('notificationsPage.popovers.leftTooltip') }}
               </a>
             </va-popover>
-            .
-            Or just
-            <va-popover
-              placement="top"
-              message="Top tooltip"
-            >
+            . Or just
+            <va-popover placement="top" message="Top tooltip">
               <a class="link">
                 {{ $t('notificationsPage.popovers.topTooltip') }}
               </a>
@@ -95,7 +73,7 @@
 <script>
 export default {
   components: {},
-  data () {
+  data() {
     return {
       icons: [
         {
