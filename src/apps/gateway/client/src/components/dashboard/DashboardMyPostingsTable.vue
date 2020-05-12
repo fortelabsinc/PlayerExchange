@@ -10,12 +10,12 @@
       >
         <template v-slot:pay="props">
           <va-button-group>
-            <va-button small @click="payConfirm(props.rowData)"
-            >Confirm</va-button
-            >
-            <va-button small @click="payComplete(props.rowData)"
-            >Complete</va-button
-            >
+            <va-button small @click="payConfirm(props.rowData)">
+              Confirm
+            </va-button>
+            <va-button small @click="payComplete(props.rowData)">
+              Complete
+            </va-button>
             <va-button small @click="payBonus(props.rowData)">Bonus</va-button>
           </va-button-group>
         </template>
@@ -28,9 +28,6 @@
             @click="removePosting(props.rowData)"
           >
             Remove
-            <!--
-            {{ $t('dashboard.table.resolve') }}
-          -->
           </va-button>
         </template>
       </va-data-table>
@@ -49,9 +46,7 @@
 </template>
 
 <script>
-import store from '@/store'
 import Network from '@/network'
-import auth from '../../network/modules/auth'
 
 export default {
   name: 'DashboardMyPostingsTable',
@@ -181,7 +176,7 @@ export default {
       })
     },
     removePosting(data) {
-      Network.work.deletePosting(data['post_id'], (success, data) => {
+      Network.work.deletePosting(data['post_id'], (success) => {
         if (success) {
           this.$eventHub.$emit('refresh-postings')
         }

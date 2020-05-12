@@ -9,7 +9,6 @@ export default {
   name: 'App',
   data() {
     return {
-      // Temporary config for 2.1.
       contextConfig: {
         gradient: false,
         shadow: 'sm', // 3 states: 'sm', 'lg', undefined (no shadow).
@@ -23,7 +22,6 @@ export default {
     }
   },
   watch: {
-    // Temporary colors fix for 2.1.
     'contextConfig.invertedColor'(val) {
       const invertedColorClass = 'va-inverted-color'
       if (val) {

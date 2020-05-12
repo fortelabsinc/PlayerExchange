@@ -12,8 +12,8 @@
           :active-by-default="hasActiveByDefault(item)"
         >
           <app-sidebar-link
-            v-for="(subMenuItem, key) in item.children"
-            :key="key"
+            v-for="(subMenuItem, k) in item.children"
+            :key="k"
             :to="{ name: subMenuItem.name }"
             :title="$t(subMenuItem.displayName)"
           />

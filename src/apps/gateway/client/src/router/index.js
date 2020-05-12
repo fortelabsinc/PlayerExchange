@@ -24,9 +24,9 @@ export default new Router({
     {
       path: '*',
       // UNCOMMENT  For Development Work
-      redirect: { name: 'dashboard' },
+      // redirect: { name: 'dashboard' },
       // COMMENT OUT  For Development work
-      // redirect: { name: 'login' },
+      redirect: { name: 'login' },
     },
     {
       path: '/auth',
@@ -65,7 +65,7 @@ export default new Router({
           component: () => import('../components/dashboard/Dashboard.vue'),
           default: true,
           // COMMENT OUT for Development work
-          // beforeEnter: requireAuth,
+          beforeEnter: requireAuth,
         },
         {
           name: 'profile',

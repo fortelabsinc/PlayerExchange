@@ -2,7 +2,6 @@
   <div class="auth-layout row align-content--center">
     <div class="flex xs12 pa-3 flex-center">
       <router-link class="auth-layout__logo py-5 flex-center" to="/">
-        <!-- <va-icon-vuestic /> -->
         Player Exchange
       </router-link>
     </div>
@@ -27,13 +26,10 @@
 </template>
 
 <script>
-import VaIconVuestic from '../../iconset/VaIconVuestic'
-
 const tabs = ['login', 'signup']
 
 export default {
   name: 'AuthLayout',
-  components: { VaIconVuestic },
   data() {
     return {
       selectedTabIndex: 0,

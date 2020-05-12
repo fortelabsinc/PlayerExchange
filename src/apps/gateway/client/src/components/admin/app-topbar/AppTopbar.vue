@@ -15,8 +15,8 @@
           :is-multi-row="item.children.length > 10"
         >
           <app-topbar-link-group-item
-            v-for="(subMenuItem, key) in item.children"
-            :key="key"
+            v-for="(subMenuItem, k) in item.children"
+            :key="k"
             class="app-topbar__menu-group-item"
             :class="{
               'app-topbar__menu-group-item--multi-row':

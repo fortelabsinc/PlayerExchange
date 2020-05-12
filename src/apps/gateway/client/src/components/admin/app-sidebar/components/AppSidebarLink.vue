@@ -25,7 +25,8 @@
         class="app-sidebar-link__item-icon-right"
         :style="computedIconStyles"
         :name="iconRight"
-      >{{ iconRightContent }}
+      >
+        {{ iconRightContent }}
       </va-icon>
     </router-link>
   </li>

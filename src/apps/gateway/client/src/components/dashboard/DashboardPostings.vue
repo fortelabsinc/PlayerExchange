@@ -156,7 +156,7 @@ export default {
     gameOptions() {
       return store.getters.games
     },
-    submit(event) {
+    submit() {
       this.showModal = true
       var data = {
         meta: {},
@@ -172,7 +172,7 @@ export default {
         user_count: Number(this.player_count),
         type: this.type,
       }
-      Network.work.createPosting(data, (success, data) => {
+      Network.work.createPosting(data, (success) => {
         if (success) {
           this.$eventHub.$emit('refresh-postings')
           //this.game = '';
@@ -188,7 +188,6 @@ export default {
           //this.bonus_req = "";
           //this.description = "";
           //this.description = "";
-        } else {
         }
       })
     },

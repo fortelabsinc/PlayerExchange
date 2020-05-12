@@ -69,7 +69,7 @@ export default {
     this.currencies = store.getters.currencies
   },
   methods: {
-    submit(event) {
+    submit() {
       var self = this
       this.showModal = true
       var data = {
@@ -77,12 +77,11 @@ export default {
         amt: String(this.amt),
         type: this.type,
       }
-      Network.wallet.payment(data, (success, data) => {
+      Network.wallet.payment(data, (success) => {
         if (success) {
           self.payId = ''
           self.amt = '1'
           self.type = 'XRP'
-        } else {
         }
       })
     },

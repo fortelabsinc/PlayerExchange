@@ -6,23 +6,6 @@
       :loading="loading"
       hoverable
     >
-      <!--
-      <template slot="icon">
-        <va-icon name="fa fa-user" color="secondary" />
-      </template>
-      <template v-slot:starred="props">
-        <va-icon
-          v-if="props.rowData.starred"
-          name="fa fa-star"
-          color="warning"
-        />
-      </template>
-      <template v-slot:status="props">
-        <va-badge :color="getStatusColor(props.rowData.status)">
-          {{ props.rowData.status }}
-        </va-badge>
-      </template>
-      -->
       <template v-slot:actions="props">
         <va-button
           small
@@ -32,9 +15,6 @@
           @click="showDetailsModal(props.rowData)"
         >
           Details
-          <!--
-          {{ $t('dashboard.table.resolve') }}
-        -->
         </va-button>
 
         <va-modal
@@ -58,9 +38,7 @@
 </template>
 
 <script>
-import store from '@/store'
 import Network from '@/network'
-import auth from '../../network/modules/auth'
 import DashboardPostingDetails from './DashboardPostingDetails'
 
 export default {

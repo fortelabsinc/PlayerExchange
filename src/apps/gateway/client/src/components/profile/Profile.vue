@@ -14,7 +14,7 @@
               </va-item-label>
 
               <va-item-label>
-                {{ this.username }}
+                {{ username }}
               </va-item-label>
             </va-item-section>
           </va-item>
@@ -26,7 +26,7 @@
               </va-item-label>
 
               <va-item-label>
-                {{ this.email }}
+                {{ email }}
               </va-item-label>
             </va-item-section>
           </va-item>
@@ -40,7 +40,7 @@
               </va-item-label>
 
               <va-item-label>
-                {{ this.pay_id }}
+                {{ pay_id }}
               </va-item-label>
             </va-item-section>
           </va-item>
@@ -93,7 +93,6 @@ export default {
   },
   methods: {
     getBalances() {
-      var self = this
       Network.wallet.balances((success, data) => {
         if (success) {
           console.log('success: ' + JSON.stringify(data))
