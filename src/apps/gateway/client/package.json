@@ -1,9 +1,8 @@
 {
-  "name": "vuestic-admin",
-  "version": "2.0.0",
+  "name": "player-exchange",
+  "version": "0.1.0",
   "private": false,
-  "description": "Vue.js admin template",
-  "author": "smartapant <smartapant@gmail.com>",
+  "description": "Player Exchange Client Portal",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -114,6 +113,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/epicmaxco/vuestic-admin.git"
+    "url": "https://github.com/fortelabsinc/PlayerExchange.git"
   }
 }
