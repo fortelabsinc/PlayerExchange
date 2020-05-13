@@ -1,20 +1,17 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import VuexI18n from 'vuex-i18n' // load vuex i18n module
-import app from './modules/app'
+import VuexI18n from 'vuex-i18n'
+import modules from './modules'
 
+// TODO: Remove this old getters
 import * as getters from './getters'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-  strict: true, // process.env.NODE_ENV !== 'production',
+  strict: process.env.NODE_ENV !== 'production',
   getters,
-  modules: {
-    app,
-  },
-  state: {},
-  mutations: {},
+  modules,
 })
 
 Vue.use(VuexI18n.plugin, store)
