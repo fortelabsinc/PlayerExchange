@@ -1,9 +1,12 @@
-import apiAxios, { setApiAuthToken } from '../api/apiAxios'
+import apiAxios, { setApiAuthToken } from '../../apiAxios'
 import { get, isEmpty } from 'lodash'
 import { getLocalStorageToken } from '../../localStorage'
 import { getToken } from './getters'
 
-export const ApiActionLogin = ({ dispatch }, { email, password, callback }) => {
+export const ApiActionLogin = (
+  { dispatch },
+  { email, password, callback } = {}
+) => {
   apiAxios
     .post('/auth/login', { username: email, password })
     .then((response) => {
@@ -26,6 +29,9 @@ export const ApiActionLogin = ({ dispatch }, { email, password, callback }) => {
         callback && callback(false, get(response, 'data.error'))
       }
     })
+    .catch((err) => {
+      callback && callback(false, err)
+    })
 }
 
 export const ApiActionLogout = ({ dispatch }) => {
@@ -46,24 +52,29 @@ export const ApiActionCheckAuth = ({ dispatch, state }, { callback } = {}) => {
     }
   }
 
-  apiAxios.post('/auth/check').then((response) => {
-    if (get(response, 'data.ok')) {
-      const payload = {
-        token: get(response, 'data.ok.access_token'),
-        refreshToken: get(response, 'data.ok.refresh_token'),
-        meta: get(response, 'data.ok.meta'),
-        user: {
-          name: get(response, 'data.ok.username'),
-          email: get(response, 'data.ok.email'),
-          payId: get(response, 'data.ok.payId'),
-        },
+  apiAxios
+    .get('/auth/check')
+    .then((response) => {
+      if (get(response, 'data.ok')) {
+        const payload = {
+          token: get(response, 'data.ok.access_token'),
+          refreshToken: get(response, 'data.ok.refresh_token'),
+          meta: get(response, 'data.ok.meta'),
+          user: {
+            name: get(response, 'data.ok.username'),
+            email: get(response, 'data.ok.email'),
+            payId: get(response, 'data.ok.payId'),
+          },
+        }
+
+        dispatch('auth/ActionLogin', payload)
+
+        callback && callback(true, get(response, 'data.ok'))
+      } else {
+        callback && callback(false, get(response, 'data.error'))
       }
-
-      dispatch('auth/ActionLogin', payload)
-
-      callback && callback(true, get(response, 'data.ok'))
-    } else {
-      callback && callback(false, get(response, 'data.error'))
-    }
-  })
+    })
+    .catch((err) => {
+      callback && callback(false, err)
+    })
 }

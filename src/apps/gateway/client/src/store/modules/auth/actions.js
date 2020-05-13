@@ -10,7 +10,7 @@ import {
   SET_USER_EMAIL,
   SET_USER_PAY_ID,
 } from './mutations'
-import { clearApiAuthToken, setApiAuthToken } from '../api/apiAxios'
+import { clearApiAuthToken, setApiAuthToken } from '../../apiAxios'
 
 export const ActionLogin = ({ commit }, payload) => {
   const { token, refreshToken, meta, user } = payload
