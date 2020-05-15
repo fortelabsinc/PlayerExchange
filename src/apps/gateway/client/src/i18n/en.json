@@ -15,10 +15,33 @@
   "postings": {
     "table": {
       "mine": {
-        "title": "My Postings"
+        "title": "My Postings",
+        "confirm_bt": "Confirm",
+        "complete_bt": "Complete",
+        "remove_bt": "Remove",
+        "fields": {
+          "game_id": "Game",
+          "type_req": "Type",
+          "details": "Details",
+          "confirm_pay_amt": "On Confirm",
+          "confirm_pay_type": "Type",
+          "complete_pay_amt": "On Complete",
+          "complete_pay_type": "Type",
+          "bonus_pay_amt": "Bonus",
+          "bonus_pay_type": "Type"
+        }
       },
       "all": {
-        "title": "Help Wanted"
+        "title": "Help Wanted",
+        "details_bt": "Details",
+        "fields": {
+          "game_id": "Game",
+          "type_req": "Type",
+          "user_id": "From",
+          "details": "Details",
+          "complete_pay_amt": "Complete",
+          "complete_pay_type": "Type"
+        }
       }
     },
     "forms": {
@@ -94,5 +117,8 @@
     "language": "Change Language",
     "logout": "Logout",
     "profile": "My Profile"
+  },
+  "navbar": {
+    "repository": "GitHub Repo"
   }
 }
