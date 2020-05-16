@@ -119,8 +119,7 @@
 </template>
 
 <script>
-import store from '@/store'
-import Network from '../../network'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'DashboardPostings',
@@ -139,23 +138,19 @@ export default {
       bonus_req: '',
       description: '',
       showModal: false,
-
-      games: [],
-      currencies: [],
-      types: [],
     }
   },
-  computed: {},
-  watch: {},
-  mounted() {
-    this.games = store.getters.games
-    this.currencies = store.getters.currencies
-    this.types = ['Individual', 'Guild']
+  computed: {
+    ...mapGetters({
+      games: 'options/getGames',
+      currencies: 'options/getCurrencies',
+      types: 'options/getTypes',
+    }),
   },
   methods: {
-    gameOptions() {
-      return store.getters.games
-    },
+    ...mapActions({
+      createPosting: 'work/ApiActionCreatePosting',
+    }),
     submit() {
       this.showModal = true
       var data = {
@@ -172,31 +167,16 @@ export default {
         user_count: Number(this.player_count),
         type: this.type,
       }
-      Network.work.createPosting(data, (success) => {
-        if (success) {
-          this.$eventHub.$emit('refresh-postings')
-          //this.game = '';
-          //this.player_count = 1;
-          //this.type = "Individual";
-          //this.currency = "XRP";
-          //this.confirm_amt = 1;
-          //this.confirm_type = "XRP";
-          //this.complete_amt = 1;
-          //this.complete_type = "XRP";
-          //this.bonus_amt = 1;
-          //this.bonus_type = "XRP";
-          //this.bonus_req = "";
-          //this.description = "";
-          //this.description = "";
-        }
+
+      this.createPosting({
+        data,
+        callback: (success) => {
+          if (success) {
+            console.log('Posting created success')
+          }
+        },
       })
     },
   },
 }
 </script>
-
-<style scoped>
-.chart {
-  height: 400px;
-}
-</style>

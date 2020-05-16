@@ -50,8 +50,6 @@ router.afterEach(() => {
   store.commit('setLoading', false)
 })
 
-Vue.prototype.$eventHub = new Vue() // Global event bus
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

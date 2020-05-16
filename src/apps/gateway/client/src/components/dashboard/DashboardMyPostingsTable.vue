@@ -166,7 +166,7 @@ export default {
           if (success) {
             console.log('Payment success')
           } else {
-            console.log('Failed to load the postings')
+            console.log('Failed to make a payment')
           }
         },
       })
@@ -184,5 +184,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss"></style>
