@@ -78,3 +78,27 @@ export const ApiActionCheckAuth = ({ dispatch, state }, { callback } = {}) => {
       callback && callback(false, err)
     })
 }
+
+export const ApiActionRegister = (
+  _,
+  { username, email, password, callback } = {}
+) => {
+  apiAxios
+    .post('/auth/register', {
+      username,
+      email,
+      password,
+      password_confirm: password,
+      meta: {},
+    })
+    .then((response) => {
+      if (get(response, 'data.ok')) {
+        callback && callback(true, get(response, 'data.ok'))
+      } else {
+        callback && callback(false, get(response, 'data.error'))
+      }
+    })
+    .catch((err) => {
+      callback && callback(false, err)
+    })
+}

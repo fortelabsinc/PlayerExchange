@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import Network from '../../../network'
+import { mapActions } from 'vuex'
 export default {
   name: 'Signup',
   data() {
@@ -65,6 +65,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      register: 'auth/ApiActionRegister',
+    }),
     onsubmit() {
       var self = this
       this.emailErrors = this.email ? [] : ['Email is required']
@@ -72,11 +75,11 @@ export default {
       if (!this.formReady) {
         return
       }
-      Network.auth.register(
-        this.email,
-        this.email,
-        this.password,
-        (success, rsp) => {
+      this.register({
+        username: this.email,
+        email: this.email,
+        password: this.password,
+        callback: (success, rsp) => {
           if (success) {
             self.$router.push({ name: 'login' })
           } else {
@@ -84,8 +87,8 @@ export default {
             self.emailErrors = ['Login Failed']
             self.passwordErrors = ['Login Failed']
           }
-        }
-      )
+        },
+      })
     },
   },
 }

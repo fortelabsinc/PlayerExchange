@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import Network from '../../../network'
+import { mapActions } from 'vuex'
 export default {
   name: 'Login',
   data() {
@@ -54,6 +54,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      login: 'auth/ApiActionLogin',
+    }),
     onsubmit() {
       var self = this
       this.emailErrors = this.email ? [] : ['Email is required']
@@ -61,18 +64,20 @@ export default {
       if (!this.formReady) {
         return
       }
-      Network.auth.login(this.email, this.password, (success, rsp) => {
-        if (success) {
-          self.$router.push({ name: 'dashboard' })
-        } else {
-          console.log('Failed to log in user: ' + JSON.stringify(rsp))
-          self.emailErrors = ['Login Failed']
-          self.passwordErrors = ['Login Failed']
-        }
+      this.login({
+        email: this.email,
+        password: this.password,
+        callback: (success, rsp) => {
+          if (success) {
+            self.$router.push({ name: 'dashboard' })
+          } else {
+            console.log('Failed to log in user: ' + JSON.stringify(rsp))
+            self.emailErrors = ['Login Failed']
+            self.passwordErrors = ['Login Failed']
+          }
+        },
       })
     },
   },
 }
 </script>
-
-<style lang="scss"></style>
