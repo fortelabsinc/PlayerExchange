@@ -2,8 +2,14 @@ import store from '../store'
 import { isEmpty, get } from 'lodash'
 
 export default (to, from, next) => {
+  // const skipAuth = true
+  // if (skipAuth) {
+  //   next()
+  //   return
+  // }
+
   const token = store.getters['auth/getToken']
-  if (to.path === '/login') {
+  if (to.name === 'login') {
     if (isEmpty(token)) {
       next()
     } else {
