@@ -16,31 +16,11 @@
           @click.native="$emit('update:minimized', !minimized)"
         />
 
-        <!-- <router-link
-          class="app-navbar__logo mr-3"
-          to="/"
-        >
-          <va-icon-vuestic />
-        </router-link> -->
         <router-link class="app-navbar__logo mr-3" to="/">
           Player Exchange
         </router-link>
       </div>
       <div class="app-navbar__center lg5 md4">
-        <!-- <span
-          class="app-navbar__text"
-          :style="{color: this.$themes.gray}"
-        >
-          {{$t('navbar.messageUs')}}&nbsp;
-          <a
-            href="mailto:hello@epicmax.co"
-            target="_blank"
-            class="app-navbar__mailto-link"
-            :style="{color: this.$themes.primary}"
-          >
-            hello@epicmax.co
-          </a>
-        </span> -->
         <va-button
           href="https://github.com/fortelabsinc/PlayerExchange"
           color="#000000"
@@ -62,17 +42,15 @@
 </template>
 
 <script>
-// import VaIconVuestic from '../../../iconset/VaIconVuestic'
 import VaIconMenu from '../../../iconset/VaIconMenu'
 import VaIconMenuCollapsed from '../../../iconset/VaIconMenuCollapsed'
 import AppNavbarActions from './components/AppNavbarActions'
 import { colorShiftHsl, ColorThemeMixin } from '../../../services/vuestic-ui'
-import store from '@/store'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'AppNavbar',
   components: {
-    // VaIconVuestic,
     VaIconMenu,
     VaIconMenuCollapsed,
     AppNavbarActions,
@@ -95,6 +73,9 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      userName: 'auth/getUserName',
+    }),
     isTopBarProxy: {
       get() {
         return this.isTopBar
@@ -142,9 +123,6 @@ export default {
           : 'transparent',
       }
     },
-  },
-  mounted() {
-    this.userName = store.getters.authUserName
   },
 }
 </script>
