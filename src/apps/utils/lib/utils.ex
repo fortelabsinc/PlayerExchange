@@ -19,146 +19,54 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-defmodule Utils.Build do
+defmodule Utils do
   @moduledoc """
-  This module basically acts as a way to define code that will be determined at
-  compile time instead of runtime.  It is kind of like using config.exs values
-  but can do much more like defining different function implementations, etc.
-
-  NOTE:  PLEASE USE WITH EXTREME CAUTION
-
-  By the nature of this code your production environments will be different
-  then your dev or test builds.  However it can come in handy for defining
-  mocks etc.
+  Some basic utils information.  Frankly I don't know what I am going to put
+  here...
   """
-
-  # ----------------------------------------------------------------------------
-  # Public API
-  # ----------------------------------------------------------------------------
 
   @doc """
+  Pull the current build number out of the system.  This can be used to disply
+  the current build of the application being hosted, etc
   """
-  @spec if_dev([{:do, any} | {:else, any}, ...]) :: any
-  defmacro if_dev(do: tBlock, else: fBlock) do
-    case Mix.env() do
-      # If this is a dev block
-      :dev ->
-        quote do
-          unquote(tBlock)
-        end
-
-      # otherwise go with the alternative
-      _ ->
-        if nil != fBlock do
-          quote do
-            unquote(fBlock)
-          end
-        end
-    end
-  end
+  @spec buildVersion() :: String.t()
+  def buildVersion(), do: Application.spec(:utils, :vsn) |> to_string()
 
   @doc """
+  When a build is done on the CICD system it will record the git commit hash
+  for it in the config values.  This will allow you access to that data
+  to verify that you are running the expected version, etc
   """
-  @spec if_not_dev([{:do, any} | {:else, any}, ...]) :: any
-  defmacro if_not_dev(do: tBlock, else: fBlock) do
-    case Mix.env() do
-      # If this is a dev block
-      :dev ->
-        if nil != fBlock do
-          quote do
-            unquote(fBlock)
-          end
-        end
-
-      # otherwise go with the alternative
-      _ ->
-        quote do
-          unquote(tBlock)
-        end
-    end
-  end
+  @spec buildHash() :: String.t()
+  def buildHash(), do: Application.get_env(:utils, :build_hash, "0")
 
   @doc """
+  Generate a new UUIDv4 in human readable string format
   """
-  @spec if_prod([{:do, any} | {:else, any}, ...]) :: any
-  defmacro if_prod(do: tBlock, else: fBlock) do
-    case Mix.env() do
-      # If this is a dev block
-      :prod ->
-        quote do
-          unquote(tBlock)
-        end
-
-      # otherwise go with the alternative
-      _ ->
-        if nil != fBlock do
-          quote do
-            unquote(fBlock)
-          end
-        end
-    end
-  end
+  @spec uuid4() :: String.t()
+  def uuid4(), do: uuid4(:string)
 
   @doc """
-  """
-  @spec if_not_prod([{:do, any} | {:else, any}, ...]) :: any
-  defmacro if_not_prod(do: tBlock, else: fBlock) do
-    case Mix.env() do
-      # If this is a dev block
-      :prod ->
-        if nil != fBlock do
-          quote do
-            unquote(fBlock)
-          end
-        end
+  Generate a new UUIDv4 in string or binary format based
+  on the atom given
 
-      # otherwise go with the alternative
-      _ ->
-        quote do
-          unquote(tBlock)
-        end
-    end
-  end
+  ## Args:
+  :binary -> Returns the UUID in binary format <<_::128>>
+  :string -> Returns the UUID in human readable string format
+  """
+  @spec uuid4(:binary | :string) :: String.t() | <<_::128>>
+  def uuid4(:string), do: UUID.uuid4()
+  def uuid4(:binary), do: uuidToBinary(UUID.uuid4())
 
   @doc """
+  Parse a binary UUID into a human readable string format
   """
-  @spec if_test([{:do, any} | {:else, any}, ...]) :: any
-  defmacro if_test(do: tBlock, else: fBlock) do
-    case Mix.env() do
-      # If this is a dev block
-      :test ->
-        quote do
-          unquote(tBlock)
-        end
-
-      # otherwise go with the alternative
-      _ ->
-        if nil != fBlock do
-          quote do
-            unquote(fBlock)
-          end
-        end
-    end
-  end
+  @spec uuidToString(<<_::128>>) :: String.t()
+  def uuidToString(uuid), do: UUID.binary_to_string!(uuid)
 
   @doc """
+  Parse a String UUID into a binary format
   """
-  @spec if_not_test([{:do, any} | {:else, any}, ...]) :: any
-  defmacro if_not_test(do: tBlock, else: fBlock) do
-    case Mix.env() do
-      # If this is a dev block
-      :test ->
-        if nil != fBlock do
-          quote do
-            unquote(fBlock)
-          end
-        end
-
-      # otherwise go with the alternative
-      _ ->
-        quote do
-          unquote(tBlock)
-        end
-    end
-  end
+  @spec uuidToBinary(String.t()) :: <<_::128>>
+  def uuidToBinary(uuid), do: UUID.string_to_binary!(uuid)
 end

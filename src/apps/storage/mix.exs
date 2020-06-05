@@ -26,14 +26,14 @@ defmodule Storage.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
-      # {:sibling_app_in_umbrella, in_umbrella: true}
+      {:comeonin, "~> 5.3.1", override: true},
+      {:plug, git: "https://github.com/fortelabsinc/plug.git", branch: "master", override: true},
+      {:bamboo, "~> 1.5.0", override: true},
       {:access_pass, git: "https://github.com/AppDoctorIo/accesspass.git"},
       {:utils, in_umbrella: true},
-      {:ecto, "3.3.4"},
-      {:ecto_cockroachdb, "~> 1.0.0"},
-      {:uuid, "~> 1.1"}
+      {:ecto, "~> 3.4"},
+      {:ecto_sql, "~> 3.4"},
+      {:postgrex, "~> 0.15.4"}
     ]
   end
 end

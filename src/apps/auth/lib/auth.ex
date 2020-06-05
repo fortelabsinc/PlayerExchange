@@ -49,6 +49,7 @@ defmodule Auth do
   def check(accessToken), do: Storage.Auth.User.check(accessToken)
 
   @doc """
+  Refreshes the given auth token
   """
   @spec refresh(String.t()) :: {:error, <<_::160>>} | {:ok, map}
   def refresh(refreshToken), do: Storage.Auth.User.refresh(refreshToken)

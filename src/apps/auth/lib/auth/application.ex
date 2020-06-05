@@ -20,20 +20,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 defmodule Auth.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
   @moduledoc false
 
   use Application
 
-  def start(_type, _args) do
-    children = [
-      # Starts a worker by calling: Auth.Worker.start_link(arg)
-      # {Auth.Worker, arg}
-    ]
+  # ----------------------------------------------------------------------------
+  # Public Auth APIs
+  # ----------------------------------------------------------------------------
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
+  @doc """
+  Callback made by OTP when the Auth Application has started
+  """
+  @spec start(any, any) :: {:error, any} | {:ok, pid}
+  def start(_type, _args) do
+    children = []
     opts = [strategy: :one_for_one, name: Auth.Supervisor]
     Supervisor.start_link(children, opts)
   end

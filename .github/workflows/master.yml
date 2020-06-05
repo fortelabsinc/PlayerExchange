@@ -36,7 +36,7 @@ jobs:
         working-directory: src/apps/gateway/client
         run: |
           npm install
-          npm run build
+          npm run build_dev
 
       # Grab the deps and compile them
       - name: Install Dependencies

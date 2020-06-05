@@ -28,7 +28,9 @@ defmodule Utils.MixProject do
   defp deps do
     [
       {:jason, "~> 1.2"},
-      {:uuid, "~> 1.1"}
+      {:uuid, "~> 1.1"},
+      {:argon2_elixir, "~> 2.3"},
+      {:comeonin, "~> 5.3.1", override: true}
     ]
   end
 end

@@ -34,7 +34,11 @@ defmodule Gateway.MixProject do
       {:blockchain, in_umbrella: true},
       {:cowboy, "~> 2.7", override: true},
       {:plug_cowboy, "~> 2.2"},
-      {:uuid, "~> 1.1"}
+      {:uuid, "~> 1.1"},
+      {:jason, "~> 1.2"},
+      {:plug, git: "https://github.com/fortelabsinc/plug.git", branch: "master", override: true},
+      {:corsica, "~> 1.1"},
+      {:ex_json_schema, "~> 0.7.4"}
     ]
   end
 end

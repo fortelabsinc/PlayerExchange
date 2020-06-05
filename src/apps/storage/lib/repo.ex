@@ -15,7 +15,7 @@ defmodule Storage.Repo do
 
   use Ecto.Repo,
     otp_app: :storage,
-    adapter: Ecto.Adapters.CockroachDB
+    adapter: Ecto.Adapters.Postgres
 
   @doc """
   Called by Ecto to setup the repo with the passed in keyword args
