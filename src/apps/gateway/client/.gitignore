@@ -10,8 +10,6 @@ node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-stylelintOutput.log*
-inspect.js
 
 # Editor directories and files
 .idea
@@ -20,5 +18,4 @@ inspect.js
 *.ntvs*
 *.njsproj
 *.sln
-*.sw*
-*.orig
+*.sw?
