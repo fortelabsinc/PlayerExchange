@@ -1,3 +1,4 @@
 export default {
-  postings: [],
+  list: [],
+  itemsPerPage: 10,
 }

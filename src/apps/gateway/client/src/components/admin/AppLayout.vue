@@ -1,125 +1,76 @@
 <template>
-  <app-page-layout
-    class="app-layout"
-    :is-top-bar.sync="isTopBar"
-    :minimized.sync="minimized"
-    :mobile-width="mobileWidth"
-  >
-    <app-navbar
-      class="app-layout__navbar"
-      :is-top-bar.sync="isTopBar"
-      :minimized.sync="minimized"
-    />
-    <app-topbar v-if="isTopBar" class="app-layout__topbar" />
-    <div class="app-layout__container">
-      <app-sidebar
-        v-if="!isTopBar"
-        class="app-layout__sidebar"
-        :minimized="minimized"
-      />
-      <div
-        class="app-layout__main"
-        :class="{ 'app-layout__main--top': isTopBar }"
-      >
-        <main
-          slot="content"
-          class="app-layout__main-layout layout fluid gutter--xl"
-          role="main"
-        >
-          <router-view />
-        </main>
-      </div>
-    </div>
-  </app-page-layout>
+  <v-app>
+    <v-app-bar app clipped-left dark dense>
+      <v-app-bar-nav-icon @click.stop="mini = !mini">
+        <v-icon v-if="!mini" slot="default">mdi-menu-open</v-icon>
+      </v-app-bar-nav-icon>
+
+      <v-toolbar-title>Player Exchange</v-toolbar-title>
+
+      <v-spacer />
+
+      <v-btn icon>
+        <v-icon>mdi-magnify</v-icon>
+      </v-btn>
+      <v-btn icon>
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+    </v-app-bar>
+
+    <v-navigation-drawer :mini-variant="mini" permanent clipped app>
+      <v-list dense>
+        <v-list-item-group v-model="selected">
+          <v-list-item v-for="item in items" :key="item.title" link>
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-navigation-drawer>
+
+    <AppLayoutContent>
+      <router-view />
+    </AppLayoutContent>
+  </v-app>
 </template>
 
 <script>
-import AppPageLayout from './AppPageLayout'
-import AppNavbar from './app-navbar/AppNavbar'
-import AppTopbar from './app-topbar/AppTopbar'
-import AppSidebar from './app-sidebar/AppSidebar'
-import { originalTheme, corporateTheme } from 'vuestic-ui/src/services/themes'
-import {
-  ColorThemeActionsMixin,
-  ColorThemeMixin,
-} from '../../services/vuestic-ui'
+import { findIndex } from 'lodash'
+import AppLayoutContent from '@/components/admin/AppLayoutContent.vue'
 
 export default {
   name: 'AppLayout',
   components: {
-    AppPageLayout,
-    AppNavbar,
-    AppTopbar,
-    AppSidebar,
+    AppLayoutContent,
   },
-  mixins: [ColorThemeActionsMixin, ColorThemeMixin],
-  data() {
-    return {
-      isTopBar: false,
-      minimized: false,
-      mobileWidth: 767,
-    }
-  },
-  inject: ['contextConfig'],
-  created() {
-    if (this.$route.query && this.$route.query.theme === 'corporate') {
-      this.setTheme('corporate')
-    }
-    this.$root.$on('change-theme', this.setTheme)
-  },
-  beforeDestroy() {
-    this.$root.$off('change-theme', this.setTheme)
-  },
-  methods: {
-    setTheme(themeName) {
-      const theme = themeName === 'corporate' ? corporateTheme : originalTheme
-      this.setColors(theme.colors)
-      Object.keys(theme.context).forEach((key) => {
-        this.contextConfig[key] = theme.context[key]
-      })
+  data: () => ({
+    mini: true,
+    items: [
+      { title: 'Home', icon: 'mdi-home', routeName: 'Home' },
+      { title: 'Postings', icon: 'mdi-apps', routeName: 'Postings' },
+      { title: 'My Account', icon: 'mdi-account', routeName: 'Profile' },
+    ],
+  }),
+  computed: {
+    selected: {
+      set(selected) {
+        const { routeName } = this.items[selected] || {}
+        if (routeName && this.$route.name !== routeName) {
+          this.$router.push({ name: routeName })
+        }
+      },
+      get() {
+        return findIndex(
+          this.items,
+          ({ routeName }) => this.$route.name === routeName
+        )
+      },
     },
   },
 }
 </script>
-
-<style lang="scss">
-.app-layout {
-  display: flex;
-  flex-direction: column;
-
-  &__container {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: stretch;
-    // TODO Probably there is a better way to achieve this.
-    height: calc(100% - 65px);
-
-    @include media-breakpoint-down(sm) {
-      height: calc(100% - 110px);
-    }
-  }
-
-  &__main {
-    box-sizing: border-box;
-    width: 100%;
-    position: relative;
-    max-height: 100%;
-    min-height: 100%;
-
-    &--top {
-    }
-
-    &-layout {
-      position: absolute;
-      top: 0;
-      right: 0;
-      left: 0;
-      bottom: 0;
-      overflow: auto;
-      box-sizing: border-box;
-      min-height: 100%;
-      margin: 0;
-    }
-  }
-}
-</style>

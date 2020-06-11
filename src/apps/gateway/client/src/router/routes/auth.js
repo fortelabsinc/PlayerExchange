@@ -1,28 +1,25 @@
-import AuthLayout from '../../components/auth/AuthLayout'
+import AuthLayout from '@/components/auth/AuthLayout'
 
 export default {
   path: '/auth',
   component: AuthLayout,
   children: [
     {
-      name: 'login',
+      default: true,
+      name: 'Login',
       path: '/login',
-      component: () => import('../../components/auth/login/Login.vue'),
-    },
-    {
-      name: 'signup',
-      path: '/signup',
-      component: () => import('../../components/auth/signup/Signup.vue'),
-    },
-    {
-      name: 'recover-password',
-      path: 'recover-password',
       component: () =>
-        import('../../components/auth/recover-password/RecoverPassword.vue'),
+        import(/* webpackChunkName: "login" */ '@/components/auth/Login.vue'),
+    },
+    {
+      name: 'Signup',
+      path: '/signup',
+      component: () =>
+        import(/* webpackChunkName: "signup" */ '@/components/auth/Signup.vue'),
     },
     {
       path: '',
-      redirect: { name: 'login' },
+      redirect: { name: 'Login' },
     },
   ],
 }

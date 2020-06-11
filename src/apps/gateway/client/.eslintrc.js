@@ -3,15 +3,13 @@ module.exports = {
   env: {
     node: true,
   },
-  extends: [
-    'plugin:vue/recommended',
-    'eslint:recommended',
-    'prettier/vue',
-    'plugin:prettier/recommended',
-  ],
+  extends: ['plugin:vue/essential', 'eslint:recommended', '@vue/prettier'],
+  parserOptions: {
+    parser: 'babel-eslint',
+  },
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
     'arrow-parens': ['error', 'always'],
     'comma-dangle': [
       'error',
@@ -24,7 +22,7 @@ module.exports = {
       },
     ],
     curly: 'error',
-    // 'vue/component-name-in-template-casing': ['error', 'PascalCase'],
+    'vue/component-name-in-template-casing': ['error', 'PascalCase'],
     'vue/require-default-prop': 'off',
     'vue/require-prop-types': 'off',
     'vue/html-indent': [
@@ -39,10 +37,15 @@ module.exports = {
       },
     ],
   },
-  parserOptions: {
-    parser: 'babel-eslint',
-  },
-  globals: {
-    workbox: 'readonly',
-  },
+  overrides: [
+    {
+      files: [
+        '**/__tests__/*.{j,t}s?(x)',
+        '**/tests/unit/**/*.spec.{j,t}s?(x)',
+      ],
+      env: {
+        jest: true,
+      },
+    },
+  ],
 }

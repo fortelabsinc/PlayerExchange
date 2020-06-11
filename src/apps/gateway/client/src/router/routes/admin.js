@@ -1,4 +1,4 @@
-import AppLayout from '../../components/admin/AppLayout'
+import AppLayout from '@/components/admin/AppLayout'
 
 export default {
   name: 'Admin',
@@ -6,18 +6,55 @@ export default {
   component: AppLayout,
   children: [
     {
-      name: 'dashboard',
-      path: '/dashboard',
-      component: () => import('../../components/dashboard/Dashboard.vue'),
+      name: 'Home',
+      path: '/home',
+      component: () =>
+        import(/* webpackChunkName: "home" */ '@/components/admin/Home.vue'),
       default: true,
       meta: {
         requireAuth: true,
       },
     },
     {
-      name: 'profile',
+      name: 'Postings',
+      path: '/postings',
+      component: () =>
+        import(
+          /* webpackChunkName: "postingsPage" */ '@/components/admin/Postings/PostingsPage.vue'
+        ),
+      meta: {
+        requireAuth: true,
+      },
+    },
+    // {
+    //   name: 'Posting',
+    //   path: '/postings/id/:id',
+    //   component: () =>
+    //     import(
+    //       /* webpackChunkName: "postingPage" */ '@/components/admin/Postings/PostingPage.vue'
+    //     ),
+    //   meta: {
+    //     requireAuth: true,
+    //   },
+    // },
+    // {
+    //   name: 'NewPosting',
+    //   path: '/postings/new',
+    //   component: () =>
+    //     import(
+    //       /* webpackChunkName: "newPostingPage" */ '@/components/admin/Postings/NewPostingPage.vue'
+    //     ),
+    //   meta: {
+    //     requireAuth: true,
+    //   },
+    // },
+    {
+      name: 'Profile',
       path: '/profile',
-      component: () => import('../../components/profile/Profile.vue'),
+      component: () =>
+        import(
+          /* webpackChunkName: "profile" */ '@/components/admin/Profile.vue'
+        ),
       meta: {
         requireAuth: true,
       },

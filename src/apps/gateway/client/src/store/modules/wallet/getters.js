@@ -1,1 +1,2 @@
-export const getBalances = ({ balances }) => balances
+export const getBalances = ({ list }) => list
+export const getBalancesItemsPerPage = ({ itemsPerPage }) => itemsPerPage

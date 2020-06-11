@@ -1,3 +1,4 @@
 export default {
-  balances: [],
+  list: [],
+  itemsPerPage: 10,
 }

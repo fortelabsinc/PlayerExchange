@@ -8,7 +8,6 @@ import {
   SET_META,
   SET_USER_NAME,
   SET_USER_EMAIL,
-  SET_USER_PAY_ID,
 } from './mutations'
 import { clearApiAuthToken, setApiAuthToken } from '../../apiAxios'
 
@@ -23,7 +22,6 @@ export const ActionLogin = ({ commit }, payload) => {
   commit(SET_META, meta)
   commit(SET_USER_NAME, user.name)
   commit(SET_USER_EMAIL, user.email)
-  commit(SET_USER_PAY_ID, user.payId)
 }
 
 export const ActionLogout = ({ commit }) => {
@@ -35,5 +33,4 @@ export const ActionLogout = ({ commit }) => {
   commit(SET_META, '')
   commit(SET_USER_NAME, '')
   commit(SET_USER_EMAIL, '')
-  commit(SET_USER_PAY_ID, '')
 }

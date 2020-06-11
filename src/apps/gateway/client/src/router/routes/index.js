@@ -4,8 +4,7 @@ import admin from './admin'
 export default [
   {
     path: '*',
-    // redirect: { name: 'dashboard' },
-    redirect: { name: 'login' },
+    redirect: { name: 'Login' },
   },
   auth,
   admin,

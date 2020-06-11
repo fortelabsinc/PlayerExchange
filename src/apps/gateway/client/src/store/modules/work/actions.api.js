@@ -1,104 +1,68 @@
-import apiAxios from '../../apiAxios'
 import { get } from 'lodash'
+import apiAxios from '../../apiAxios'
+import { apiResponseHandler, apiErrorHandler } from '../../utils/api'
+import {
+  POSTINGS_LIST_SET,
+  POSTINGS_LIST_ADD,
+  POSTINGS_LIST_REMOVE,
+} from './mutations'
 
-export const ApiActionFetchAllPostings = ({ dispatch }, { callback } = {}) => {
+export const ApiActionFetchAllPostings = ({ commit }) =>
   apiAxios
     .get('/work/posting')
-    .then((response) => {
-      if (get(response, 'data.ok')) {
-        const payload = get(response, 'data.ok')
-        dispatch('work/ActionSetAllPostings', payload)
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(POSTINGS_LIST_SET, payload)
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)
 
-        callback && callback(true, get(response, 'data.ok'))
-      } else {
-        callback && callback(false, get(response, 'data.error'))
-      }
-    })
-    .catch((err) => {
-      callback && callback(false, err)
-    })
-}
-
-export const ApiActionFetchUserPostings = (
-  { dispatch },
-  { username, callback } = {}
-) => {
+export const ApiActionFetchUserPostings = ({ commit }, { username }) =>
   apiAxios
     .get(`/work/posting/${username}`)
-    .then((response) => {
-      if (get(response, 'data.ok')) {
-        const payload = get(response, 'data.ok')
-        dispatch('work/ActionAddPostings', payload)
-
-        callback && callback(true, get(response, 'data.ok'))
-      } else {
-        callback && callback(false, get(response, 'data.error'))
-      }
-    })
-    .catch((err) => {
-      callback && callback(false, err)
-    })
-}
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(POSTINGS_LIST_ADD, payload)
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)
 
 export const ApiActionFetchMyUserPostings = (context, payload) => {
   const username = get(context.rootState, 'auth.user.name')
   return ApiActionFetchUserPostings(context, { ...payload, username })
 }
 
-export const ApiActionCreatePosting = (
-  { dispatch },
-  { posting, callback } = {}
-) => {
+export const ApiActionCreatePosting = ({ commit }, { posting }) =>
   apiAxios
     .post('/work/posting', posting)
-    .then((response) => {
-      if (get(response, 'data.ok')) {
-        const payload = get(response, 'data.ok')
-        dispatch('work/ActionAddPostings', payload)
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(POSTINGS_LIST_ADD, posting)
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)
 
-        callback && callback(true, get(response, 'data.ok'))
-      } else {
-        callback && callback(false, get(response, 'data.error'))
-      }
-    })
-    .catch((err) => {
-      callback && callback(false, err)
-    })
-}
-
-export const ApiActionDeletePosting = (
-  { dispatch },
-  { postingId, callback } = {}
-) => {
+export const ApiActionDeletePosting = ({ commit }, { postingId }) =>
   apiAxios
     .delete(`/work/posting/${postingId}`)
-    .then((response) => {
-      if (get(response, 'data.ok')) {
-        dispatch('work/ActionRemovePostingsByIds', postingId)
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(POSTINGS_LIST_REMOVE, postingId)
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)
 
-        callback && callback(true, get(response, 'data.ok'))
-      } else {
-        callback && callback(false, get(response, 'data.error'))
-      }
-    })
-    .catch((err) => {
-      callback && callback(false, err)
-    })
-}
-
-export const ApiActionDeleteAllPostings = ({ dispatch }, { callback } = {}) => {
+export const ApiActionDeleteAllPostings = ({ commit }) =>
   apiAxios
     .delete('/work/posting')
-    .then((response) => {
-      if (get(response, 'data.ok')) {
-        dispatch('work/ActionDeleteAllPostings')
-
-        callback && callback(true, get(response, 'data.ok'))
-      } else {
-        callback && callback(false, get(response, 'data.error'))
-      }
-    })
-    .catch((err) => {
-      callback && callback(false, err)
-    })
-}
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(POSTINGS_LIST_SET, [])
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)

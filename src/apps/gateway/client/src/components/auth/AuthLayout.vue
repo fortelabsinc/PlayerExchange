@@ -1,48 +1,50 @@
 <template>
-  <div class="auth-layout row align-content--center">
-    <div class="flex xs12 pa-3 flex-center">
-      <router-link class="auth-layout__logo py-5 flex-center" to="/">
-        Player Exchange
-      </router-link>
-    </div>
+  <v-app class="auth-layout">
+    <v-content class="grey lighten-3 flex-sm-grow-1 align-sm-center">
+      <v-row class="mb-6" :align="'end'" :justify="'center'">
+        <router-link class="logo text-primary" to="/">
+          Player Exchange
+        </router-link>
+      </v-row>
 
-    <div class="flex xs12 pa-3">
-      <div class="d-flex justify--center">
-        <va-card class="auth-layout__card">
-          <va-tabs v-model="tabIndex" center>
-            <va-tab>{{ $t('auth.login') }}</va-tab>
-            <va-tab>{{ $t('auth.createNewAccount') }}</va-tab>
-          </va-tabs>
-
-          <va-separator />
-
-          <div class="pa-3">
-            <router-view />
-          </div>
-        </va-card>
-      </div>
-    </div>
-  </div>
+      <v-row :align="'start'" :justify="'center'">
+        <v-card class="card">
+          <v-toolbar flat>
+            <v-tabs v-model="tabIndex" centered>
+              <v-tab
+                v-for="item in tabs"
+                :key="item.routeName"
+                :href="'#' + item.routeName"
+              >
+                {{ item.title }}
+              </v-tab>
+            </v-tabs>
+          </v-toolbar>
+          <router-view />
+        </v-card>
+      </v-row>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
-const tabs = ['login', 'signup']
-
 export default {
   name: 'AuthLayout',
-  data() {
-    return {
-      selectedTabIndex: 0,
-      tabTitles: ['login', 'createNewAccount'],
-    }
-  },
+  data: () => ({
+    tabs: [
+      { routeName: 'Login', title: 'Login' },
+      { routeName: 'Signup', title: 'Create Account' },
+    ],
+  }),
   computed: {
     tabIndex: {
       set(tabIndex) {
-        this.$router.push({ name: tabs[tabIndex] })
+        if (this.$route.name !== tabIndex) {
+          this.$router.push({ name: tabIndex })
+        }
       },
       get() {
-        return tabs.indexOf(this.$route.name)
+        return this.$route.name
       },
     },
   },
@@ -51,25 +53,15 @@ export default {
 
 <style lang="scss">
 .auth-layout {
-  min-height: 100vh;
-  // background-image: linear-gradient(to right, #0e4ac4, #002c85);
-  background-color: #eeeeee;
+  .logo {
+    font-size: 36px;
+    font-weight: bold;
+    text-decoration: none;
+  }
 
-  &__card {
+  .card {
     width: 100%;
     max-width: 600px;
-  }
-
-  &__options {
-    @include media-breakpoint-down(xs) {
-      flex-direction: column;
-    }
-  }
-
-  &__logo {
-    font-size: 30px;
-    font-weight: bold;
-    color: rgb(108, 127, 238);
   }
 }
 </style>

@@ -3,4 +3,3 @@ export const getRefreshToken = ({ refreshToken }) => refreshToken
 export const getMeta = ({ meta }) => meta
 export const getUserName = ({ user }) => user.name
 export const getEmail = ({ user }) => user.email
-export const getPayId = ({ user }) => user.payI
