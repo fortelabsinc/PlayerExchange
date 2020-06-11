@@ -6,14 +6,8 @@
   >
     <defs />
     <title>overview_icon_4</title>
-    <g
-      id="Layer_2"
-      data-name="Layer 2"
-    >
-      <g
-        id="Layer_1-2"
-        data-name="Layer 1"
-      >
+    <g id="Layer_2" data-name="Layer 2">
+      <g id="Layer_1-2" data-name="Layer 1">
         <path
           class="cls-1"
           d="M38.23,16.17a10,10,0,1,0-17.67,6.42V47.5l7.33-5,8,5V22.58A10,10,0,0,0,38.23,16.17Z"

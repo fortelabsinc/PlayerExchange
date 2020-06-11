@@ -1,23 +1,19 @@
 <template>
-  <aside
-    class="app-sidebar"
-    :class="computedClass"
-    :style="computedStyle"
-  >
+  <aside class="app-sidebar" :class="computedClass" :style="computedStyle">
     <ul class="app-sidebar__menu">
       <template v-for="(item, key) in items">
         <app-sidebar-link-group
+          v-if="item.children"
           :key="key"
           :minimized="minimized"
           :icon="item.meta && item.meta.iconClass"
-          v-if="item.children"
           :title="$t(item.displayName)"
           :children="item.children"
           :active-by-default="hasActiveByDefault(item)"
         >
           <app-sidebar-link
-            v-for="(subMenuItem, key) in item.children"
-            :key="key"
+            v-for="(subMenuItem, k) in item.children"
+            :key="k"
             :to="{ name: subMenuItem.name }"
             :title="$t(subMenuItem.displayName)"
           />
@@ -43,7 +39,7 @@ import AppSidebarLinkGroup from './components/AppSidebarLinkGroup'
 import { ColorThemeMixin } from '../../../services/vuestic-ui'
 
 export default {
-  name: 'app-sidebar',
+  name: 'AppSidebar',
   inject: ['contextConfig'],
   components: {
     AppSidebarLink,
@@ -60,30 +56,31 @@ export default {
       default: 'secondary',
     },
   },
-  data () {
+  data() {
     return {
       items: navigationRoutes.routes,
     }
   },
   computed: {
-    computedClass () {
+    computedClass() {
       return {
         'app-sidebar--minimized': this.minimized,
       }
     },
-    computedStyle () {
+    computedStyle() {
       return {
-        backgroundColor: this.contextConfig.invertedColor ? 'white' : this.colorComputed,
+        backgroundColor: this.contextConfig.invertedColor
+          ? 'white'
+          : this.colorComputed,
       }
     },
   },
   methods: {
-    hasActiveByDefault (item) {
-      return item.children.some(child => child.name === this.$route.name)
+    hasActiveByDefault(item) {
+      return item.children.some((child) => child.name === this.$route.name)
     },
   },
 }
-
 </script>
 
 <style lang="scss">

@@ -6,30 +6,30 @@
           <div class="row">
             <div class="flex xs4">
               <va-input
-                :label="$t('postings.forms.payment.payid')"
                 v-model="payId"
-                textBy="description"
+                :label="$t('postings.forms.payment.payid')"
+                text-by="description"
               />
             </div>
             <div class="flex xs4">
               <va-input
-                :label="$t('postings.forms.payment.amount')"
                 v-model="amt"
-                textBy="The number of player needed"
+                :label="$t('postings.forms.payment.amount')"
+                text-by="The number of player needed"
               />
             </div>
             <div class="flex xs4">
               <va-select
-                :label="$t('postings.forms.payment.type')"
                 v-model="type"
-                textBy="Type of Players"
+                :label="$t('postings.forms.payment.type')"
+                text-by="Type of Players"
                 :options="currencies"
               />
             </div>
             <div class="flex xs4">
               <va-button @click="submit">
-                {{$t('postings.forms.payment.button_submit') }}
-              </va-button> 
+                {{ $t('postings.forms.payment.button_submit') }}
+              </va-button>
             </div>
           </div>
         </form>
@@ -38,23 +38,22 @@
     <va-modal
       v-model="showModal"
       size="small"
-      :title=" $t('postings.forms.payment.submit_title')"
-      cancelClass="none"
-      :message=" $t('postings.forms.payment.submit_message') "
-      :okText=" $t('postings.forms.payment.submit_confirm') "
-      noOutsideDismiss
-      noEscDismiss
+      :title="$t('postings.forms.payment.submit_title')"
+      cancel-class="none"
+      :message="$t('postings.forms.payment.submit_message')"
+      :ok-text="$t('postings.forms.payment.submit_confirm')"
+      no-outside-dismiss
+      no-esc-dismiss
     />
   </div>
 </template>
 
 <script>
-import store from '@/store';
-import Network from '../../network'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'dashboard-payment',
-  data () {
+  name: 'DashboardPayment',
+  data() {
     return {
       payId: '',
       amt: '1',
@@ -63,41 +62,33 @@ export default {
       currencies: [],
     }
   },
-  mounted() {
-    this.currencies = store.getters.currencies;
-  },
-  watch: {
+  computed: {
+    ...mapGetters({
+      currencies: 'options/getCurrencies',
+    }),
   },
   methods: {
-    submit(event){
-      var self = this;
-      this.showModal = true;
+    ...mapActions({
+      makePayment: 'wallet/ApiActionMakePayment',
+    }),
+    submit() {
+      this.showModal = true
       var data = {
-          pay_id: this.payId,
-          amt: String(this.amt),
-          type: this.type
-      };
-      Network.wallet.payment(data, (success, data) => {
-        if(success)
-        {
-          self.payId = '';
-          self.amt = '1';
-          self.type = 'XRP';
-        }
-        else
-        {
-
-        }
-      });
-    }
-  },
-  computed: {
+        pay_id: this.payId,
+        amt: String(this.amt),
+        type: this.type,
+      }
+      this.makePayment({
+        data,
+        callback: (success) => {
+          if (success) {
+            console.log('Payment success')
+          } else {
+            console.log('Failed to make a payment')
+          }
+        },
+      })
+    },
   },
 }
 </script>
-
-<style scoped>
-  .chart {
-    height: 400px;
-  }
-</style>

@@ -16,20 +16,22 @@
       :error-messages="passwordErrors"
     />
 
-    <div class="auth-layout__options d-flex align--center justify--space-between">
+    <div
+      class="auth-layout__options d-flex align--center justify--space-between"
+    >
       <va-checkbox
         v-model="agreedToTerms"
         class="mb-0"
         :error="!!agreedToTermsErrors.length"
-        :errorMessages="agreedToTermsErrors"
+        :error-messages="agreedToTermsErrors"
       >
         <template slot="label">
           {{ $t('auth.agree') }}
           <span class="link">{{ $t('auth.termsOfUse') }}</span>
         </template>
       </va-checkbox>
-      <router-link class="ml-1 link" :to="{name: 'recover-password'}">
-        {{$t('auth.recover_password')}}
+      <router-link class="ml-1 link" :to="{ name: 'recover-password' }">
+        {{ $t('auth.recover_password') }}
       </router-link>
     </div>
 
@@ -40,10 +42,10 @@
 </template>
 
 <script>
-import Network from '../../../network'
+import { mapActions } from 'vuex'
 export default {
-  name: 'signup',
-  data () {
+  name: 'Signup',
+  data() {
     return {
       email: '',
       password: '',
@@ -53,34 +55,43 @@ export default {
       agreedToTermsErrors: [],
     }
   },
+  computed: {
+    formReady() {
+      return !(
+        this.emailErrors.length ||
+        this.passwordErrors.length ||
+        this.agreedToTermsErrors.length
+      )
+    },
+  },
   methods: {
-    onsubmit () {
-
-      var self = this;
+    ...mapActions({
+      register: 'auth/ApiActionRegister',
+    }),
+    onsubmit() {
+      var self = this
       this.emailErrors = this.email ? [] : ['Email is required']
       this.passwordErrors = this.password ? [] : ['Password is required']
       if (!this.formReady) {
         return
       }
-      Network.auth.register(this.email, this.email, this.password, (success, rsp) => {
-        if(success){
-          self.$router.push({ name: 'login' });
-        }
-        else{
-          console.log("Failed to log in user: " + JSON.stringify(rsp));
-          self.emailErrors = ['Login Failed'];
-          self.passwordErrors = ['Login Failed'];
-        }
-      });
-    },
-  },
-  computed: {
-    formReady () {
-      return !(this.emailErrors.length || this.passwordErrors.length || this.agreedToTermsErrors.length)
+      this.register({
+        username: this.email,
+        email: this.email,
+        password: this.password,
+        callback: (success, rsp) => {
+          if (success) {
+            self.$router.push({ name: 'login' })
+          } else {
+            console.log('Failed to log in user: ' + JSON.stringify(rsp))
+            self.emailErrors = ['Login Failed']
+            self.passwordErrors = ['Login Failed']
+          }
+        },
+      })
     },
   },
 }
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

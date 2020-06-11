@@ -1,0 +1,104 @@
+import apiAxios, { setApiAuthToken } from '../../apiAxios'
+import { get, isEmpty } from 'lodash'
+import { getLocalStorageToken } from '../../localStorage'
+import { getToken } from './getters'
+
+export const ApiActionLogin = (
+  { dispatch },
+  { email, password, callback } = {}
+) => {
+  apiAxios
+    .post('/auth/login', { username: email, password })
+    .then((response) => {
+      if (get(response, 'data.ok')) {
+        const payload = {
+          token: get(response, 'data.ok.access_token'),
+          refreshToken: get(response, 'data.ok.refresh_token'),
+          meta: get(response, 'data.ok.meta'),
+          user: {
+            name: email,
+            email,
+            payId: get(response, 'data.ok.payId'),
+          },
+        }
+
+        dispatch('auth/ActionLogin', payload)
+
+        callback && callback(true, get(response, 'data.ok'))
+      } else {
+        callback && callback(false, get(response, 'data.error'))
+      }
+    })
+    .catch((err) => {
+      callback && callback(false, err)
+    })
+}
+
+export const ApiActionLogout = ({ dispatch }) => {
+  // TODO: Call an API endpoint?
+  dispatch('auth/ActionLogout')
+}
+
+export const ApiActionCheckAuth = ({ dispatch, state }, { callback } = {}) => {
+  const token = getToken(state)
+  if (!isEmpty(token)) {
+    setApiAuthToken(token)
+  } else {
+    const localStorageToken = getLocalStorageToken()
+    if (localStorageToken) {
+      setApiAuthToken(localStorageToken)
+    } else {
+      callback && callback(false, 'No token found')
+    }
+  }
+
+  apiAxios
+    .get('/auth/check')
+    .then((response) => {
+      if (get(response, 'data.ok')) {
+        const payload = {
+          token: get(response, 'data.ok.access_token'),
+          refreshToken: get(response, 'data.ok.refresh_token'),
+          meta: get(response, 'data.ok.meta'),
+          user: {
+            name: get(response, 'data.ok.username'),
+            email: get(response, 'data.ok.email'),
+            payId: get(response, 'data.ok.payId'),
+          },
+        }
+
+        dispatch('auth/ActionLogin', payload)
+
+        callback && callback(true, get(response, 'data.ok'))
+      } else {
+        callback && callback(false, get(response, 'data.error'))
+      }
+    })
+    .catch((err) => {
+      callback && callback(false, err)
+    })
+}
+
+export const ApiActionRegister = (
+  _,
+  { username, email, password, callback } = {}
+) => {
+  apiAxios
+    .post('/auth/register', {
+      username,
+      email,
+      password,
+      password_confirm: password,
+      meta: {},
+    })
+    .then((response) => {
+      if (get(response, 'data.ok')) {
+        callback && callback(true, get(response, 'data.ok'))
+      } else {
+        callback && callback(false, get(response, 'data.error'))
+      }
+    })
+    .catch((err) => {
+      callback && callback(false, err)
+    })
+}

@@ -1,11 +1,7 @@
 <template>
   <div>
     <va-card :title="$t('postings.table.mine.title')">
-
-      <va-input
-      :label="$t('postings.forms.payment.title')"
-      v-model="payId"
-      />
+      <va-input v-model="payId" :label="$t('postings.forms.payment.title')" />
       <va-data-table
         :fields="fields"
         :data="postings"
@@ -14,8 +10,12 @@
       >
         <template v-slot:pay="props">
           <va-button-group>
-            <va-button small @click="payConfirm(props.rowData)">Confirm</va-button>
-            <va-button small @click="payComplete(props.rowData)">Complete</va-button>
+            <va-button small @click="payConfirm(props.rowData)">
+              {{ $t('postings.table.mine.confirm_bt') }}
+            </va-button>
+            <va-button small @click="payComplete(props.rowData)">
+              {{ $t('postings.table.mine.complete_bt') }}
+            </va-button>
             <va-button small @click="payBonus(props.rowData)">Bonus</va-button>
           </va-button-group>
         </template>
@@ -27,10 +27,7 @@
             class="ma-0"
             @click="removePosting(props.rowData)"
           >
-          Remove
-          <!--
-            {{ $t('dashboard.table.resolve') }}
-          -->
+            {{ $t('postings.table.mine.remove_bt') }}
           </va-button>
         </template>
       </va-data-table>
@@ -38,165 +35,152 @@
     <va-modal
       v-model="showModal"
       size="small"
-      :title=" $t('postings.forms.payment.submit_title')"
-      cancelClass="none"
-      :message=" $t('postings.forms.payment.submit_message') "
-      :okText=" $t('postings.forms.payment.submit_confirm') "
-      noOutsideDismiss
-      noEscDismiss
+      :title="$t('postings.forms.payment.submit_title')"
+      cancel-class="none"
+      :message="$t('postings.forms.payment.submit_message')"
+      :ok-text="$t('postings.forms.payment.submit_confirm')"
+      no-outside-dismiss
+      no-esc-dismiss
     />
   </div>
 </template>
 
 <script>
-import store from '@/store';
-import Network from '@/network'
-import auth from '../../network/modules/auth';
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'dashboard-my-postings-table',
-  data () {
+  name: 'DashboardMyPostingsTable',
+  data() {
     return {
-      postings: [
-        //{
-        //  type_req: "Group",
-        //  user_id: "cjimison@forte.io",
-        //  game_id: "World of Warcraft",
-        //  details: "Need help to finish thing",
-        //  complete_pay_amt: "100",
-        //  complete_pay_type: "XRP",
-        //} 
-      ],
+      // postings: [
+      //   {
+      //     type_req: 'Group',
+      //     user_id: 'cjimison@forte.io',
+      //     game_id: 'World of Warcraft',
+      //     details: 'Need help to finish thing',
+      //     complete_pay_amt: '100',
+      //     complete_pay_type: 'XRP',
+      //   },
+      // ],
       loading: false,
-      term: null,
-      mode: 0,
       payId: '',
       showModal: false,
     }
   },
   computed: {
-    fields () {
+    ...mapGetters({
+      postings: 'work/getMyPostings',
+    }),
+    fields() {
       return [
-      {
-        name: 'game_id',
-        title: 'Game',//this.$t('tables.headings.name'),
-        width: '20%',
-      },
-      {
-        name: 'type_req',
-        title: 'Type', //this.$t('tables.headings.payid'),
-        width: '5%',
-      },
-      {
-        name: 'details',
-        title: 'Details',//'this.$t('tables.headings.status'),
-        width: '50%',
-        //sortField: 'status',
-      },
-      {
-        name: 'confirm_pay_amt',
-        title: 'Complete',//'this.$t('tables.headings.status'),
-        width: '5%',
-        //sortField: 'status',
-      },
-      {
-        name: 'complete_pay_amt',
-        title: 'Complete',//'this.$t('tables.headings.status'),
-        width: '5%',
-        //sortField: 'status',
-      },
-      {
-        name: 'bonus_pay_amt',
-        title: 'Complete',//'this.$t('tables.headings.status'),
-        width: '5%',
-        //sortField: 'status',
-      },
-      {
-        name: 'bonus_pay_type',
-        title: 'Type',//'this.$t('tables.headings.status'),
-        width: '5%',
-        //sortField: 'status',
-      },
-      {
-        title: "Pay",
-        name: '__slot:pay',
-        dataClass: 'text-right',
-      },
-      {
-        name: '__slot:remove',
-        dataClass: 'text-right',
-      }]
-    }
+        {
+          name: 'game_id',
+          title: this.$t('postings.table.mine.fields.game_id'),
+          width: '20%',
+        },
+        {
+          name: 'type_req',
+          title: this.$t('postings.table.mine.fields.type_req'),
+          width: '5%',
+        },
+        {
+          name: 'details',
+          title: this.$t('postings.table.mine.fields.details'),
+          width: '50%',
+        },
+        {
+          name: 'confirm_pay_amt',
+          title: this.$t('postings.table.mine.fields.confirm_pay_amt'),
+          width: '5%',
+        },
+        {
+          name: 'complete_pay_amt',
+          title: this.$t('postings.table.mine.fields.complete_pay_amt'),
+          width: '5%',
+        },
+        {
+          name: 'bonus_pay_amt',
+          title: this.$t('postings.table.mine.fields.bonus_pay_amt'),
+          width: '5%',
+        },
+        {
+          name: 'bonus_pay_type',
+          title: this.$t('postings.table.mine.fields.bonus_pay_type'),
+          width: '5%',
+        },
+        {
+          title: 'Pay',
+          name: '__slot:pay',
+          dataClass: 'text-right',
+        },
+        {
+          name: '__slot:remove',
+          dataClass: 'text-right',
+        },
+      ]
+    },
   },
   mounted() {
-    this.loadPostings();
-  },
-  created() {
-    this.$eventHub.$on('refresh-postings', this.loadPostings);
-  },
-  beforeDestroy() {
-    this.$eventHub.$off('refresh-postings');
+    this.loading = true
+    this.loadMyPostings({
+      callback: (success) => {
+        this.loading = false
+        if (!success) {
+          console.log('Failed to load the postings')
+        }
+      },
+    })
   },
   methods: {
+    ...mapActions({
+      loadMyPostings: 'work/ApiActionFetchMyUserPostings',
+      deletePostings: 'work/ApiActionDeletePosting',
+      makePayment: 'wallet/ApiActionMakePayment',
+    }),
     payConfirm(data) {
       this.pay({
-        "amt": data["confirm_pay_amt"],
-        "type": data["confirm_pay_type"],
-        "pay_id": this.payId
-      });
+        amt: data['confirm_pay_amt'],
+        type: data['confirm_pay_type'],
+        pay_id: this.payId,
+      })
     },
     payComplete(data) {
       this.pay({
-        "amt": data["complete_pay_amt"],
-        "type": data["complete_pay_type"],
-        "pay_id": this.payId
-      });
+        amt: data['complete_pay_amt'],
+        type: data['complete_pay_type'],
+        pay_id: this.payId,
+      })
     },
     payBonus(data) {
       this.pay({
-        "amt": data["bonus_pay_amt"],
-        "type": data["bonus_pay_type"],
-        "pay_id": this.payId
-      });
+        amt: data['bonus_pay_amt'],
+        type: data['bonus_pay_type'],
+        pay_id: this.payId,
+      })
     },
     pay(data) {
-      this.showModal = true;
-      Network.wallet.payment(data, (success, data) =>{
-        if(success)
-        {
-          console.log("Payment success")
-        }
-        else
-        {
-          console.log("Failed to load the postings: " + data)
-        }
-      });
-    },
-    loadPostings() {
-      var self = this;
-      Network.work.userPostings((success, data) => {
-        if(success)
-        {
-          self.postings = data;
-        }
-        else
-        {
-          console.log("Failed to load the postings: " + data)
-        }
-      });
+      this.showModal = true
+      this.makePayment({
+        data,
+        callback: (success) => {
+          if (success) {
+            console.log('Payment success')
+          } else {
+            console.log('Failed to make a payment')
+          }
+        },
+      })
     },
     removePosting(data) {
-      Network.work.deletePosting(data["post_id"], (success, data) =>
-      {
-        if(success)
-        {
-          this.$eventHub.$emit('refresh-postings');
-        }
-      });
-    }
+      this.deletePosting({
+        postingId: data['post_id'],
+        callback: (success) => {
+          if (success) {
+            console.log('Posting delete success')
+          }
+        },
+      })
+    },
   },
 }
 </script>
-
-<style lang="scss">
-</style>

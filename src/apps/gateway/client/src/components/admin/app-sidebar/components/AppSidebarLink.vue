@@ -1,15 +1,12 @@
 <template>
-  <li
-    class="app-sidebar-link"
-    :class="computedLinkClass"
-  >
+  <li class="app-sidebar-link" :class="computedLinkClass">
     <router-link
       class="app-sidebar-link__item"
-      @mouseenter.native="updateHoverState(true)"
-      @mouseleave.native="updateHoverState(false)"
       :style="computedLinkStyles"
       :to="to"
       :target="target"
+      @mouseenter.native="updateHoverState(true)"
+      @mouseleave.native="updateHoverState(false)"
     >
       <va-icon
         v-if="icon"
@@ -17,9 +14,9 @@
         :style="computedIconStyles"
         :name="icon"
       />
-      <div class="app-sidebar-link__item-title" v-if="title">
+      <div v-if="title" class="app-sidebar-link__item-title">
         <slot>
-          {{title}}
+          {{ title }}
         </slot>
       </div>
 
@@ -28,7 +25,8 @@
         class="app-sidebar-link__item-icon-right"
         :style="computedIconStyles"
         :name="iconRight"
-      >{{iconRightContent}}
+      >
+        {{ iconRightContent }}
       </va-icon>
     </router-link>
   </li>
@@ -38,7 +36,7 @@
 import { colorShiftHsl, ColorThemeMixin } from '../../../../services/vuestic-ui'
 
 export default {
-  name: 'app-sidebar-link',
+  name: 'AppSidebarLink',
   inject: ['contextConfig'],
   mixins: [ColorThemeMixin],
   props: {
@@ -69,24 +67,19 @@ export default {
       type: Boolean,
     },
   },
-  data () {
+  data() {
     return {
       isHovered: false,
       isActive: this.activeByDefault,
     }
   },
-  watch: {
-    $route () {
-      this.updateActiveState()
-    },
-  },
   computed: {
-    computedLinkClass () {
+    computedLinkClass() {
       return {
         'app-sidebar-link--minimized': this.minimized,
       }
     },
-    computedLinkStyles () {
+    computedLinkStyles() {
       const style = {}
 
       if (this.contextConfig.invertedColor) {
@@ -100,13 +93,17 @@ export default {
       }
 
       if (this.isHovered || this.isActive) {
-        style.backgroundColor = this.contextConfig.gradient ? colorShiftHsl(this.$themes.secondary, {
-          s: -13,
-          l: 15,
-        }).css : this.$themes.primary
+        style.backgroundColor = this.contextConfig.gradient
+          ? colorShiftHsl(this.$themes.secondary, {
+              s: -13,
+              l: 15,
+            }).css
+          : this.$themes.primary
 
         if (this.contextConfig.gradient) {
-          style.borderColor = this.isActive ? this.$themes.primary : 'transparent'
+          style.borderColor = this.isActive
+            ? this.$themes.primary
+            : 'transparent'
         } else {
           style.borderColor = colorShiftHsl(this.$themes.primary, {
             s: 13,
@@ -117,7 +114,7 @@ export default {
 
       return style
     },
-    computedIconStyles () {
+    computedIconStyles() {
       if (this.contextConfig.invertedColor) {
         if (this.isHovered || this.isActive) {
           return {
@@ -141,16 +138,21 @@ export default {
       }
     },
   },
-  methods: {
-    updateHoverState (isHovered) {
-      this.isHovered = isHovered
-    },
-    updateActiveState () {
-      this.isActive = (this.$route.name === this.to.name) || this.activeByDefault
+  watch: {
+    $route() {
+      this.updateActiveState()
     },
   },
-  mounted () {
+  mounted() {
     this.updateActiveState()
+  },
+  methods: {
+    updateHoverState(isHovered) {
+      this.isHovered = isHovered
+    },
+    updateActiveState() {
+      this.isActive = this.$route.name === this.to.name || this.activeByDefault
+    },
   },
 }
 </script>

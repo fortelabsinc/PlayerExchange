@@ -2,11 +2,11 @@
   <router-link
     class="app-topbar-link"
     tag="li"
-    @mouseenter.native="updateHoverState(true)"
-    @mouseleave.native="updateHoverState(false)"
     :style="computedStyle"
     :to="to"
     :target="target"
+    @mouseenter.native="updateHoverState(true)"
+    @mouseleave.native="updateHoverState(false)"
   >
     <va-icon
       v-if="icon"
@@ -16,7 +16,7 @@
     />
     <div class="app-topbar-link__title">
       <slot>
-        {{title}}
+        {{ title }}
       </slot>
     </div>
     <va-icon
@@ -28,10 +28,13 @@
 </template>
 
 <script>
-import { colorShiftHsl, ColorThemeMixin } from './../../../../services/vuestic-ui'
+import {
+  colorShiftHsl,
+  ColorThemeMixin,
+} from './../../../../services/vuestic-ui'
 
 export default {
-  name: 'topbar-link',
+  name: 'TopbarLink',
   inject: ['contextConfig'],
   mixins: [ColorThemeMixin],
   props: {
@@ -57,19 +60,20 @@ export default {
       default: false,
     },
   },
-  data () {
+  data() {
     return {
       isHovered: false,
     }
   },
   computed: {
-    computedStyle () {
+    computedStyle() {
       // TODO Inverted color condition is incorrect here.
       if (this.contextConfig.invertedColor) {
         if (this.isHovered || this.isActive) {
           return {
             color: this.$themes.primary,
-            borderColor: colorShiftHsl(this.$themes.primary, { s: 13, l: -15 }).css,
+            borderColor: colorShiftHsl(this.$themes.primary, { s: 13, l: -15 })
+              .css,
           }
         }
 
@@ -82,14 +86,20 @@ export default {
         return {
           color: this.$themes.primary,
           borderColor: this.$themes.primary,
-          backgroundColor: colorShiftHsl(this.$themes.secondary, { s: -13, l: 15 }).css,
+          backgroundColor: colorShiftHsl(this.$themes.secondary, {
+            s: -13,
+            l: 15,
+          }).css,
         }
       }
 
       if (this.isHovered) {
         return {
           color: this.$themes.primary,
-          backgroundColor: colorShiftHsl(this.$themes.secondary, { s: -13, l: 15 }).css,
+          backgroundColor: colorShiftHsl(this.$themes.secondary, {
+            s: -13,
+            l: 15,
+          }).css,
         }
       }
 
@@ -97,7 +107,7 @@ export default {
         color: this.$themes.info,
       }
     },
-    computedIconStyles () {
+    computedIconStyles() {
       if (this.contextConfig.invertedColor) {
         if (this.isHovered || this.isActive) {
           return {
@@ -122,13 +132,13 @@ export default {
     },
   },
   methods: {
-    updateHoverState (isHovered) {
+    updateHoverState(isHovered) {
       this.isHovered = isHovered
     },
-    updateActiveState () {
-      this.isActive = (this.$route.name === this.to.name) || this.activeByDefault
+    updateActiveState() {
+      this.isActive = this.$route.name === this.to.name || this.activeByDefault
     },
-    mounted () {
+    mounted() {
       this.updateActiveState()
     },
   },
@@ -136,7 +146,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .app-topbar-link {
   position: relative;
   cursor: pointer;

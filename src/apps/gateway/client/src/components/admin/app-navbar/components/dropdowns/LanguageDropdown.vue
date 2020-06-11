@@ -1,18 +1,20 @@
 <template>
-  <va-dropdown
-    class="language-dropdown"
-    offset="0, 16px"
-    fixed
-  >
-    <va-icon slot="anchor" :name="['flag-icon flag-icon-large', flagIconClass(currentLanguage())]"/>
+  <va-dropdown class="language-dropdown" offset="0, 16px" fixed>
+    <va-icon
+      slot="anchor"
+      :name="['flag-icon flag-icon-large', flagIconClass(currentLanguage())]"
+    />
     <div class="language-dropdown__content pl-4 pr-4 pt-2 pb-2">
-      <div class="language-dropdown__item row align--center pt-1 pb-1 mt-2 mb-2"
+      <div
         v-for="(option, id) in options"
         :key="id"
+        class="language-dropdown__item row align--center pt-1 pb-1 mt-2 mb-2"
         :class="{ active: option.code === currentLanguage() }"
         @click="setLanguage(option.code)"
       >
-        <va-icon :name="['flag-icon flag-icon-small', flagIconClass(option.code)]"/>
+        <va-icon
+          :name="['flag-icon flag-icon-small', flagIconClass(option.code)]"
+        />
         <span class="dropdown-item__text">
           {{ $t(`language.${option.name}`) }}
         </span>
@@ -25,7 +27,7 @@
 import Vue from 'vue'
 
 export default {
-  name: 'language-dropdown',
+  name: 'LanguageDropdown',
   props: {
     options: {
       type: Array,
@@ -54,15 +56,15 @@ export default {
     },
   },
   methods: {
-    setLanguage (locale) {
+    setLanguage(locale) {
       Vue.i18n.set(locale)
     },
 
-    currentLanguage () {
+    currentLanguage() {
       return Vue.i18n.locale() === 'en' ? 'gb' : Vue.i18n.locale()
     },
 
-    flagIconClass (code) {
+    flagIconClass(code) {
       return `flag-icon-${code}`
     },
   },
@@ -70,7 +72,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "~flag-icon-css/css/flag-icon.css";
+@import '~flag-icon-css/css/flag-icon.css';
 
 .language-dropdown {
   cursor: pointer;
@@ -104,7 +106,7 @@ export default {
   }
 
   .flag-icon::before {
-    content: "";
+    content: '';
   }
 
   .flag-icon-large {

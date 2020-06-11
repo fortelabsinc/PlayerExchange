@@ -8,9 +8,13 @@
         <template slot="menu">
           <template v-for="(item, index) in items">
             <app-sidebar-link-group
+              v-if="item.children"
               :key="index"
-              :icon="[ 'sidebar-menu-item-icon vuestic-iconset', item.meta.iconClass ]"
-              v-if="item.children">
+              :icon="[
+                'sidebar-menu-item-icon vuestic-iconset',
+                item.meta.iconClass,
+              ]"
+            >
               <span slot="title">{{ item.displayName }}</span>
               <app-sidebar-link
                 v-for="(subMenuItem, index) in item.children"
@@ -26,8 +30,12 @@
             <app-sidebar-link
               v-else
               :key="index"
-              :icon="[ 'sidebar-menu-item-icon vuestic-iconset', item.meta.iconClass ]"
-              :to="{ name: item.name }">
+              :icon="[
+                'sidebar-menu-item-icon vuestic-iconset',
+                item.meta.iconClass,
+              ]"
+              :to="{ name: item.name }"
+            >
               <span slot="title">{{ item.displayName }}</span>
             </app-sidebar-link>
           </template>
@@ -36,16 +44,16 @@
     </VbCard>
 
     <VbCard title="Sidebar minimised">
-      <app-sidebar
-        style="position: static; height: auto;"
-        minimized
-      >
+      <app-sidebar style="position: static; height: auto;" minimized>
         <template slot="menu">
           <template v-for="(item, index) in items">
             <app-sidebar-link-group
-              :key="index"
-              :icon="[ 'sidebar-menu-item-icon vuestic-iconset', item.meta.iconClass ]"
               v-if="item.children"
+              :key="index"
+              :icon="[
+                'sidebar-menu-item-icon vuestic-iconset',
+                item.meta.iconClass,
+              ]"
               minimized
             >
               <span slot="title">{{ item.displayName }}</span>
@@ -64,7 +72,10 @@
             <app-sidebar-link
               v-else
               :key="index"
-              :icon="[ 'sidebar-menu-item-icon vuestic-iconset', item.meta.iconClass ]"
+              :icon="[
+                'sidebar-menu-item-icon vuestic-iconset',
+                item.meta.iconClass,
+              ]"
               :to="{ name: item.name }"
               minimized
             >
@@ -89,7 +100,7 @@ export default {
     AppSidebarLinkGroup,
     AppSidebarLink,
   },
-  data () {
+  data() {
     return {
       value: 60,
       icon: 'iconicstroke iconicstroke-info',

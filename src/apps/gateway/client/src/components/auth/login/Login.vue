@@ -16,9 +16,17 @@
       :error-messages="passwordErrors"
     />
 
-    <div class="auth-layout__options d-flex align--center justify--space-between">
-      <va-checkbox v-model="keepLoggedIn" class="mb-0" :label="$t('auth.keep_logged_in')"/>
-      <router-link class="ml-1 link" :to="{name: 'recover-password'}">{{$t('auth.recover_password')}}</router-link>
+    <div
+      class="auth-layout__options d-flex align--center justify--space-between"
+    >
+      <va-checkbox
+        v-model="keepLoggedIn"
+        class="mb-0"
+        :label="$t('auth.keep_logged_in')"
+      />
+      <router-link class="ml-1 link" :to="{ name: 'recover-password' }">{{
+        $t('auth.recover_password')
+      }}</router-link>
     </div>
 
     <div class="d-flex justify--center mt-3">
@@ -28,10 +36,10 @@
 </template>
 
 <script>
-import Network from '../../../network'
+import { mapActions } from 'vuex'
 export default {
-  name: 'login',
-  data () {
+  name: 'Login',
+  data() {
     return {
       email: '',
       password: '',
@@ -41,32 +49,35 @@ export default {
     }
   },
   computed: {
-    formReady () {
+    formReady() {
       return !this.emailErrors.length && !this.passwordErrors.length
     },
   },
   methods: {
-    onsubmit () {
-      var self = this;
+    ...mapActions({
+      login: 'auth/ApiActionLogin',
+    }),
+    onsubmit() {
+      var self = this
       this.emailErrors = this.email ? [] : ['Email is required']
       this.passwordErrors = this.password ? [] : ['Password is required']
       if (!this.formReady) {
         return
       }
-      Network.auth.login(this.email, this.password, (success, rsp) => {
-        if(success){
-          self.$router.push({ name: 'dashboard' });
-        }
-        else{
-          console.log("Failed to log in user: " + JSON.stringify(rsp));
-          self.emailErrors = ['Login Failed'];
-          self.passwordErrors = ['Login Failed'];
-        }
-      });
+      this.login({
+        email: this.email,
+        password: this.password,
+        callback: (success, rsp) => {
+          if (success) {
+            self.$router.push({ name: 'dashboard' })
+          } else {
+            console.log('Failed to log in user: ' + JSON.stringify(rsp))
+            self.emailErrors = ['Login Failed']
+            self.passwordErrors = ['Login Failed']
+          }
+        },
+      })
     },
   },
 }
 </script>
-
-<style lang="scss">
-</style>

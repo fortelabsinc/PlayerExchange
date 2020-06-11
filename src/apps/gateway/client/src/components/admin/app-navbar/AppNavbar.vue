@@ -1,52 +1,26 @@
 <template>
-  <nav
-    class="app-navbar"
-    :style="navbarStyle"
-  >
+  <nav class="app-navbar" :style="navbarStyle">
     <div class="app-navbar__content row">
       <div class="app-navbar__menu-container">
         <va-icon-menu
-          class="app-navbar__menu"
           v-if="!minimized && !isTopBar"
-          @click.native="$emit('update:minimized', !minimized)"
+          class="app-navbar__menu"
           :color="contextConfig.invertedColor ? $themes.gray : 'white'"
+          @click.native="$emit('update:minimized', !minimized)"
         />
 
         <va-icon-menu-collapsed
-          class="app-navbar__menu"
           v-if="minimized && !isTopBar"
-          @click.native="$emit('update:minimized', !minimized)"
+          class="app-navbar__menu"
           :color="contextConfig.invertedColor ? $themes.gray : 'white'"
+          @click.native="$emit('update:minimized', !minimized)"
         />
 
-        <!-- <router-link
-          class="app-navbar__logo mr-3"
-          to="/"
-        >
-          <va-icon-vuestic />
-        </router-link> -->
-        <router-link
-          class="app-navbar__logo mr-3"
-          to="/"
-        >
+        <router-link class="app-navbar__logo mr-3" to="/">
           Player Exchange
         </router-link>
       </div>
       <div class="app-navbar__center lg5 md4">
-        <!-- <span
-          class="app-navbar__text"
-          :style="{color: this.$themes.gray}"
-        >
-          {{$t('navbar.messageUs')}}&nbsp;
-          <a
-            href="mailto:hello@epicmax.co"
-            target="_blank"
-            class="app-navbar__mailto-link"
-            :style="{color: this.$themes.primary}"
-          >
-            hello@epicmax.co
-          </a>
-        </span> -->
         <va-button
           href="https://github.com/fortelabsinc/PlayerExchange"
           color="#000000"
@@ -54,7 +28,7 @@
           icon="fa fa-github"
           target="_blank"
         >
-          {{$t('navbar.repository')}}
+          {{ $t('navbar.repository') }}
         </va-button>
       </div>
       <app-navbar-actions
@@ -63,31 +37,26 @@
         :is-top-bar.sync="isTopBarProxy"
       />
     </div>
-    <div
-      class="app-navbar__shape"
-      :style="shapeStyle"
-    ></div>
+    <div class="app-navbar__shape" :style="shapeStyle"></div>
   </nav>
 </template>
 
 <script>
-// import VaIconVuestic from '../../../iconset/VaIconVuestic'
 import VaIconMenu from '../../../iconset/VaIconMenu'
 import VaIconMenuCollapsed from '../../../iconset/VaIconMenuCollapsed'
 import AppNavbarActions from './components/AppNavbarActions'
 import { colorShiftHsl, ColorThemeMixin } from '../../../services/vuestic-ui'
-import store from '@/store';
+import { mapGetters } from 'vuex'
 
 export default {
-  name: 'app-navbar',
-  mixins: [ColorThemeMixin],
-  inject: ['contextConfig'],
+  name: 'AppNavbar',
   components: {
-    // VaIconVuestic,
     VaIconMenu,
     VaIconMenuCollapsed,
     AppNavbarActions,
   },
+  mixins: [ColorThemeMixin],
+  inject: ['contextConfig'],
   props: {
     isTopBar: {
       type: Boolean,
@@ -98,32 +67,32 @@ export default {
       required: true,
     },
   },
-  data () {
+  data() {
     return {
       userName: '',
     }
   },
-  mounted() {
-    this.userName = store.getters.authUserName;
-  },
   computed: {
+    ...mapGetters({
+      userName: 'auth/getUserName',
+    }),
     isTopBarProxy: {
-      get () {
+      get() {
         return this.isTopBar
       },
-      set (isTopBar) {
+      set(isTopBar) {
         this.$emit('update:isTopBar', isTopBar)
       },
     },
     minimizedProxy: {
-      get () {
+      get() {
         return this.minimized
       },
-      set (minimized) {
+      set(minimized) {
         this.$emit('update:minimized', minimized)
       },
     },
-    navbarStyle () {
+    navbarStyle() {
       const style = {
         backgroundColor: 'white',
       }
@@ -136,18 +105,22 @@ export default {
       }
 
       if (this.contextConfig.shadow === 'sm') {
-        style.boxShadow = !this.isTopBar ? '0 2px 3px 0 rgba(52, 56, 85, 0.25)' : null
+        style.boxShadow = !this.isTopBar
+          ? '0 2px 3px 0 rgba(52, 56, 85, 0.25)'
+          : null
       }
       return style
     },
 
-    shapeStyle () {
+    shapeStyle() {
       return {
-        borderTopColor: this.contextConfig.gradient ? colorShiftHsl(this.$themes.secondary, {
-          h: -1,
-          s: -11,
-          l: 10,
-        }).css : 'transparent',
+        borderTopColor: this.contextConfig.gradient
+          ? colorShiftHsl(this.$themes.secondary, {
+              h: -1,
+              s: -11,
+              l: 10,
+            }).css
+          : 'transparent',
       }
     },
   },
