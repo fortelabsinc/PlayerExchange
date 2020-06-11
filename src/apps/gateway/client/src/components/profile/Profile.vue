@@ -74,34 +74,30 @@
 </template>
 
 <script>
-import store from '@/store'
-import Network from '../../network'
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
-  data() {
-    return {
-      username: '',
-      email: '',
-      pay_id: '',
-      balance: [],
-    }
+  computed: {
+    ...mapGetters({
+      username: 'auth/getUserName',
+      email: 'auth/getEmail',
+      pay_id: 'auth/getPayId',
+      balance: 'wallet/getBalances',
+    }),
   },
   mounted() {
-    this.username = store.getters.authUserName
-    this.email = store.getters.authEmail
-    this.pay_id = store.getters.authPayId
-    this.getBalances()
+    this.getBalances({
+      callback: (success) => {
+        if (!success) {
+          console.log('Failed to load balances')
+        }
+      },
+    })
   },
   methods: {
-    getBalances() {
-      Network.wallet.balances((success, data) => {
-        if (success) {
-          console.log('success: ' + JSON.stringify(data))
-          this.balance = data
-        } else {
-          console.log('ERROR: ' + JSON.stringify(data))
-        }
-      })
-    },
+    ...mapActions({
+      getBalances: 'wallet/ApiActionFetchBalances',
+    }),
   },
 }
 </script>

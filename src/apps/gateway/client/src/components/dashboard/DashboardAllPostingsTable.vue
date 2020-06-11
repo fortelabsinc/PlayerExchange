@@ -14,7 +14,7 @@
           class="ma-0"
           @click="showDetailsModal(props.rowData)"
         >
-          Details
+          {{ $t('postings.table.all.details_bt') }}
         </va-button>
 
         <va-modal
@@ -38,8 +38,8 @@
 </template>
 
 <script>
-import Network from '@/network'
 import DashboardPostingDetails from './DashboardPostingDetails'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'DashboardAllPostingsTable',
@@ -48,58 +48,56 @@ export default {
   },
   data() {
     return {
-      postings: [
-        //{
-        //  type_req: "Group",
-        //  user_id: "cjimison@forte.io",
-        //  game_id: "World of Warcraft",
-        //  details: "Need help to finish thing",
-        //  complete_pay_amt: "100",
-        //  complete_pay_type: "XRP",
-        //}
-      ],
+      // postings: [
+      //   {
+      //     type_req: 'Group',
+      //     user_id: 'cjimison@forte.io',
+      //     game_id: 'World of Warcraft',
+      //     details: 'Need help to finish thing',
+      //     complete_pay_amt: '100',
+      //     complete_pay_type: 'XRP',
+      //   },
+      // ],
       loading: false,
-      term: null,
-      mode: 0,
       isModalVisible: false,
       selectedPosting: {},
     }
   },
   computed: {
+    ...mapGetters({
+      postings: 'work/getAllPostings',
+    }),
     fields() {
       return [
         {
           name: 'game_id',
-          title: 'Game', //this.$t('tables.headings.name'),
+          title: this.$t('postings.table.all.fields.game_id'),
           width: '20%',
         },
         {
           name: 'type_req',
-          title: 'Type', //this.$t('tables.headings.payid'),
+          title: this.$t('postings.table.all.fields.type_req'),
           width: '5%',
         },
         {
           name: 'user_id',
-          title: 'From', //this.$t('tables.headings.payid'),
+          title: this.$t('postings.table.all.fields.user_id'),
           width: '10%',
         },
         {
           name: 'details',
-          title: 'Details', //'this.$t('tables.headings.status'),
+          title: this.$t('postings.table.all.fields.details'),
           width: '40%',
-          //sortField: 'status',
         },
         {
           name: 'complete_pay_amt',
-          title: 'Complete', //'this.$t('tables.headings.status'),
+          title: this.$t('postings.table.all.fields.complete_pay_amt'),
           width: '10%',
-          //sortField: 'status',
         },
         {
           name: 'complete_pay_type',
-          title: 'Type', //'this.$t('tables.headings.status'),
+          title: this.$t('postings.table.all.fields.complete_pay_type'),
           width: '10%',
-          //sortField: 'status',
         },
         {
           name: '__slot:actions',
@@ -109,25 +107,20 @@ export default {
     },
   },
   mounted() {
-    this.loadPostings()
-  },
-  created() {
-    this.$eventHub.$on('refresh-postings', this.loadPostings)
-  },
-  beforeDestroy() {
-    this.$eventHub.$off('refresh-postings')
+    this.loading = true
+    this.loadPostings({
+      callback: (success) => {
+        this.loading = false
+        if (!success) {
+          console.log('Failed to load the postings')
+        }
+      },
+    })
   },
   methods: {
-    loadPostings() {
-      var self = this
-      Network.work.postings((success, data) => {
-        if (success) {
-          self.postings = data
-        } else {
-          console.log('Failed to load the postings: ' + data)
-        }
-      })
-    },
+    ...mapActions({
+      loadPostings: 'work/ApiActionFetchAllPostings',
+    }),
     showDetailsModal(data) {
       this.selectedPosting = data
       this.isModalVisible = true
@@ -135,5 +128,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss"></style>

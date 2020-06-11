@@ -49,8 +49,7 @@
 </template>
 
 <script>
-import store from '@/store'
-import Network from '../../network'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'DashboardPayment',
@@ -63,34 +62,33 @@ export default {
       currencies: [],
     }
   },
-  computed: {},
-  watch: {},
-  mounted() {
-    this.currencies = store.getters.currencies
+  computed: {
+    ...mapGetters({
+      currencies: 'options/getCurrencies',
+    }),
   },
   methods: {
+    ...mapActions({
+      makePayment: 'wallet/ApiActionMakePayment',
+    }),
     submit() {
-      var self = this
       this.showModal = true
       var data = {
         pay_id: this.payId,
         amt: String(this.amt),
         type: this.type,
       }
-      Network.wallet.payment(data, (success) => {
-        if (success) {
-          self.payId = ''
-          self.amt = '1'
-          self.type = 'XRP'
-        }
+      this.makePayment({
+        data,
+        callback: (success) => {
+          if (success) {
+            console.log('Payment success')
+          } else {
+            console.log('Failed to make a payment')
+          }
+        },
       })
     },
   },
 }
 </script>
-
-<style scoped>
-.chart {
-  height: 400px;
-}
-</style>
