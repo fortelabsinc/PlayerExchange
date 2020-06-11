@@ -1,11 +1,7 @@
 <template>
   <div>
     <va-card :title="$t('postings.table.mine.title')">
-
-      <va-input
-      :label="$t('postings.forms.payment.title')"
-      v-model="payId"
-      />
+      <va-input v-model="payId" :label="$t('postings.forms.payment.title')" />
       <va-data-table
         :fields="fields"
         :data="postings"
@@ -14,8 +10,12 @@
       >
         <template v-slot:pay="props">
           <va-button-group>
-            <va-button small @click="payConfirm(props.rowData)">Confirm</va-button>
-            <va-button small @click="payComplete(props.rowData)">Complete</va-button>
+            <va-button small @click="payConfirm(props.rowData)">
+              Confirm
+            </va-button>
+            <va-button small @click="payComplete(props.rowData)">
+              Complete
+            </va-button>
             <va-button small @click="payBonus(props.rowData)">Bonus</va-button>
           </va-button-group>
         </template>
@@ -27,10 +27,7 @@
             class="ma-0"
             @click="removePosting(props.rowData)"
           >
-          Remove
-          <!--
-            {{ $t('dashboard.table.resolve') }}
-          -->
+            Remove
           </va-button>
         </template>
       </va-data-table>
@@ -38,24 +35,22 @@
     <va-modal
       v-model="showModal"
       size="small"
-      :title=" $t('postings.forms.payment.submit_title')"
-      cancelClass="none"
-      :message=" $t('postings.forms.payment.submit_message') "
-      :okText=" $t('postings.forms.payment.submit_confirm') "
-      noOutsideDismiss
-      noEscDismiss
+      :title="$t('postings.forms.payment.submit_title')"
+      cancel-class="none"
+      :message="$t('postings.forms.payment.submit_message')"
+      :ok-text="$t('postings.forms.payment.submit_confirm')"
+      no-outside-dismiss
+      no-esc-dismiss
     />
   </div>
 </template>
 
 <script>
-import store from '@/store';
 import Network from '@/network'
-import auth from '../../network/modules/auth';
 
 export default {
-  name: 'dashboard-my-postings-table',
-  data () {
+  name: 'DashboardMyPostingsTable',
+  data() {
     return {
       postings: [
         //{
@@ -65,7 +60,7 @@ export default {
         //  details: "Need help to finish thing",
         //  complete_pay_amt: "100",
         //  complete_pay_type: "XRP",
-        //} 
+        //}
       ],
       loading: false,
       term: null,
@@ -75,128 +70,120 @@ export default {
     }
   },
   computed: {
-    fields () {
+    fields() {
       return [
-      {
-        name: 'game_id',
-        title: 'Game',//this.$t('tables.headings.name'),
-        width: '20%',
-      },
-      {
-        name: 'type_req',
-        title: 'Type', //this.$t('tables.headings.payid'),
-        width: '5%',
-      },
-      {
-        name: 'details',
-        title: 'Details',//'this.$t('tables.headings.status'),
-        width: '50%',
-        //sortField: 'status',
-      },
-      {
-        name: 'confirm_pay_amt',
-        title: 'Complete',//'this.$t('tables.headings.status'),
-        width: '5%',
-        //sortField: 'status',
-      },
-      {
-        name: 'complete_pay_amt',
-        title: 'Complete',//'this.$t('tables.headings.status'),
-        width: '5%',
-        //sortField: 'status',
-      },
-      {
-        name: 'bonus_pay_amt',
-        title: 'Complete',//'this.$t('tables.headings.status'),
-        width: '5%',
-        //sortField: 'status',
-      },
-      {
-        name: 'bonus_pay_type',
-        title: 'Type',//'this.$t('tables.headings.status'),
-        width: '5%',
-        //sortField: 'status',
-      },
-      {
-        title: "Pay",
-        name: '__slot:pay',
-        dataClass: 'text-right',
-      },
-      {
-        name: '__slot:remove',
-        dataClass: 'text-right',
-      }]
-    }
+        {
+          name: 'game_id',
+          title: 'Game', //this.$t('tables.headings.name'),
+          width: '20%',
+        },
+        {
+          name: 'type_req',
+          title: 'Type', //this.$t('tables.headings.payid'),
+          width: '5%',
+        },
+        {
+          name: 'details',
+          title: 'Details', //'this.$t('tables.headings.status'),
+          width: '50%',
+          //sortField: 'status',
+        },
+        {
+          name: 'confirm_pay_amt',
+          title: 'Complete', //'this.$t('tables.headings.status'),
+          width: '5%',
+          //sortField: 'status',
+        },
+        {
+          name: 'complete_pay_amt',
+          title: 'Complete', //'this.$t('tables.headings.status'),
+          width: '5%',
+          //sortField: 'status',
+        },
+        {
+          name: 'bonus_pay_amt',
+          title: 'Complete', //'this.$t('tables.headings.status'),
+          width: '5%',
+          //sortField: 'status',
+        },
+        {
+          name: 'bonus_pay_type',
+          title: 'Type', //'this.$t('tables.headings.status'),
+          width: '5%',
+          //sortField: 'status',
+        },
+        {
+          title: 'Pay',
+          name: '__slot:pay',
+          dataClass: 'text-right',
+        },
+        {
+          name: '__slot:remove',
+          dataClass: 'text-right',
+        },
+      ]
+    },
   },
   mounted() {
-    this.loadPostings();
+    this.loadPostings()
   },
   created() {
-    this.$eventHub.$on('refresh-postings', this.loadPostings);
+    this.$eventHub.$on('refresh-postings', this.loadPostings)
   },
   beforeDestroy() {
-    this.$eventHub.$off('refresh-postings');
+    this.$eventHub.$off('refresh-postings')
   },
   methods: {
     payConfirm(data) {
       this.pay({
-        "amt": data["confirm_pay_amt"],
-        "type": data["confirm_pay_type"],
-        "pay_id": this.payId
-      });
+        amt: data['confirm_pay_amt'],
+        type: data['confirm_pay_type'],
+        pay_id: this.payId,
+      })
     },
     payComplete(data) {
       this.pay({
-        "amt": data["complete_pay_amt"],
-        "type": data["complete_pay_type"],
-        "pay_id": this.payId
-      });
+        amt: data['complete_pay_amt'],
+        type: data['complete_pay_type'],
+        pay_id: this.payId,
+      })
     },
     payBonus(data) {
       this.pay({
-        "amt": data["bonus_pay_amt"],
-        "type": data["bonus_pay_type"],
-        "pay_id": this.payId
-      });
+        amt: data['bonus_pay_amt'],
+        type: data['bonus_pay_type'],
+        pay_id: this.payId,
+      })
     },
     pay(data) {
-      this.showModal = true;
-      Network.wallet.payment(data, (success, data) =>{
-        if(success)
-        {
-          console.log("Payment success")
+      this.showModal = true
+      Network.wallet.payment(data, (success, data) => {
+        if (success) {
+          console.log('Payment success')
+        } else {
+          console.log('Failed to load the postings: ' + data)
         }
-        else
-        {
-          console.log("Failed to load the postings: " + data)
-        }
-      });
+      })
     },
     loadPostings() {
-      var self = this;
+      var self = this
       Network.work.userPostings((success, data) => {
-        if(success)
-        {
-          self.postings = data;
+        if (success) {
+          self.postings = data
+        } else {
+          console.log('Failed to load the postings: ' + data)
         }
-        else
-        {
-          console.log("Failed to load the postings: " + data)
-        }
-      });
+      })
     },
     removePosting(data) {
-      Network.work.deletePosting(data["post_id"], (success, data) =>
-      {
-        if(success)
-        {
-          this.$eventHub.$emit('refresh-postings');
+      Network.work.deletePosting(data['post_id'], (success) => {
+        if (success) {
+          this.$eventHub.$emit('refresh-postings')
         }
-      });
-    }
+      })
+    },
   },
 }
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

@@ -1,35 +1,41 @@
 <template>
-  <aside
-    class="app-topbar"
-    :style="computedStyles"
-  >
+  <aside class="app-topbar" :style="computedStyles">
     <ul class="app-topbar__menu">
       <template v-for="(item, key) in items">
         <app-topbar-link-group
-          class="app-topbar__menu-group"
           v-if="item.children"
           :key="key"
+          class="app-topbar__menu-group"
           :is-active="hasActiveByDefault(item)"
-          :icon="[ 'sidebar-menu-item-icon vuestic-iconset', item.meta.iconClass ]"
+          :icon="[
+            'sidebar-menu-item-icon vuestic-iconset',
+            item.meta.iconClass,
+          ]"
           :title="$t(item.displayName)"
           :is-multi-row="item.children.length > 10"
         >
           <app-topbar-link-group-item
+            v-for="(subMenuItem, k) in item.children"
+            :key="k"
             class="app-topbar__menu-group-item"
-            :class="{'app-topbar__menu-group-item--multi-row': item.children.length > 10 }"
-            v-for="(subMenuItem, key) in item.children"
-            :key="key"
+            :class="{
+              'app-topbar__menu-group-item--multi-row':
+                item.children.length > 10,
+            }"
             :to="{ name: subMenuItem.name }"
             :is-active="subMenuItem.name === $route.name"
             :title="$t(subMenuItem.displayName)"
           />
         </app-topbar-link-group>
         <app-topbar-link
-          class="app-topbar__link"
           v-else
           :key="key"
+          class="app-topbar__link"
           :is-active="item.name === $route.name"
-          :icon="[ 'sidebar-menu-item-icon vuestic-iconset', item.meta.iconClass ]"
+          :icon="[
+            'sidebar-menu-item-icon vuestic-iconset',
+            item.meta.iconClass,
+          ]"
           :to="{ name: item.name }"
         >
           {{ $t(item.displayName) }}
@@ -47,18 +53,22 @@ import { navigationRoutes } from '../app-sidebar/NavigationRoutes'
 import { ColorThemeMixin } from '../../../services/vuestic-ui'
 
 export default {
-  name: 'app-topbar',
-  mixins: [ColorThemeMixin],
-  inject: ['contextConfig'],
+  name: 'AppTopbar',
   components: {
     AppTopbarLink,
     AppTopbarLinkGroup,
     AppTopbarLinkGroupItem,
   },
-  props: {
+  mixins: [ColorThemeMixin],
+  inject: ['contextConfig'],
+  props: {},
+  data() {
+    return {
+      items: navigationRoutes.routes,
+    }
   },
   computed: {
-    computedStyles () {
+    computedStyles() {
       if (this.contextConfig.invertedColor) {
         return {
           backgroundColor: 'white',
@@ -71,21 +81,15 @@ export default {
       }
     },
   },
-  data () {
-    return {
-      items: navigationRoutes.routes,
-    }
-  },
   methods: {
-    hasActiveByDefault (item) {
-      return item.children.some(child => child.name === this.$route.name)
+    hasActiveByDefault(item) {
+      return item.children.some((child) => child.name === this.$route.name)
     },
   },
 }
 </script>
 
 <style lang="scss">
-
 .app-topbar {
   transition: all 0.3s ease;
   width: 100%;

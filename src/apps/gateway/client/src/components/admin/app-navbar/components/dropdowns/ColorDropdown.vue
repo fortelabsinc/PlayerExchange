@@ -1,8 +1,5 @@
 <template>
-  <va-dropdown
-    class="color-dropdown"
-    offset="0, 13px"
-  >
+  <va-dropdown class="color-dropdown" offset="0, 13px">
     <va-icon-color
       slot="anchor"
       class="color-dropdown__icon"
@@ -10,122 +7,98 @@
     />
     <div class="color-dropdown__content pl-4 pr-4 pt-2 pb-2">
       <va-button-toggle
+        v-model="selectedTheme"
         outline
         small
-        v-model="selectedTheme"
         :options="modeOptions"
         style="max-width: 100%;"
       />
       <va-dropdown class="color-picker-dropdown mt-1 mb-1">
         <va-badge
+          slot="anchor"
           class="color-picker-dropdown__badge"
           color="primary"
-          slot="anchor"
         >
           Primary
         </va-badge>
-        <va-advanced-color-picker
-          class="my-1"
-          v-model="$themes.primary"
-        />
+        <va-advanced-color-picker v-model="$themes.primary" class="my-1" />
       </va-dropdown>
 
       <va-dropdown class="color-picker-dropdown mt-1 mb-1">
         <va-badge
+          slot="anchor"
           class="color-picker-dropdown__badge"
           color="secondary"
-          slot="anchor"
         >
           Secondary
         </va-badge>
-        <va-advanced-color-picker
-          class="my-1"
-          v-model="$themes.secondary"
-        />
+        <va-advanced-color-picker v-model="$themes.secondary" class="my-1" />
       </va-dropdown>
 
       <va-dropdown class="color-picker-dropdown mt-1 mb-1">
         <va-badge
+          slot="anchor"
           class="color-picker-dropdown__badge"
           color="success"
-          slot="anchor"
         >
           Success
         </va-badge>
-        <va-advanced-color-picker
-          class="my-1"
-          v-model="$themes.success"
-        />
+        <va-advanced-color-picker v-model="$themes.success" class="my-1" />
       </va-dropdown>
 
       <va-dropdown class="color-picker-dropdown mt-1 mb-1">
         <va-badge
+          slot="anchor"
           class="color-picker-dropdown__badge"
           color="info"
-          slot="anchor"
         >
           Info
         </va-badge>
-        <va-advanced-color-picker
-          class="my-1"
-          v-model="$themes.info"
-        />
+        <va-advanced-color-picker v-model="$themes.info" class="my-1" />
       </va-dropdown>
 
       <va-dropdown class="color-picker-dropdown mt-1 mb-1">
         <va-badge
+          slot="anchor"
           class="color-picker-dropdown__badge"
           color="danger"
-          slot="anchor"
         >
           Danger
         </va-badge>
-        <va-advanced-color-picker
-          class="my-1"
-          v-model="$themes.danger"
-        />
+        <va-advanced-color-picker v-model="$themes.danger" class="my-1" />
       </va-dropdown>
 
       <va-dropdown class="color-picker-dropdown mt-1 mb-1">
         <va-badge
+          slot="anchor"
           class="color-picker-dropdown__badge"
           color="warning"
-          slot="anchor"
         >
           Warning
         </va-badge>
-        <va-advanced-color-picker
-          class="my-1"
-          v-model="$themes.warning"
-        />
+        <va-advanced-color-picker v-model="$themes.warning" class="my-1" />
       </va-dropdown>
 
       <va-dropdown class="color-picker-dropdown mt-1 mb-1">
         <va-badge
+          slot="anchor"
           class="color-picker-dropdown__badge"
           color="gray"
-          slot="anchor"
         >
           Gray
         </va-badge>
-        <va-advanced-color-picker
-          class="my-1"
-          v-model="$themes.gray"
-        />
+        <va-advanced-color-picker v-model="$themes.gray" class="my-1" />
       </va-dropdown>
 
       <va-dropdown class="color-picker-dropdown mt-1 mb-1">
         <va-badge
+          slot="anchor"
           class="color-picker-dropdown__badge"
           color="dark"
-          slot="anchor"
         >
           Dark
         </va-badge>
-        <va-advanced-color-picker
-          class="my-1"
-          v-model="$themes.dark"
-        />
+        <va-advanced-color-picker v-model="$themes.dark" class="my-1" />
       </va-dropdown>
     </div>
   </va-dropdown>
@@ -141,14 +114,14 @@ export default {
   },
   computed: {
     selectedTheme: {
-      get () {
+      get() {
         return this.contextConfig.invertedColor ? 'corporate' : 'original'
       },
-      set (themeName) {
+      set(themeName) {
         this.$root.$emit('change-theme', themeName)
       },
     },
-    modeOptions () {
+    modeOptions() {
       return [
         {
           label: 'Original',
@@ -165,7 +138,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .color-dropdown {
   cursor: pointer;
 

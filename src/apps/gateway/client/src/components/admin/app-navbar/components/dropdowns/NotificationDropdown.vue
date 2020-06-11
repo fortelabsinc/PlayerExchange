@@ -1,13 +1,9 @@
 <template>
-  <va-dropdown
-    class="notification-dropdown"
-    offset="0, 16px"
-    boundary-body
-  >
+  <va-dropdown class="notification-dropdown" offset="0, 16px" boundary-body>
     <va-icon-notification
       slot="anchor"
       class="notification-dropdown__icon"
-      :class="{'notification-dropdown__icon--unread': !allRead}"
+      :class="{ 'notification-dropdown__icon--unread': !allRead }"
       :color="contextConfig.invertedColor ? $themes.gray : 'white'"
     />
     <div class="notification-dropdown__content pl-3 pr-3 pt-2 pb-2">
@@ -15,17 +11,35 @@
         v-for="option in computedOptions"
         :key="option.id"
         class="notification-dropdown__item row pt-1 pb-1 mt-2 mb-2"
-        :class="{'notification-dropdown__item--unread': option.unread}"
+        :class="{ 'notification-dropdown__item--unread': option.unread }"
         @click="option.unread = false"
       >
-        <img v-if="option.details.avatar" class="mr-2 notification-dropdown__item__avatar" :src="option.details.avatar"/>
+        <img
+          v-if="option.details.avatar"
+          class="mr-2 notification-dropdown__item__avatar"
+          :src="option.details.avatar"
+        />
         <span class="ellipsis" style="max-width: 85%;">
-          <span class="text--bold" v-if="option.details.name">{{option.details.name}}</span> {{$t(`notifications.${option.name}`, { type: option.details.type })}}
+          <span v-if="option.details.name" class="text--bold">{{
+            option.details.name
+          }}</span>
+          {{
+            $t(`notifications.${option.name}`, { type: option.details.type })
+          }}
         </span>
       </div>
       <div class="row justify--space-between">
-        <va-button class="ma-0 mb-2 mt-1" small>{{ $t('notifications.all') }}</va-button>
-        <va-button class="ma-0 mb-2 mt-1" small outline @click="markAllAsRead" :disabled="allRead">{{ $t('notifications.mark_as_read') }}</va-button>
+        <va-button class="ma-0 mb-2 mt-1" small>{{
+          $t('notifications.all')
+        }}</va-button>
+        <va-button
+          class="ma-0 mb-2 mt-1"
+          small
+          outline
+          :disabled="allRead"
+          @click="markAllAsRead"
+        >{{ $t('notifications.mark_as_read') }}</va-button
+        >
       </div>
     </div>
   </va-dropdown>
@@ -36,17 +50,12 @@ import VaIconNotification from '../../../../../iconset/VaIconNotification'
 import { ColorThemeMixin } from '../../../../../services/vuestic-ui'
 
 export default {
-  name: 'notification-dropdown',
+  name: 'NotificationDropdown',
   inject: ['contextConfig'],
   components: {
     VaIconNotification,
   },
   mixins: [ColorThemeMixin],
-  data () {
-    return {
-      computedOptions: [...this.options],
-    }
-  },
   props: {
     options: {
       type: Array,
@@ -76,14 +85,19 @@ export default {
       ],
     },
   },
+  data() {
+    return {
+      computedOptions: [...this.options],
+    }
+  },
   computed: {
-    allRead () {
-      return !this.computedOptions.filter(item => item.unread).length
+    allRead() {
+      return !this.computedOptions.filter((item) => item.unread).length
     },
   },
   methods: {
-    markAllAsRead () {
-      this.computedOptions = this.computedOptions.map(item => ({
+    markAllAsRead() {
+      this.computedOptions = this.computedOptions.map((item) => ({
         ...item,
         unread: false,
       }))
@@ -93,7 +107,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .notification-dropdown {
   cursor: pointer;
 

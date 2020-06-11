@@ -7,40 +7,40 @@
             {{ $t('profile.account.title') }}
           </va-list-label>
 
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('profile.account.username') }}
               </va-item-label>
 
               <va-item-label>
-                {{ this.username }}
+                {{ username }}
               </va-item-label>
             </va-item-section>
           </va-item>
 
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('profile.account.email') }}
               </va-item-label>
 
               <va-item-label>
-                {{ this.email }}
+                {{ email }}
               </va-item-label>
             </va-item-section>
           </va-item>
 
           <va-list-separator fit spaced />
 
-          <va-item >
+          <va-item>
             <va-item-section>
               <va-item-label caption>
                 {{ $t('profile.account.pay_id') }}
               </va-item-label>
 
               <va-item-label>
-                {{ this.pay_id }}
+                {{ pay_id }}
               </va-item-label>
             </va-item-section>
           </va-item>
@@ -53,14 +53,10 @@
             {{ $t('profile.balance.title') }}
           </va-list-label>
 
-          <va-item
-            clickable
-            v-for="item in balance"
-            :key="item.id"
-          >
+          <va-item v-for="item in balance" :key="item.id" clickable>
             <va-item-section
               side
-              :style="{color: $parent.$themes.primary, fontWeight: 'bold'}"
+              :style="{ color: $parent.$themes.primary, fontWeight: 'bold' }"
             >
               {{ item.id }}
             </va-item-section>
@@ -78,39 +74,34 @@
 </template>
 
 <script>
-import store from '@/store';
+import store from '@/store'
 import Network from '../../network'
 export default {
-  data () {
+  data() {
     return {
       username: '',
       email: '',
       pay_id: '',
-      balance: []
+      balance: [],
     }
   },
   mounted() {
-
-    this.username = store.getters.authUserName;
-    this.email = store.getters.authEmail;
-    this.pay_id = store.getters.authPayId;
-    this.getBalances();
+    this.username = store.getters.authUserName
+    this.email = store.getters.authEmail
+    this.pay_id = store.getters.authPayId
+    this.getBalances()
   },
   methods: {
-    getBalances(){
-      var self = this;
+    getBalances() {
       Network.wallet.balances((success, data) => {
-        if(success) {
-          console.log("success: " + JSON.stringify(data));
-          this.balance = data;
-        }
-        else
-        {
-          console.log("ERROR: " + JSON.stringify(data));
+        if (success) {
+          console.log('success: ' + JSON.stringify(data))
+          this.balance = data
+        } else {
+          console.log('ERROR: ' + JSON.stringify(data))
         }
       })
-    }
-  }
-
+    },
+  },
 }
 </script>

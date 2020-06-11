@@ -4,53 +4,25 @@
     <dashboard-postings />
     <dashboard-my-postings-table />
     <dashboard-payment />
-    <!--
-    <dashboard-table />
-    <dashboard-charts />
-    <dashboard-info-block />
-    <div class="row">
-      <div class="flex xs12">
-        <dashboard-table />
-      </div>
-    </div>
-    <div class="row row-equal">
-      <div class="flex xs12 lg6">
-        <dashboard-tabs @submit="addAddressToMap"/>
-      </div>
-      <div class="flex xs12 lg6">
-        <dashboard-map ref="dashboardMap"/>
-      </div>
-    </div>
-    -->
   </div>
 </template>
 
 <script>
-import DashboardCharts from './DashboardCharts'
-import DashboardInfoBlock from './DashboardInfoBlock'
-import DashboardTable from './DashboardTable'
-import DashboardTabs from './DashboardTabs'
-import DashboardMap from './DashboardMap'
 import DashboardPostings from './DashboardPostings'
 import DashboardMyPostingsTable from './DashboardMyPostingsTable'
 import DashboardAllPostingsTable from './DashboardAllPostingsTable'
 import DashboardPayment from './DashboardPayment'
 
 export default {
-  name: 'dashboard',
+  name: 'Dashboard',
   components: {
-    DashboardCharts,
-    DashboardInfoBlock,
-    DashboardTable,
-    DashboardTabs,
-    DashboardMap,
     DashboardPostings,
     DashboardMyPostingsTable,
     DashboardAllPostingsTable,
     DashboardPayment,
   },
   methods: {
-    addAddressToMap ({ city, country }) {
+    addAddressToMap({ city, country }) {
       this.$refs.dashboardMap.addAddress({ city: city.text, country })
     },
   },
@@ -58,15 +30,15 @@ export default {
 </script>
 
 <style lang="scss">
-  .row-equal .flex {
-    .va-card {
-      height: 100%;
-    }
+.row-equal .flex {
+  .va-card {
+    height: 100%;
   }
+}
 
-  .dashboard {
-    .va-card {
-      margin-bottom: 0 !important;
-    }
+.dashboard {
+  .va-card {
+    margin-bottom: 0 !important;
   }
+}
 </style>

@@ -6,28 +6,27 @@
 </template>
 
 <script>
-
 export default {
-  name: 'app-page-layout',
+  name: 'AppPageLayout',
   props: {
     mobileWidth: {
       type: Number,
       default: 767,
     },
   },
-  mounted () {
+  mounted() {
     window.addEventListener('resize', () => this.updateSidebarState())
 
     this.updateSidebarState()
   },
-  beforeDestroy () {
+  beforeDestroy() {
     window.removeEventListener('resize', () => this.updateSidebarState())
   },
   methods: {
-    checkIsDesktop () {
+    checkIsDesktop() {
       return window.matchMedia(`(min-width: ${this.mobileWidth}px)`).matches
     },
-    updateSidebarState () {
+    updateSidebarState() {
       if (this.checkIsDesktop()) {
         this.$emit('update:minimized', false)
       } else {
@@ -39,7 +38,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .app-page-layout {
   position: fixed;
   top: 0;
