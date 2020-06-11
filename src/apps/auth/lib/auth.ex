@@ -22,7 +22,7 @@
 defmodule Auth do
   @moduledoc ~S"""
   """
-
+  import Utils.Build
   require Logger
 
   # ----------------------------------------------------------------------------
@@ -58,7 +58,19 @@ defmodule Auth do
   """
   @spec register(:invalid | %{optional(:__struct__) => none, optional(atom | binary) => any}) ::
           {:error, <<_::200>> | %{optional(atom) => [binary]}} | {:ok, any}
-  def register(data), do: Storage.Auth.User.register(data)
+  if_prod do
+    def register(data), do: Storage.Auth.User.register(data)
+  else
+    def register(data) do
+      case Storage.Auth.User.registerDev(data) do
+        {:error, _} = err ->
+          err
+
+        {:ok, _data, confirmId} ->
+          confirm(confirmId)
+      end
+    end
+  end
 
   @doc """
   """

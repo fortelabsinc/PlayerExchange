@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'Login',
   data() {
@@ -48,16 +49,25 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      login: 'auth/ApiActionLogin',
+    }),
     onSubmit() {
       if (!this.$refs.form.validate()) {
         return
       }
-      // TODO: Make API call to /login
-      // if (success) {
-      this.$router.push({ name: 'Home' })
-      // } else {
-      //   console.log('Failed to log in user: ' + JSON.stringify(rsp))
-      // }
+
+      this.login({
+        email: this.email, 
+        password: this.password}).then((data) => {
+          if(undefined != data["payload"]) {
+            this.$router.push({ name: 'Home' })
+          }
+          else
+          {
+            console.log("Error: " + JSON.stringify(data))
+          }
+      })
     },
   },
 }

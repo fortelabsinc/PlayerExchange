@@ -29,7 +29,7 @@ defmodule Storage.MixProject do
       {:comeonin, "~> 5.3.1", override: true},
       {:plug, git: "https://github.com/fortelabsinc/plug.git", branch: "master", override: true},
       {:bamboo, "~> 1.5.0", override: true},
-      {:access_pass, git: "https://github.com/AppDoctorIo/accesspass.git"},
+      {:access_pass, git: "https://github.com/fortelabsinc/accesspass.git"},
       {:utils, in_umbrella: true},
       {:ecto, "~> 3.4"},
       {:ecto_sql, "~> 3.4"},

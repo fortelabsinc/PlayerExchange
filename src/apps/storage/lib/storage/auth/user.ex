@@ -196,7 +196,18 @@ defmodule Storage.Auth.User do
   """
   @spec register(:invalid | %{optional(:__struct__) => none, optional(atom | binary) => any}) ::
           {:error, <<_::200>> | %{optional(atom) => [binary]}} | {:ok, any}
+
   def register(data), do: AccessPass.register(data)
+
+  @doc """
+  This is the same as the register version but for dev env.  Basically
+  this will not send an email but will return the confirmID so
+  it can be handled on the server side
+  """
+  @spec registerDev(:invalid | %{optional(:__struct__) => none, optional(atom | binary) => any}) ::
+          {:error, <<_::200>> | %{optional(atom) => [binary]}} | {:ok, any, String.t()}
+
+  def registerDev(data), do: AccessPass.no_email_register(data)
 
   @doc """
   Confirms a Registration token that was sent to a users email address.

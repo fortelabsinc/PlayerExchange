@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'Signup',
   data() {
@@ -47,16 +48,20 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      register: 'auth/ApiActionRegister',
+    }),
     onSubmit() {
       if (!this.$refs.form.validate()) {
         return
       }
-      // TODO: Make API call to /login
-      // if (success) {
-      this.$router.push({ name: 'Home' })
-      // } else {
-      //   console.log('Failed to log in user: ' + JSON.stringify(rsp))
-      // }
+      this.register({
+        username: this.email,
+        email: this.email,
+        password: this.password}).then((data) => {
+          console.log("Data = " + JSON.stringify(data))
+          this.$router.push({ name: 'Login' })
+      })
     },
   },
 }

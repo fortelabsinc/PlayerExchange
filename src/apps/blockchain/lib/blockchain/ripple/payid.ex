@@ -43,7 +43,11 @@ defmodule Blockchain.Ripple.PayID do
   # ----------------------------------------------------------------------------
   plug(Tesla.Middleware.BaseUrl, @serverName)
   plug(Tesla.Middleware.JSON)
-  plug(Tesla.Middleware.Headers, [{"Content-Type", "application/json"}])
+
+  plug(Tesla.Middleware.Headers, [
+    {"Content-Type", "application/json"},
+    {"PayID-API-Version", "2020-05-28"}
+  ])
 
   # ----------------------------------------------------------------------------
   # Public API
@@ -88,7 +92,7 @@ defmodule Blockchain.Ripple.PayID do
       [name, server] ->
         {:ok, rsp} =
           Tesla.get("https://#{server}/#{name}",
-            headers: [{"Accept", header(type)}]
+            headers: [{"Accept", header(type)}, {"PayID-Version", "1.0"}]
           )
 
         case rsp.status do
@@ -133,7 +137,7 @@ defmodule Blockchain.Ripple.PayID do
   @spec lookupFull(any) ::
           {:error, :bad_request | :not_found | :server_unavailable} | {:ok, map}
   def lookupFull(payID) do
-    {:ok, rsp} = get("/v1/users/#{payID}")
+    {:ok, rsp} = get("/users/#{payID}")
 
     case rsp.status do
       200 -> {:ok, rsp.body}
@@ -153,10 +157,10 @@ defmodule Blockchain.Ripple.PayID do
           :ok | {:error, :bad_request | :in_use | :server_unavailable}
   def create(payID, wallet, type \\ :xrp_test) do
     data = %{
-      pay_id: payID,
+      payId: payID,
       addresses: [
         %{
-          payment_network: network(type),
+          paymentNetwork: network(type),
           environment: environment(type),
           details: %{
             address: wallet
@@ -165,11 +169,12 @@ defmodule Blockchain.Ripple.PayID do
       ]
     }
 
-    {:ok, rsp} = post("/v1/users", data)
+    {:ok, rsp} = post("/users", data)
 
     case rsp.status do
       201 -> :ok
       400 -> {:error, :bad_request}
+      404 -> {:error, :not_found}
       409 -> {:error, :in_use}
       503 -> {:error, :server_unavailable}
     end
@@ -185,10 +190,10 @@ defmodule Blockchain.Ripple.PayID do
           :ok | {:error, :bad_request | :in_use | :server_unavailable}
   def update(payID, wallet, type \\ :xrp_test) do
     data = %{
-      pay_id: payID,
+      payId: payID,
       addresses: [
         %{
-          payment_network: network(type),
+          paymentNetwork: network(type),
           environment: environment(type),
           details: %{
             address: wallet
@@ -197,12 +202,13 @@ defmodule Blockchain.Ripple.PayID do
       ]
     }
 
-    {:ok, rsp} = put("/v1/users/#{payID}", data)
+    {:ok, rsp} = put("/users/#{payID}", data)
 
     case rsp.status do
       200 -> :ok
       201 -> :ok
       400 -> {:error, :bad_request}
+      404 -> {:error, :not_found}
       409 -> {:error, :in_use}
       503 -> {:error, :server_unavailable}
     end
@@ -217,7 +223,7 @@ defmodule Blockchain.Ripple.PayID do
   @spec remove(String.t()) ::
           :ok | {:error, :bad_request | :not_found | :server_unavailable}
   def remove(payID) do
-    {:ok, rsp} = delete("/v1/users/#{payID}")
+    {:ok, rsp} = delete("/users/#{payID}")
 
     case rsp.status do
       200 -> :ok
@@ -233,6 +239,7 @@ defmodule Blockchain.Ripple.PayID do
   # ----------------------------------------------------------------------------
 
   # Pull out the header address for the network you are looking for
+  defp header(:all), do: "application/payid+json"
   defp header(:xrp), do: "application/xrpl-mainnet+json"
   defp header(:xrp_test), do: "application/xrpl-testnet+json"
   defp header(:xrp_dev), do: "application/xrpl-devnet+json"

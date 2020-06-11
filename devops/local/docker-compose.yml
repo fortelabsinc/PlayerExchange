@@ -39,7 +39,7 @@ services:
     hostname: rippler
     image: gcr.io/forte-player-exchange/rippler:latest
     ports:
-      - "8180:8180"
+      - "3000:3000"
     networks:
       close:
         aliases:

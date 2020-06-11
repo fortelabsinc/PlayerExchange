@@ -27,7 +27,7 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Auth do
   change API versions later on but still keep backwards compatability
   support if possible
   """
-
+  import Utils.Build
   require Logger
   use Plug.Router
   import Plug.Conn
@@ -36,6 +36,11 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Auth do
   # Plug options
   # ----------------------------------------------------------------------------
   plug(Plug.Logger)
+
+  if_not_prod do
+    plug(Corsica, origins: "*", allow_methods: :all, allow_headers: :all)
+  end
+
   plug(:match)
 
   plug(Plug.Parsers,
