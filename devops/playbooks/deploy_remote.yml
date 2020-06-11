@@ -6,11 +6,13 @@
 
   pre_tasks:
     - include_tasks: tasks/args_load.yml
+    - include_tasks: tasks/args_check.yml
 
   tasks:
     - include_tasks: tasks/namespaces.yml
     - include_tasks: tasks/cockroach/kube_deploy.yml
-    #- include_tasks: tasks/monitoring/kube_deploy.yml
+    - include_tasks: tasks/monitoring/kube_deploy.yml
+      when: stage == "prod"
     - include_tasks: tasks/payid/kube_deploy.yml
     - include_tasks: tasks/rippler/kube_deploy.yml
     - include_tasks: tasks/plyxchg/kube_deploy.yml

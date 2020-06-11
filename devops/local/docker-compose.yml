@@ -1,1 +1,108 @@
 # What do I need to have inside this docker compose file?
+# ---------------------------------------------------------------------------
+# Docker setup for local development and testing.
+#
+# This compose file should have pretty much everything needed to run a local
+# copy of the service.  The goal here is to make an easy to debug environment
+# that doesn't require any other external hosting.
+
+version: "3.8"
+services:
+  # ---------------------------------------------------------------------------
+  # Setup the local redis server.
+  redis:
+    image: redis:6-alpine
+    container_name: redis
+    hostname: redis
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    networks:
+      close:
+        aliases:
+          - redis
+
+  payid:
+    container_name: payid
+    hostname: payid
+    image: gcr.io/forte-player-exchange/payid:latest
+    ports:
+      - "8081:8081"
+      - "8080:8080"
+    networks:
+      close:
+        aliases:
+          - payid
+
+  rippler:
+    container_name: rippler
+    hostname: rippler
+    image: gcr.io/forte-player-exchange/rippler:latest
+    ports:
+      - "8180:8180"
+    networks:
+      close:
+        aliases:
+          - rippler
+
+  # ---------------------------------------------------------------------------
+  # Set up local Cockroach DB.  For now we will spin up a 3 node cluster.
+  # The first node will be responsible for running the UI and generally just
+  # get setup for development purposes.  The other nodes are there to test
+  # out things like replication overhead and general management of the system.
+  #
+  # In a live Kubernetes based deployment this will behind a "service" to
+  # help load balance connection etc.  For future "local" development
+  # system we will want to port some of this to a docker desktop running
+  # kubernetes.
+  cdb_1:
+    container_name: cdb_1
+    hostname: cdb_1
+    image: cockroachdb/cockroach:latest
+    command: start --insecure
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    expose:
+      #  - "8080"
+      - "26257"
+    ports:
+      - "26257:26257"
+      #- "8080:8080"
+    networks:
+      close:
+        aliases:
+          - cdb_1
+  # Setup the second cockroach dB node.
+  cdb_2:
+    container_name: cdb_2
+    hostname: cdb_2
+    image: cockroachdb/cockroach:latest
+    command: start --insecure --join=cdb_1
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    depends_on:
+      - cdb_1
+    networks:
+      close:
+        aliases:
+          - cdb_2
+  # Setup the third cockroach dB node.
+  cdb_3:
+    container_name: cdb_3
+    hostname: cdb_3
+    image: cockroachdb/cockroach:latest
+    command: start --insecure --join=cdb_1
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    depends_on:
+      - cdb_1
+    networks:
+      close:
+        aliases:
+          - cdb_3
+
+networks:
+  open:
+    driver: bridge
+  close:
+    driver: bridge

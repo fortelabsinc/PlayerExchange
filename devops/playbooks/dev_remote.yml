@@ -6,7 +6,7 @@
 - hosts: localhost
   gather_facts: false
   vars:
-    ansible_python_interpreter: "/usr/bin/python3"
+    ansible_python_interpreter: "/opt/hostedtoolcache/Python/3.8.3/x64/bin/python3"
 
   # Setup the state of the node.
   pre_tasks:
@@ -73,7 +73,6 @@
       add_host:
         hostname: "cb_1"
         ansible_connection: docker
-        ansible_python_interpreter: /usr/bin/python3
       when: env_state != 'stop'
 
     - name: "{{ action_class }} the cockroach 2 backend in docker"

@@ -1,0 +1,4 @@
+# placeholder for Deploying a Redis server
+- name: "Deploy the Redis server stack"
+  debug:
+    msg: "NOT YET IMPLEMENTED"

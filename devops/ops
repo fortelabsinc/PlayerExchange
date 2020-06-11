@@ -41,6 +41,14 @@ parser.add_argument('--local_dev_stop',
                     help='Stops a local dev environment',
                     action="store_true")
 
+parser.add_argument('--remote_dev_start',
+                    help='Starts a dev environment on github action server',
+                    action="store_true")
+
+parser.add_argument('--remote_dev_stop',
+                    help='Stops a dev environment on github action server',
+                    action="store_true")
+
 parser.add_argument('--cluster_create',
                     help='Creates a cluster on GKE.',
                     action="store_true")
@@ -56,6 +64,10 @@ parser.add_argument('--deploy',
 parser.add_argument('--release',
                     help='Release the services to GKE',
                     action="store_true")
+
+parser.add_argument('--env',
+                    help='Which env you want.  The env type must be defined in the spec environments array and default is "dev"',
+                    action="store")
 
 parser.add_argument('--dev',
                     help='Used to test some stuff out while developing scripts.',
@@ -76,6 +88,7 @@ args = parser.parse_args()
 ansible_root = "./"
 spec = "default"
 ver = "latest"
+env = "dev"
 
 if(None != args.ansible_root):
     ansible_root = args.ansible_root
@@ -85,6 +98,9 @@ if(None != args.spec):
 
 if(None != args.ver):
     ver = args.ver
+
+if(None != args.env):
+    env = args.env
 
 verboseOpts = ''
 if(args.verbose):
@@ -129,15 +145,15 @@ elif args.cluster_destroy:
 
 elif args.deploy:
     print("Deploy the environments")
-    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_remote.yml --extra-vars "env_state=start spec={1} build_ver={2}" {3}'
-    osCmd = cmd.format(ansible_root, spec, ver, verboseOpts)
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_remote.yml --extra-vars "env_state=start spec={1} build_ver={2} stage={3}" {4}'
+    osCmd = cmd.format(ansible_root, spec, ver, env, verboseOpts)
     os.system(osCmd)
     print("Cluster Deployment Complete")
 
 elif args.release:
     print("Release the environments")
-    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_remote.yml --extra-vars "env_state=stop spec={1} build_ver={2}" {3}'
-    osCmd = cmd.format(ansible_root, spec, ver, verboseOpts)
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/deploy_remote.yml --extra-vars "env_state=stop spec={1} build_ver={2} stage={3}" {4}'
+    osCmd = cmd.format(ansible_root, spec, ver, env, verboseOpts)
     os.system(osCmd)
     print("Cluster Deployment Release Complete")
 
@@ -153,6 +169,17 @@ elif args.local_dev_stop:
     os.system(cmd.format(ansible_root, verboseOpts))
     print("Local Environment Stopped")
 
+elif args.remote_dev_start:
+    print("Starting the dev environment")
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/dev_remote.yml --extra-vars "env_state=start" {1}'
+    os.system(cmd.format(ansible_root, verboseOpts))
+    print("Environment Started")
+
+elif args.remote_dev_stop:
+    print("Stopping the dev environment")
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/dev_remote.yml --extra-vars "env_state=stop" {1}'
+    os.system(cmd.format(ansible_root, verboseOpts))
+    print("Environment Stopped")
 
 elif args.dev:
     print("Starting the local dev environment")

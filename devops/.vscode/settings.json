@@ -2,9 +2,12 @@
   "cSpell.ignoreWords": [
     "ansible",
     "devops",
+    "gcloud",
     "kubernetes",
+    "openshift",
     "payid",
     "playerexchange",
-    "plyxchg"
+    "plyxchg",
+    "preemptible"
   ]
 }

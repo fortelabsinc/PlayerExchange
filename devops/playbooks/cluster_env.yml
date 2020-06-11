@@ -56,6 +56,13 @@
         gcloud beta container clusters {{cluster_action}} {{cluster_name}} --quiet --machine-type={{cluster_machine_type}} --num-nodes={{cluster_num_nodes}} --release-channel=rapid
       when: false == cluster_machine_preemptible and env_state == 'start'
 
+    # Setup the cluster credentials
+    # Launch the cluster!!!  Or we can run it without preemptible flag
+    - name: "{{cluster_action}} the cluster credentials {{cluster_name}}"
+      raw: >
+        gcloud beta container clusters get-credentials {{cluster_name}}
+      when: env_state == 'start'
+
     # Blow it away because I said so...
     - name: "{{cluster_action}} the cluster {{cluster_name}}"
       raw: >

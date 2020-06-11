@@ -65,7 +65,7 @@ defmodule Gateway.Application do
           String.to_integer(
             System.get_env(
               "PLYXCHG_GATEWAY_PORTAL_PORT",
-              Application.get_env(:gateway, :portal_port, "8180")
+              Application.get_env(:gateway, :portal_port, "8181")
             )
           )
       )

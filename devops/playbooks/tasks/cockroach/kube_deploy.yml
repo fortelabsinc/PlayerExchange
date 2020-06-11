@@ -12,8 +12,7 @@
         name: cockroachdb-public
         labels:
           app: cockroachdb
-        #namespace: "{{cluster_name}}-{{stage}}"
-        namespace: default
+        namespace: "{{cluster_name}}-{{stage}}"
       spec:
         ports:
           # The main port, served by gRPC, serves Postgres-flavor SQL, internode
@@ -53,8 +52,7 @@
           prometheus.io/scrape: "true"
           prometheus.io/path: "_status/vars"
           prometheus.io/port: "8080"
-        #namespace: "{{cluster_name}}-{{stage}}"
-        namespace: default
+        namespace: "{{cluster_name}}-{{stage}}"
       spec:
         ports:
           - port: 26257
@@ -80,8 +78,7 @@
       kind: PodDisruptionBudget
       metadata:
         name: cockroachdb-budget
-        #namespace: "{{cluster_name}}-{{stage}}"
-        namespace: default
+        namespace: "{{cluster_name}}-{{stage}}"
         labels:
           app: cockroachdb
       spec:
@@ -99,11 +96,10 @@
       kind: StatefulSet
       metadata:
         name: cockroachdb
-        #namespace: "{{cluster_name}}-{{stage}}"
-        namespace: default
+        namespace: "{{cluster_name}}-{{stage}}"
       spec:
         serviceName: "cockroachdb"
-        replicas: 3
+        replicas: "{{crdb_replicants}}"
         selector:
           matchLabels:
             app: cockroachdb
@@ -202,8 +198,7 @@
       kind: Job
       metadata:
         name: cluster-init
-        namespace: default
-        #namespace: "{{cluster_name}}-{{stage}}"
+        namespace: "{{cluster_name}}-{{stage}}"
         labels:
           app: cockroachdb
       spec:
