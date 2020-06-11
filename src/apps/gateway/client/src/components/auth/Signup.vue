@@ -59,8 +59,13 @@ export default {
         username: this.email,
         email: this.email,
         password: this.password}).then((data) => {
-          console.log("Data = " + JSON.stringify(data))
-          this.$router.push({ name: 'Login' })
+          if(undefined != data["payload"]) {
+            this.$router.push({ name: 'Login' })
+          }
+          else
+          {
+            console.log("Error: " + JSON.stringify(data))
+          }
       })
     },
   },
