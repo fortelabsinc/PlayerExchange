@@ -58,14 +58,13 @@ export default {
       this.register({
         username: this.email,
         email: this.email,
-        password: this.password}).then((data) => {
-          if(undefined != data["payload"]) {
-            this.$router.push({ name: 'Login' })
-          }
-          else
-          {
-            console.log("Error: " + JSON.stringify(data))
-          }
+        password: this.password,
+      }).then((data) => {
+        if (undefined != data['payload']) {
+          this.$router.push({ name: 'Login' })
+        } else {
+          console.log('Error: ' + JSON.stringify(data))
+        }
       })
     },
   },

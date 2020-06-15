@@ -26,6 +26,17 @@ export default {
         requireAuth: true,
       },
     },
+    {
+      name: 'My Postings',
+      path: '/my-postings',
+      component: () =>
+        import(
+          /* webpackChunkName: "my-postingsPage" */ '@/components/admin/Postings/MyPostingsPage.vue'
+        ),
+      meta: {
+        requireAuth: true,
+      },
+    },
     // {
     //   name: 'Posting',
     //   path: '/postings/id/:id',
@@ -37,17 +48,17 @@ export default {
     //     requireAuth: true,
     //   },
     // },
-    // {
-    //   name: 'NewPosting',
-    //   path: '/postings/new',
-    //   component: () =>
-    //     import(
-    //       /* webpackChunkName: "newPostingPage" */ '@/components/admin/Postings/NewPostingPage.vue'
-    //     ),
-    //   meta: {
-    //     requireAuth: true,
-    //   },
-    // },
+    {
+      name: 'NewPosting',
+      path: '/postings/new',
+      component: () =>
+        import(
+          /* webpackChunkName: "newPostingPage" */ '@/components/admin/Postings/NewPostPage.vue'
+        ),
+      meta: {
+        requireAuth: true,
+      },
+    },
     {
       name: 'Profile',
       path: '/profile',

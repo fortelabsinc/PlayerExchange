@@ -58,15 +58,14 @@ export default {
       }
 
       this.login({
-        email: this.email, 
-        password: this.password}).then((data) => {
-          if(undefined != data["payload"]) {
-            this.$router.push({ name: 'Home' })
-          }
-          else
-          {
-            console.log("Error: " + JSON.stringify(data))
-          }
+        email: this.email,
+        password: this.password,
+      }).then((data) => {
+        if (undefined != data['payload']) {
+          this.$router.push({ name: 'Home' })
+        } else {
+          console.log('Error: ' + JSON.stringify(data))
+        }
       })
     },
   },
