@@ -69,6 +69,15 @@ router.get('/status/:hash', asyncMiddleware(async (req, res, next) => {
   res.send(JSON.stringify(data));
 }));
 
+router.get('/payment/:hash', asyncMiddleware(async (req, res, next) => {
+  const hash = req.params.hash;
+  const xrpClient = new XRPClient(testNet, XRPLNetwork.Test);
+  let tran = await xrpClient.getPayment(hash);
+  tran["account"] = Utils.encodeXAddress(tran["account"], undefined, true);
+  tran["paymentFields"]["destination"] = Utils.encodeXAddress(tran["paymentFields"]["destination"], undefined, true);
+  res.send(tran);
+}));
+
 router.get('/payment/:address/:hash', asyncMiddleware(async (req, res, next) => {
   const hash = req.params.hash;
   const address = req.params.address;

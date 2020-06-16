@@ -35,7 +35,9 @@ defmodule Blockchain.MixProject do
 
       # optional, required by JSON middleware
       {:jason, "~> 1.2"},
-      {:utils, in_umbrella: true}
+      {:utils, in_umbrella: true},
+      {:eth, git: "git@github.com:fortelabsinc/eth.git"},
+      {:hexate, git: "git@github.com:fortelabsinc/hexate.git", override: true}
     ]
   end
 end

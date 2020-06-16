@@ -19,22 +19,21 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-defmodule Storage.Wallet.XRP do
+defmodule Storage.Wallet.Eth do
   @moduledoc ~S"""
   NOTE:
 
-  defmodule Storage.Repo.Migrations.WalletXrp do
+  defmodule Storage.Repo.Migrations.WalletEth do
     use Ecto.Migration
     def change do
-      create table(:xrp) do
-        add(:address, :string)
-        add(:derivation, :string)
-        add(:mnemonic, :string)
-        add(:privatekey, :string)
-        add(:publickey, :string)
+      create table(:eth) do
+        add(:address, :eth)
+        add(:mnemonic, :eth)
+        add(:privatekey, :eth)
+        add(:publickey, :eth)
       end
 
-      create(unique_index(:xrp, [:address]))
+      create(unique_index(:eth, [:address]))
     end
   end
   """
@@ -50,9 +49,8 @@ defmodule Storage.Wallet.XRP do
   from the database.
   """
   @primary_key false
-  schema "xrp" do
+  schema "eth" do
     field(:address, :string, primary_key: true)
-    field(:derivation, :string)
     field(:mnemonic, :string)
     field(:privatekey, :string)
     field(:publickey, :string)
@@ -68,9 +66,8 @@ defmodule Storage.Wallet.XRP do
   # to use this struct directly however I did add accessors so that
   # it can be used without having to know the actual key names
   # incase I change them in the future
-  @type t :: %Storage.Wallet.XRP{
+  @type t :: %Storage.Wallet.Eth{
           address: String.t(),
-          derivation: String.t(),
           mnemonic: String.t(),
           privatekey: String.t(),
           publickey: String.t(),
@@ -82,38 +79,32 @@ defmodule Storage.Wallet.XRP do
   @doc """
   Storage.Work.Posting.t accessor to address
   """
-  @spec address(Storage.Wallet.XRP.t()) :: String.t()
-  def address(xrpT), do: xrpT.address
-
-  @doc """
-  Storage.Work.Posting.t accessor to derivation
-  """
-  @spec derivation(Storage.Wallet.XRP.t()) :: String.t()
-  def derivation(xrpT), do: xrpT.derivation
+  @spec address(Storage.Wallet.Eth.t()) :: String.t()
+  def address(ethT), do: ethT.address
 
   @doc """
   Storage.Work.Posting.t accessor to mnemonic
   """
-  @spec mnemonic(Storage.Wallet.XRP.t()) :: String.t()
-  def mnemonic(xrpT), do: xrpT.mnemonic
+  @spec mnemonic(Storage.Wallet.Eth.t()) :: String.t()
+  def mnemonic(ethT), do: ethT.mnemonic
 
   @doc """
   Storage.Work.Posting.t accessor to mnemonic
   """
-  @spec privateKey(Storage.Wallet.XRP.t()) :: String.t()
-  def privateKey(xrpT), do: xrpT.privatekey
+  @spec privateKey(Storage.Wallet.Eth.t()) :: String.t()
+  def privateKey(ethT), do: ethT.privatekey
 
   @doc """
   Storage.Work.Posting.t accessor to mnemonic
   """
-  @spec publicKey(Storage.Wallet.XRP.t()) :: String.t()
-  def publicKey(xrpT), do: xrpT.publickey
+  @spec publicKey(Storage.Wallet.Eth.t()) :: String.t()
+  def publicKey(ethT), do: ethT.publickey
 
   @doc """
   Storage.Work.Posting.t accessor to meta data
   """
-  @spec meta(Storage.Wallet.XRP.t()) :: map
-  def meta(xrpT), do: xrpT.meta
+  @spec meta(Storage.Wallet.Eth.t()) :: map
+  def meta(ethT), do: ethT.meta
 
   @doc """
   Create a new wallet structure with the
@@ -124,7 +115,6 @@ defmodule Storage.Wallet.XRP do
   ```
   %{
     "address" => "String value",
-    "derivation" => "String value",
     "mnemonic" => "String value",
     "privatekey" => "String value",
     "publickey" => "String value",
@@ -132,11 +122,10 @@ defmodule Storage.Wallet.XRP do
   }
   ```
   """
-  @spec new(map) :: Storage.Wallet.XRP.t()
+  @spec new(map) :: Storage.Wallet.Eth.t()
   def new(map) do
-    %Storage.Wallet.XRP{
+    %Storage.Wallet.Eth{
       address: map["address"],
-      derivation: map["derivation"],
       mnemonic: map["mnemonic"],
       privatekey: map["privateKey"],
       publickey: map["publicKey"],
@@ -151,14 +140,13 @@ defmodule Storage.Wallet.XRP do
   @doc """
   Write the record to the database
   """
-  @spec write(Storage.Wallet.XRP.t()) :: {:ok, Storage.Wallet.XRP.t()} | {:error, any()}
-  def write(xrp) do
+  @spec write(Storage.Wallet.Eth.t()) :: {:ok, Storage.Wallet.Eth.t()} | {:error, any()}
+  def write(eth) do
     %{
-      xrp
-      | derivation: Utils.Crypto.encrypt(xrp.derivation),
-        mnemonic: Utils.Crypto.encrypt(xrp.mnemonic),
-        privatekey: Utils.Crypto.encrypt(xrp.privatekey),
-        publickey: Utils.Crypto.encrypt(xrp.publickey)
+      eth
+      | mnemonic: Utils.Crypto.encrypt(eth.mnemonic),
+        privatekey: Utils.Crypto.encrypt(eth.privatekey),
+        publickey: Utils.Crypto.encrypt(eth.publickey)
     }
     |> Storage.Repo.insert()
   end
@@ -166,14 +154,14 @@ defmodule Storage.Wallet.XRP do
   @doc """
   Update the meta value assigned to this address
   """
-  @spec updateMeta(String.t(), map) :: {:ok, Storage.Wallet.XRP.t()} | {:error, any()}
+  @spec updateMeta(String.t(), map) :: {:ok, Storage.Wallet.Eth.t()} | {:error, any()}
   def updateMeta(address, meta) do
     changes = Storage.Repo.changeSetField(%{}, :meta, meta)
-    post = Ecto.Changeset.change(%Storage.Wallet.XRP{address: address}, changes)
+    post = Ecto.Changeset.change(%Storage.Wallet.Eth{address: address}, changes)
 
     case Storage.Repo.update(post) do
       {:error, changeset} = err ->
-        Logger.error("[Storage.Wallet.XRP.updateMeta] Failed #{inspect(changeset)}")
+        Logger.error("[Storage.Wallet.Eth.updateMeta] Failed #{inspect(changeset)}")
         err
 
       results ->
@@ -189,18 +177,18 @@ defmodule Storage.Wallet.XRP do
   # Pull all the users from the system.  The cost of this call will grow with the
   # total number of users in the system.  It will require a DB read
   # """
-  @spec query :: [Storage.Wallet.XRP.t()]
+  @spec query :: [Storage.Wallet.Eth.t()]
   def query() do
-    Storage.Repo.all(Storage.Wallet.XRP)
+    Storage.Repo.all(Storage.Wallet.Eth)
     |> decrypt()
   end
 
   @doc """
   Pulls an address info out of the DB.
   """
-  @spec query(String.t()) :: nil | Storage.Wallet.XRP.t()
+  @spec query(String.t()) :: nil | Storage.Wallet.Eth.t()
   def query(address) do
-    Storage.Repo.get_by(Storage.Wallet.XRP, address: address)
+    Storage.Repo.get_by(Storage.Wallet.Eth, address: address)
     |> decrypt()
   end
 
@@ -212,16 +200,15 @@ defmodule Storage.Wallet.XRP do
   defp encrypt(nil), do: nil
 
   defp encrypt(entries) when is_list(entries) do
-    Enum.map(entries, fn xrp -> encrypt(xrp) end)
+    Enum.map(entries, fn eth -> encrypt(eth) end)
   end
 
-  defp encrypt(xrp) do
+  defp encrypt(eth) do
     %{
-      xrp
-      | derivation: Utils.Crypto.encrypt(xrp.derivation),
-        mnemonic: Utils.Crypto.encrypt(xrp.mnemonic),
-        privatekey: Utils.Crypto.encrypt(xrp.privatekey),
-        publickey: Utils.Crypto.encrypt(xrp.publickey)
+      eth
+      | mnemonic: Utils.Crypto.encrypt(eth.mnemonic),
+        privatekey: Utils.Crypto.encrypt(eth.privatekey),
+        publickey: Utils.Crypto.encrypt(eth.publickey)
     }
   end
 
@@ -229,16 +216,15 @@ defmodule Storage.Wallet.XRP do
   defp decrypt(nil), do: nil
 
   defp decrypt(entries) when is_list(entries) do
-    Enum.map(entries, fn xrp -> decrypt(xrp) end)
+    Enum.map(entries, fn eth -> decrypt(eth) end)
   end
 
-  defp decrypt(xrp) do
+  defp decrypt(eth) do
     %{
-      xrp
-      | derivation: Utils.Crypto.decrypt(xrp.derivation),
-        mnemonic: Utils.Crypto.decrypt(xrp.mnemonic),
-        privatekey: Utils.Crypto.decrypt(xrp.privatekey),
-        publickey: Utils.Crypto.decrypt(xrp.publickey)
+      eth
+      | mnemonic: Utils.Crypto.decrypt(eth.mnemonic),
+        privatekey: Utils.Crypto.decrypt(eth.privatekey),
+        publickey: Utils.Crypto.decrypt(eth.publickey)
     }
   end
 end

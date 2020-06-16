@@ -36,6 +36,11 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Wallet do
   # Plug options
   # ----------------------------------------------------------------------------
   plug(Plug.Logger)
+
+  if_not_prod do
+    plug(Corsica, origins: "*", allow_methods: :all, allow_headers: :all)
+  end
+
   plug(:match)
 
   plug(Plug.Parsers,
