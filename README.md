@@ -25,7 +25,7 @@ simpler version which does not require `Ansible`
 
 1. Open a second terminal shell
 
-1. `cd <project_root>/src && mix deps.get && mix.deps.compile && cd apps/storage && ./setup.sh`
+1. `cd <project_root>/src && mix deps.get && mix deps.compile && cd apps/storage && ./setup.sh`
 
 After these steps you should have all the databases running and setup
 
