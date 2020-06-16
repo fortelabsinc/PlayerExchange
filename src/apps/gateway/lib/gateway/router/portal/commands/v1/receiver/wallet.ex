@@ -28,6 +28,7 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Wallet do
   support if possible
   """
 
+  import Utils.Build
   require Logger
   use Plug.Router
   import Plug.Conn

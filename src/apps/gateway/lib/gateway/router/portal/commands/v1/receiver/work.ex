@@ -27,7 +27,7 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
   change API versions later on but still keep backwards compatability
   support if possible
   """
-
+  import Utils.Build
   require Logger
   use Plug.Router
   import Plug.Conn
