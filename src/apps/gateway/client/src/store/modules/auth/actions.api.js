@@ -61,7 +61,7 @@ export const ApiActionCheckAuth = ({ dispatch, state }) => {
     .catch(apiErrorHandler)
 }
 
-export const ApiActionRegister = (_, { username, email, password }) => {
+export const ApiActionRegister = (_, { username, email, password }) =>
   apiAxios
     .post('/auth/register', {
       username: username,
@@ -72,4 +72,3 @@ export const ApiActionRegister = (_, { username, email, password }) => {
     })
     .then((response) => apiResponseHandler(response))
     .catch(apiErrorHandler)
-}

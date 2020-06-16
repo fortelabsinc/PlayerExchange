@@ -1,7 +1,7 @@
 <template>
   <AppLayoutPanel>
     <v-toolbar flat color="white">
-      <v-toolbar-title>Postings</v-toolbar-title>
+      <v-toolbar-title>My Postings</v-toolbar-title>
       <v-spacer />
       <v-btn color="primary" class="mb-2" @click="newItem()">New Post</v-btn>
     </v-toolbar>
@@ -22,26 +22,44 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-btn color="primary" text @click="showDetails(item)">
-          Details
+        <v-btn color="primary" text @click="payItem(item)">
+          pay
         </v-btn>
+        <v-icon small color="red" @click="deleteItem(item)">
+          mdi-delete
+        </v-icon>
       </template>
     </v-data-table>
 
-    <v-dialog v-model="dialog">
+    <v-dialog v-model="dialog" :persistent="deleting" max-width="600px">
       <v-card>
         <v-card-title>
-          Post Details
+          Are you sure you want to delete this posting?
         </v-card-title>
         <v-divider class="mb-2" />
         <v-card-text>
-          <PostDetails :posting="currentItem" />
+          <p>Post ID: {{ currentItem.posting_id }}</p>
+          <p>Name: {{ currentItem.postingName }}</p>
         </v-card-text>
         <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" text @click="closeDetails">
-            Close
-          </v-btn>
+          <v-progress-linear
+            v-if="deleting"
+            height="25"
+            :active="true"
+            :indeterminate="true"
+            color="primary"
+          >
+            <strong class="white--text">Deleting</strong>
+          </v-progress-linear>
+          <template v-else>
+            <v-spacer />
+            <v-btn text @click="cancelDelete">
+              Cancel
+            </v-btn>
+            <v-btn color="primary" text @click="confirmDelete">
+              Confirm
+            </v-btn>
+          </template>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -51,13 +69,11 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
-import PostDetails from '@/components/admin/Postings/PostDetails.vue'
 
 export default {
-  name: 'PostingsPage',
+  name: 'MyPostingsPage',
   components: {
     AppLayoutPanel,
-    PostDetails,
   },
   data() {
     return {
@@ -74,6 +90,7 @@ export default {
       dialog: false,
       currentItem: {},
       loading: false,
+      deleting: false,
       totalItems: 0,
       options: {},
     }
@@ -140,6 +157,7 @@ export default {
   methods: {
     ...mapActions({
       getPostingsPage: 'work/ApiActionFetchAllPostings',
+      deletePosting: 'work/ApiActionDeletePosting',
     }),
     fetchTableData() {
       const { page, itemsPerPage } = this.options
@@ -156,13 +174,31 @@ export default {
     newItem() {
       this.$router.push('/postings/new')
     },
-    showDetails(item) {
+    payItem(item) {
+      this.$router.push(`/postings/id/${item.posting_id}`)
+    },
+    deleteItem(item) {
       this.currentItem = item
       this.dialog = true
     },
-    closeDetails() {
+    cancelDelete() {
       this.currentItem = {}
       this.dialog = false
+    },
+    confirmDelete() {
+      this.deleting = true
+      this.deletePosting({ posting_id: this.currentItem.posting_id }).then(
+        ({ error }) => {
+          this.currentItem = {}
+          this.dialog = false
+          this.deleting = false
+          if (!error) {
+            this.$toast.success('Posting deleted successfully.')
+          } else {
+            this.$toast.error(`Error deleting the posting. ${error.message}`)
+          }
+        }
+      )
     },
   },
 }
