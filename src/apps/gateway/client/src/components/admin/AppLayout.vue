@@ -53,6 +53,7 @@ export default {
     items: [
       { title: 'Home', icon: 'mdi-home', routeName: 'Home' },
       { title: 'Postings', icon: 'mdi-apps', routeName: 'Postings' },
+      { title: 'My Postings', icon: 'mdi-apps', routeName: 'My Postings' },
       { title: 'My Account', icon: 'mdi-account', routeName: 'Profile' },
     ],
   }),
