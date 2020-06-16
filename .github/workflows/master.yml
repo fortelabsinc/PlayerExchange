@@ -14,6 +14,7 @@ env:
   DEPLOYMENT: prod
   SEND_GRID_KEY: ${{ secrets.SEND_GRID_KEY }}
   PLYXCHG_DB_HOST: ${{ secrets.PLYXCHG_DB_HOST }}
+  PLYXCHG_APP_KEYS: ${{ secrets.PLYXCHG_APP_KEYS }}
 
 jobs:
   build-application:

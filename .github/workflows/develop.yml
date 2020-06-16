@@ -12,6 +12,7 @@ env:
   GKE_ZONE: us-central1-c
   IMAGE: plyxchg
   DEPLOYMENT: prod
+  PLYXCHG_DB_HOST: ${{ secrets.PLYXCHG_DB_HOST }}
   PLYXCHG_APP_KEYS: ${{ secrets.PLYXCHG_APP_KEYS }}
 
 jobs:
@@ -67,6 +68,21 @@ jobs:
           #service_account_email: ${{ secrets.SA_EMAIL }}
           service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           project_id: forte-player-exchange
+
+      # Configure docker to use the gcloud command-line tool as a credential helper
+      - run: |
+          gcloud auth configure-docker --quiet
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE --quiet
+          python3 -m pip install --upgrade pip
+          python3 -m pip install ansible==2.9.2 requests docker openshift google-auth
 
       # Build the Rippler Docker image
       - name: Build rippler
