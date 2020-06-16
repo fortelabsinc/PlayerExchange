@@ -9,7 +9,7 @@ on:
 env:
   GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
   GKE_CLUSTER: forte-player-exchange
-  GKE_ZONE: us-central1-c
+  GKE_ZONE: us-central1-a
   IMAGE: plyxchg
   DEPLOYMENT: prod
   PLYXCHG_DB_HOST: ${{ secrets.PLYXCHG_DB_HOST }}
