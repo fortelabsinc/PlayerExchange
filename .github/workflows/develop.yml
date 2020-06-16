@@ -12,6 +12,7 @@ env:
   GKE_ZONE: us-central1-c
   IMAGE: plyxchg
   DEPLOYMENT: prod
+  PLYXCHG_APP_KEYS: ${{ secrets.PLYXCHG_APP_KEYS }}
 
 jobs:
   build-application:

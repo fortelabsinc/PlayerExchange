@@ -42,7 +42,7 @@ defaultHost =
 
 # OK, if no environment vars are found bail out
 if nil == System.get_env("PLYXCHG_APP_KEYS", nil) do
-  raise "Environment Variable not found PPS_APP_KEYS"
+  raise "Environment Variable not found PLYXCHG_APP_KEYS"
 end
 
 config :storage,
