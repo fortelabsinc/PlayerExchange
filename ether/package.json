@@ -13,6 +13,7 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
+    "web3": "~1.2",
     "ethereumjs-wallet": "~0.6.3",
     "ethereumjs-tx": "~2.1.2",
     "ethereumjs-util": "~7.0.2"

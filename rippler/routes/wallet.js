@@ -22,31 +22,38 @@ Returns the newly created wallet
 {
   "publicKey": "string key",
   "privateKey": "string key",
-  "test": bool
+  "address": "string key",
+  "mnemonic": "string",
+  "derivation": "string"
 }
 */
 router.post('/create', function(req, res, next) {
   const generationResult = Wallet.generateRandomWallet(undefined, true);
   const wallet = generationResult.wallet;
-  var obj = {};
-  obj["publicKey"] = wallet.getPublicKey();
-  obj["privateKey"] = wallet.getPrivateKey();
-  obj["address"] = wallet.getAddress();
-  obj["mnemonic"] = generationResult.mnemonic;
-  obj["derivation"] = generationResult.derivationPath;
+  var obj = {
+    publicKey: wallet.getPublicKey(),
+    privateKey: wallet.getPrivateKey(),
+    address: wallet.getAddress(),
+    mnemonic: generationResult.mnemonic,
+    derivation: generationResult.derivationPath
+  };
   res.send(obj);
 });
 
-//router.post('/facet', function(req, res, next) {
-//  const generationResult = Wallet.generateRandomWallet(undefined, true);
-//  const newWallet = generationResult.wallet;
-//  res.send(newWallet);
-//});
+/*
+Returns the balance of XRP assigned to the wallet
 
-router.get('/balance/:address', asyncMiddleware(async (req, res, next) => {
+Returns:  Integer number
+*/
+router.get('/balance/:network/:address', asyncMiddleware(async (req, res, next) => {
   var address = req.params.address;
-  console.log("Getting balance for user: " + address);
-  const xrpClient = new XRPClient(testNet, XRPLNetwork.Test);
+  var url = testNet;
+  var net = XRPLNetwork.Test;
+  if (network == "main") {
+    url = mainNet;
+    net = XRPLNetwork.Main;
+  }
+  const xrpClient = new XRPClient(url, net);
   const balance = await xrpClient.getBalance(address);
   res.send(balance);
 }));

@@ -58,3 +58,41 @@ jobs:
       - name: Build the Package
         working-directory: src
         run: MIX_ENV=prod mix release plyxchg
+
+      # Setup gcloud CLI
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          version: "270.0.0"
+          #service_account_email: ${{ secrets.SA_EMAIL }}
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          project_id: forte-player-exchange
+
+      # Build the Rippler Docker image
+      - name: Build rippler
+        working-directory: rippler
+        run: |
+          export BUILD_VSN=$(cat ../src/vsn.txt) &&
+          docker build -t gcr.io/$GKE_PROJECT/rippler:$BUILD_VSN -t gcr.io/$GKE_PROJECT/rippler:$GITHUB_SHA \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF="$GITHUB_REF" .
+
+      # Push the Docker Rippler image to Google Container Registry
+      - name: Publish rippler
+        working-directory: rippler
+        run: |
+          docker push gcr.io/$GKE_PROJECT/rippler
+
+      # Build the Ether Docker image
+      - name: Build ether
+        working-directory: ether
+        run: |
+          export BUILD_VSN=$(cat ../src/vsn.txt) &&
+          docker build -t gcr.io/$GKE_PROJECT/ether:$BUILD_VSN -t gcr.io/$GKE_PROJECT/ether:$GITHUB_SHA \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF="$GITHUB_REF" .
+
+      # Push the Docker ether image to Google Container Registry
+      - name: Publish ether
+        working-directory: ether
+        run: |
+          docker push gcr.io/$GKE_PROJECT/ether

@@ -17,8 +17,8 @@ import Config
 #       metadata: [:user_id]
 #
 
-config :ethereumex,
-  url: "https://kovan.infura.io/v3/bd759a8d4ecb45eaa6376cf022beeb9d"
+# config :ethereumex,
+#  url: "https://kovan.infura.io/v3/bd759a8d4ecb45eaa6376cf022beeb9d"
 
 defaultHost =
   if :dev == Mix.env() or :test == Mix.env() do
