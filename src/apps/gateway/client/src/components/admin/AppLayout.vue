@@ -52,8 +52,26 @@ export default {
     mini: true,
     items: [
       { title: 'Home', icon: 'mdi-home', routeName: 'Home' },
-      { title: 'Postings', icon: 'mdi-apps', routeName: 'Postings' },
-      { title: 'My Postings', icon: 'mdi-apps', routeName: 'My Postings' },
+      {
+        title: 'My Postings',
+        icon: 'mdi-account-box',
+        routeName: 'My Postings',
+      },
+      {
+        title: 'Postings',
+        icon: 'mdi-account-box-multiple',
+        routeName: 'Postings',
+      },
+      {
+        title: 'Apps',
+        icon: 'mdi-play-box-multiple',
+        routeName: 'Apps',
+      },
+      {
+        title: 'Guilds',
+        icon: 'mdi-star-box-multiple',
+        routeName: 'Guilds',
+      },
       { title: 'My Account', icon: 'mdi-account', routeName: 'Profile' },
     ],
   }),
