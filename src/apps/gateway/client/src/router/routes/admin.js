@@ -16,17 +16,6 @@ export default {
       },
     },
     {
-      name: 'Postings',
-      path: '/postings',
-      component: () =>
-        import(
-          /* webpackChunkName: "postingsPage" */ '@/components/admin/Postings/PostingsPage.vue'
-        ),
-      meta: {
-        requireAuth: true,
-      },
-    },
-    {
       name: 'My Postings',
       path: '/my-postings',
       component: () =>
@@ -37,17 +26,17 @@ export default {
         requireAuth: true,
       },
     },
-    // {
-    //   name: 'Posting',
-    //   path: '/postings/id/:id',
-    //   component: () =>
-    //     import(
-    //       /* webpackChunkName: "postingPage" */ '@/components/admin/Postings/PostingPage.vue'
-    //     ),
-    //   meta: {
-    //     requireAuth: true,
-    //   },
-    // },
+    {
+      name: 'Postings',
+      path: '/postings',
+      component: () =>
+        import(
+          /* webpackChunkName: "postingsPage" */ '@/components/admin/Postings/PostingsPage.vue'
+        ),
+      meta: {
+        requireAuth: true,
+      },
+    },
     {
       name: 'NewPosting',
       path: '/postings/new',
@@ -65,6 +54,73 @@ export default {
       component: () =>
         import(
           /* webpackChunkName: "profile" */ '@/components/admin/Profile.vue'
+        ),
+      meta: {
+        requireAuth: true,
+      },
+    },
+    {
+      name: 'Apps',
+      path: '/apps',
+      component: () =>
+        import(
+          /* webpackChunkName: "appsPage" */ '@/components/admin/Apps/AppsPage.vue'
+        ),
+      meta: {
+        requireAuth: true,
+      },
+    },
+    {
+      name: 'App',
+      path: '/apps/id/:id',
+      component: () =>
+        import(
+          /* webpackChunkName: "appPage" */ '@/components/admin/Apps/AppPage.vue'
+        ),
+      meta: {
+        requireAuth: true,
+      },
+    },
+    {
+      name: 'NewApp',
+      path: '/apps/new',
+      component: () =>
+        import(
+          /* webpackChunkName: "newAppPage" */ '@/components/admin/Apps/NewAppPage.vue'
+        ),
+      meta: {
+        requireAuth: true,
+      },
+    },
+
+    {
+      name: 'Guilds',
+      path: '/guilds',
+      component: () =>
+        import(
+          /* webpackChunkName: "guildsPage" */ '@/components/admin/Guilds/GuildsPage.vue'
+        ),
+      meta: {
+        requireAuth: true,
+      },
+    },
+    {
+      name: 'Guild',
+      path: '/guilds/id/:id',
+      component: () =>
+        import(
+          /* webpackChunkName: "guildPage" */ '@/components/admin/Guilds/GuildPage.vue'
+        ),
+      meta: {
+        requireAuth: true,
+      },
+    },
+    {
+      name: 'NewGuild',
+      path: '/guilds/new',
+      component: () =>
+        import(
+          /* webpackChunkName: "newGuildPage" */ '@/components/admin/Guilds/NewGuildPage.vue'
         ),
       meta: {
         requireAuth: true,
