@@ -37,13 +37,24 @@ services:
   rippler:
     container_name: rippler
     hostname: rippler
-    image: gcr.io/forte-player-exchange/rippler:latest
+    image: gcr.io/forte-player-exchange/rippler-dev:latest
     ports:
       - "3000:3000"
     networks:
       close:
         aliases:
           - rippler
+
+  ether:
+    container_name: ether
+    hostname: rippler
+    image: gcr.io/forte-player-exchange/ether-dev:latest
+    ports:
+      - "3001:3001"
+    networks:
+      close:
+        aliases:
+          - ether
 
   # ---------------------------------------------------------------------------
   # Set up local Cockroach DB.  For now we will spin up a 3 node cluster.

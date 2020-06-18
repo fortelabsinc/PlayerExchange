@@ -100,7 +100,7 @@ jobs:
         working-directory: rippler
         run: |
           export BUILD_VSN=$(cat ../src/vsn.txt) &&
-          docker build -t gcr.io/$GKE_PROJECT/rippler:$BUILD_VSN -t gcr.io/$GKE_PROJECT/rippler:$GITHUB_SHA \
+          docker build -t gcr.io/$GKE_PROJECT/rippler-$DEPLOYMENT:$BUILD_VSN -t gcr.io/$GKE_PROJECT/rippler--$DEPLOYMENT:$GITHUB_SHA \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="$GITHUB_REF" .
 
@@ -108,14 +108,29 @@ jobs:
       - name: Publish rippler
         working-directory: rippler
         run: |
-          docker push gcr.io/$GKE_PROJECT/rippler
+          docker push gcr.io/$GKE_PROJECT/rippler-$DEPLOYMENT
+
+      # Build the Ether Docker image
+      - name: Build ether
+        working-directory: ether
+        run: |
+          export BUILD_VSN=$(cat ../src/vsn.txt) &&
+          docker build -t gcr.io/$GKE_PROJECT/ether-$DEPLOYMENT:$BUILD_VSN -t gcr.io/$GKE_PROJECT/ether-$DEPLOYMENT:$GITHUB_SHA \
+            --build-arg GITHUB_SHA="$GITHUB_SHA" \
+            --build-arg GITHUB_REF="$GITHUB_REF" .
+
+      # Push the Docker ether image to Google Container Registry
+      - name: Publish ether
+        working-directory: ether
+        run: |
+          docker push gcr.io/$GKE_PROJECT/ether-$DEPLOYMENT
 
       # Build the plyxchg Docker image
       - name: Build plyxchg
         working-directory: src/docker/plyxchg
         run: |
           export BUILD_VSN=$(cat ../../vsn.txt) &&
-          docker build -t gcr.io/$GKE_PROJECT/plyxchg:$BUILD_VSN -t gcr.io/$GKE_PROJECT/plyxchg:$GITHUB_SHA \
+          docker build -t gcr.io/$GKE_PROJECT/plyxchg-$DEPLOYMENT:$BUILD_VSN -t gcr.io/$GKE_PROJECT/plyxchg-$DEPLOYMENT:$GITHUB_SHA \
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="$GITHUB_REF" .
 
@@ -123,7 +138,7 @@ jobs:
       - name: Publish plyxchg
         working-directory: src/docker/plyxchg
         run: |
-          docker push gcr.io/$GKE_PROJECT/plyxchg
+          docker push gcr.io/$GKE_PROJECT/plyxchg-$DEPLOYMENT
 
       - name: Deploy the environment
         working-directory: devops
