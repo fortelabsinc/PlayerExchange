@@ -167,10 +167,10 @@ defmodule Storage.Wallet.Eth do
   ## Query Operations
   ## ----------------------------------------------------------------------------
 
-  # @doc """
-  # Pull all the users from the system.  The cost of this call will grow with the
-  # total number of users in the system.  It will require a DB read
-  # """
+  @doc """
+  Pull all the users from the system.  The cost of this call will grow with the
+  total number of users in the system.  It will require a DB read
+  """
   @spec query :: [Storage.Wallet.Eth.t()]
   def query() do
     Storage.Repo.all(Storage.Wallet.Eth)
@@ -184,6 +184,29 @@ defmodule Storage.Wallet.Eth do
   def query(address) do
     Storage.Repo.get_by(Storage.Wallet.Eth, address: address)
     |> decrypt()
+  end
+
+  @doc """
+  Pull all the users from the system.  The cost of this call will grow with the
+  total number of users in the system.  It will require a DB read
+
+  NOTE: This will not decrypt the info from the DB.  Thus making it a bit
+        faster call
+  """
+  @spec queryRaw :: [Storage.Wallet.Eth.t()]
+  def queryRaw() do
+    Storage.Repo.all(Storage.Wallet.Eth)
+  end
+
+  @doc """
+  Pulls an address info out of the DB.
+
+  NOTE: This will not decrypt the info from the DB.  Thus making it a bit
+        faster call
+  """
+  @spec queryRaw(String.t()) :: nil | Storage.Wallet.Eth.t()
+  def queryRaw(address) do
+    Storage.Repo.get_by(Storage.Wallet.Eth, address: address)
   end
 
   # ----------------------------------------------------------------------------
@@ -200,9 +223,9 @@ defmodule Storage.Wallet.Eth do
   defp encrypt(eth) do
     %{
       eth
-      | mnemonic: Utils.Crypto.encrypt(eth.mnemonic),
-        privatekey: Utils.Crypto.encrypt(eth.privatekey),
-        publickey: Utils.Crypto.encrypt(eth.publickey)
+      | mnemonic: Utils.Crypto.encrypt(eth.mnemonic) |> Base.encode64(),
+        privatekey: Utils.Crypto.encrypt(eth.privatekey) |> Base.encode64(),
+        publickey: Utils.Crypto.encrypt(eth.publickey) |> Base.encode64()
     }
   end
 
@@ -216,9 +239,9 @@ defmodule Storage.Wallet.Eth do
   defp decrypt(eth) do
     %{
       eth
-      | mnemonic: Utils.Crypto.decrypt(eth.mnemonic),
-        privatekey: Utils.Crypto.decrypt(eth.privatekey),
-        publickey: Utils.Crypto.decrypt(eth.publickey)
+      | mnemonic: Base.decode64!(eth.mnemonic) |> Utils.Crypto.decrypt(),
+        privatekey: Base.decode64!(eth.privatekey) |> Utils.Crypto.decrypt(),
+        publickey: Base.decode64!(eth.publickey) |> Utils.Crypto.decrypt()
     }
   end
 end

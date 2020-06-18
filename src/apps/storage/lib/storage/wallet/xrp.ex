@@ -237,10 +237,10 @@ defmodule Storage.Wallet.XRP do
   defp encrypt(xrp) do
     %{
       xrp
-      | derivation: Utils.Crypto.encrypt(xrp.derivation),
-        mnemonic: Utils.Crypto.encrypt(xrp.mnemonic),
-        privatekey: Utils.Crypto.encrypt(xrp.privatekey),
-        publickey: Utils.Crypto.encrypt(xrp.publickey)
+      | derivation: Utils.Crypto.encrypt(xrp.derivation) |> Base.encode64(),
+        mnemonic: Utils.Crypto.encrypt(xrp.mnemonic) |> Base.encode64(),
+        privatekey: Utils.Crypto.encrypt(xrp.privatekey) |> Base.encode64(),
+        publickey: Utils.Crypto.encrypt(xrp.publickey) |> Base.encode64()
     }
   end
 
@@ -254,10 +254,10 @@ defmodule Storage.Wallet.XRP do
   defp decrypt(xrp) do
     %{
       xrp
-      | derivation: Utils.Crypto.decrypt(xrp.derivation),
-        mnemonic: Utils.Crypto.decrypt(xrp.mnemonic),
-        privatekey: Utils.Crypto.decrypt(xrp.privatekey),
-        publickey: Utils.Crypto.decrypt(xrp.publickey)
+      | derivation: Base.decode64!(xrp.derivation) |> Utils.Crypto.decrypt(),
+        mnemonic: Base.decode64!(xrp.mnemonic) |> Utils.Crypto.decrypt(),
+        privatekey: Base.decode64!(xrp.privatekey) |> Utils.Crypto.decrypt(),
+        publickey: Base.decode64!(xrp.publickey) |> Utils.Crypto.decrypt()
     }
   end
 end

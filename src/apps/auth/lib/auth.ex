@@ -96,7 +96,6 @@ defmodule Auth do
           Blockchain.Ripple.PayID.create("#{userName}$forte.playerexchange.io", wallet["address"])
 
         # Save the wallet info
-
         {:ok, _} =
           Storage.Wallet.XRP.new(wallet)
           |> Storage.Wallet.XRP.write()

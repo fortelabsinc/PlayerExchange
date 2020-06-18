@@ -8,6 +8,7 @@ defmodule Storage.Repo.Migrations.Xrp do
       add(:mnemonic, :text)
       add(:privatekey, :text)
       add(:publickey, :text)
+      add(:meta, :map)
       timestamps()
     end
 

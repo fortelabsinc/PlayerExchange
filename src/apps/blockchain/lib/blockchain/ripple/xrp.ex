@@ -202,7 +202,8 @@ defmodule Blockchain.Ripple.XRP do
   def create() do
     case post("/wallet/create", "") do
       {:ok, rsp} ->
-        {:ok, rsp.body}
+        body = Map.put(rsp.body, "meta", %{})
+        {:ok, body}
 
       rsp ->
         rsp

@@ -7,6 +7,7 @@ defmodule Storage.Repo.Migrations.Eth do
       add(:mnemonic, :text)
       add(:privatekey, :text)
       add(:publickey, :text)
+      add(:meta, :map)
       timestamps()
     end
 
