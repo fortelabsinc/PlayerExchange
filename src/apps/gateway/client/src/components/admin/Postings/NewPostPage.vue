@@ -144,22 +144,24 @@ export default {
   },
   data() {
     return {
-      name: '',
-      email: '',
-      hook: '',
-      publicKey: '',
+      game: '',
+      player_count: '',
+      type: '',
+      description: '',
+      confirm_amt: '',
+      confirm_type: '',
+      complete_amt: '',
+      complete_type: '',
+      bonus_amt: '',
+      bonus_type: '',
+      bonus_req: '',
       valid: true,
       rules: {
         name: [(v) => v.length >= 4 || 'Min 4 characters'],
-        email: [
-          (v) => !!v || 'E-mail is required',
-          (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-        ],
       },
       creating: false,
     }
   },
-
   computed: {
     ...mapGetters({
       games: 'options/getGames',
@@ -184,16 +186,16 @@ export default {
       this.apiCreatePost({
         meta: {},
         game_id: this.game,
-        details: this.description,
-        conf_type: this.confirm_type,
-        conf_amt: String(this.confirm_amt),
-        comp_type: this.complete_type,
-        comp_amt: String(this.complete_amt),
-        bonus_type: this.bonus_type,
-        bonus_amt: String(this.bonus_amt),
-        bonus_req: this.bonus_req,
         user_count: Number(this.player_count),
         type: this.type,
+        details: this.description,
+        conf_amt: String(this.confirm_amt),
+        conf_type: this.confirm_type,
+        comp_amt: String(this.complete_amt),
+        comp_type: this.complete_type,
+        bonus_amt: String(this.bonus_amt),
+        bonus_type: this.bonus_type,
+        bonus_req: this.bonus_req,
       }).then(({ error }) => {
         this.creating = false
         if (!error) {
