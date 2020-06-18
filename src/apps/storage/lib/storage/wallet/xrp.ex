@@ -153,14 +153,7 @@ defmodule Storage.Wallet.XRP do
   """
   @spec write(Storage.Wallet.XRP.t()) :: {:ok, Storage.Wallet.XRP.t()} | {:error, any()}
   def write(xrp) do
-    %{
-      xrp
-      | derivation: Utils.Crypto.encrypt(xrp.derivation),
-        mnemonic: Utils.Crypto.encrypt(xrp.mnemonic),
-        privatekey: Utils.Crypto.encrypt(xrp.privatekey),
-        publickey: Utils.Crypto.encrypt(xrp.publickey)
-    }
-    |> Storage.Repo.insert()
+    encrypt(xrp) |> Storage.Repo.insert()
   end
 
   @doc """
@@ -185,10 +178,10 @@ defmodule Storage.Wallet.XRP do
   ## Query Operations
   ## ----------------------------------------------------------------------------
 
-  # @doc """
-  # Pull all the users from the system.  The cost of this call will grow with the
-  # total number of users in the system.  It will require a DB read
-  # """
+  @doc """
+  Pull all the users from the system.  The cost of this call will grow with the
+  total number of users in the system.  It will require a DB read
+  """
   @spec query :: [Storage.Wallet.XRP.t()]
   def query() do
     Storage.Repo.all(Storage.Wallet.XRP)
@@ -200,6 +193,32 @@ defmodule Storage.Wallet.XRP do
   """
   @spec query(String.t()) :: nil | Storage.Wallet.XRP.t()
   def query(address) do
+    Storage.Repo.get_by(Storage.Wallet.XRP, address: address)
+    |> decrypt()
+  end
+
+  @doc """
+  Pull all the users from the system.  The cost of this call will grow with the
+  total number of users in the system.  It will require a DB read.any()
+
+  NOTE: This will not decrypt the data in the DB.  This is useful for pulling
+        data that might be publicly viewable.  This call is also
+        faster because it doesn't have to decrypt data
+  """
+  @spec queryRaw :: [Storage.Wallet.XRP.t()]
+  def queryRaw() do
+    Storage.Repo.all(Storage.Wallet.XRP)
+  end
+
+  @doc """
+  Pulls an address info out of the DB.
+
+  NOTE: This will not decrypt the data in the DB.  This is useful for pulling
+        data that might be publicly viewable.  This call is also
+        faster because it doesn't have to decrypt data
+  """
+  @spec queryRaw(String.t()) :: nil | Storage.Wallet.XRP.t()
+  def queryRaw(address) do
     Storage.Repo.get_by(Storage.Wallet.XRP, address: address)
     |> decrypt()
   end

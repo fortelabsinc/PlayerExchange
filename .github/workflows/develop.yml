@@ -61,6 +61,14 @@ jobs:
         working-directory: src
         run: MIX_ENV=prod mix release plyxchg
 
+      - name: Copy Build folders
+        working-directory: src/_build/prod/rel/
+        run: tar -czvf plyxchg.tar.gz plyxchg
+
+      - name: Move the tar file into the docker folders
+        working-directory: src/_build/prod/rel/
+        run: mv plyxchg.tar.gz ../../../docker/plyxchg
+
       # Setup gcloud CLI
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:

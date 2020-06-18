@@ -25,7 +25,7 @@ defmodule Storage.Work.Guild do
   """
   require Logger
   use Ecto.Schema
-  import Ecto.Query
+  # import Ecto.Query
 
   # ----------------------------------------------------------------------------
   # Public API

@@ -83,7 +83,7 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
           |> Map.get("address")
 
         # Lookup the address info
-        case Storage.Wallet.XRP.queryByAddress(from) do
+        case Storage.Wallet.XRP.query(from) do
           nil ->
             {:error, "wallet not found"}
 
@@ -168,7 +168,7 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
             |> Map.get("address")
 
           # Lookup the address info
-          case Storage.Wallet.XRP.queryByAddress(from) do
+          case Storage.Wallet.XRP.query(from) do
             nil ->
               {:error, "wallet not found"}
 
@@ -211,7 +211,7 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
           |> Map.get("address")
 
         # Lookup the address info
-        case Storage.Wallet.XRP.queryByAddress(from) do
+        case Storage.Wallet.XRP.query(from) do
           nil ->
             {:error, "wallet not found"}
 

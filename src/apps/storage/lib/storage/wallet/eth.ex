@@ -142,13 +142,7 @@ defmodule Storage.Wallet.Eth do
   """
   @spec write(Storage.Wallet.Eth.t()) :: {:ok, Storage.Wallet.Eth.t()} | {:error, any()}
   def write(eth) do
-    %{
-      eth
-      | mnemonic: Utils.Crypto.encrypt(eth.mnemonic),
-        privatekey: Utils.Crypto.encrypt(eth.privatekey),
-        publickey: Utils.Crypto.encrypt(eth.publickey)
-    }
-    |> Storage.Repo.insert()
+    encrypt(eth) |> Storage.Repo.insert()
   end
 
   @doc """

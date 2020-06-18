@@ -65,7 +65,7 @@
         command: start --insecure
         ports:
           - "26257:26257"
-          - "8080:8080"
+          #- "8080:8080"
         networks_cli_compatible: yes
         state: "{{ action_class }}"
 
@@ -100,6 +100,21 @@
           - "/var/run/docker.sock:/var/run/docker.sock:ro"
         command: start --insecure --join=cb_1
         networks_cli_compatible: yes
+        state: "{{ action_class }}"
+
+    - name: "{{ action_class }} the payID server in docker"
+      docker_container:
+        name: payid
+        hostname: payid
+        image: gcr.io/forte-player-exchange/payid:latest
+        networks:
+          - name: backend
+        volumes:
+          - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        networks_cli_compatible: yes
+        ports:
+          - "8081:8081"
+          - "8080:8080"
         state: "{{ action_class }}"
 
     - name: Run the migrations needed
