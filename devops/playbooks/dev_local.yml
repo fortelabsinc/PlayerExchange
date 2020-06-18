@@ -104,5 +104,5 @@
 
     - name: Run the migrations needed
       raw: >
-        cd ../../pps/apps/storage && mix ecto.create && mix ecto.migrate
+        cd ../../src/apps/storage && mix ecto.create && mix ecto.migrate
       when: env_state == 'start'

@@ -33,6 +33,14 @@ parser.add_argument('--setup_local',
                     help='Installs any additional Ansible packages needed.',
                     action="store_true")
 
+parser.add_argument('--setup_remote',
+                    help='Preps a remote deployment',
+                    action="store_true")
+
+parser.add_argument('--undo_remote',
+                    help='Used for testing remote deployment DO NOT USE UNLESS YOU KNOW WHAT YOU ARE DOING',
+                    action="store_true")
+
 parser.add_argument('--local_dev_start',
                     help='Starts a local dev environment',
                     action="store_true")
@@ -127,6 +135,20 @@ elif args.setup_local:
     os.system(cmd.format(ansible_root, verboseOpts))
     print("setup_local complete.  Please make sure to add ~/.local/bin to your path or future commands will fail")
     print("Also given the order of ops you may see some failures.  Try running command a second time and report back if failures persist")
+
+elif args.setup_remote:
+    print("Setup Remote env")
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/setup_remote.yml --extra-vars "env_state=start spec={1} build_ver={2} stage={3}" {4}'
+    osCmd = cmd.format(ansible_root, spec, ver, env, verboseOpts)
+    os.system(osCmd)
+    print("Cluster Setup Complete")
+
+elif args.undo_remote:
+    print("Undo Remote env")
+    cmd = 'ansible-playbook -i {0}/inventory/hosts {0}/playbooks/setup_remote.yml --extra-vars "env_state=stop spec={1} build_ver={2} stage={3}" {4}'
+    osCmd = cmd.format(ansible_root, spec, ver, env, verboseOpts)
+    os.system(osCmd)
+    print("Cluster Undo Complete")
 
 #----------------------------------------------------------------------------
 # --create_cluster Handler

@@ -8,10 +8,9 @@
       kind: Deployment
       metadata:
         name: plyxchg
-        namespace: default
-        #namespace: "{{cluster_name}}-{{stage}}"
+        namespace: "{{cluster_name}}-{{stage}}"
       spec:
-        replicas: 1
+        replicas: "{{plyxchg_replicas}}"
         selector:
           matchLabels:
             app: plyxchg
@@ -22,7 +21,7 @@
           spec:
             containers:
               - name: plyxchg
-                image: "gcr.io/forte-player-exchange/plyxchg:{{build_ver}}"
+                image: "gcr.io/payment-processing-service/plyxchg-{{stage}}:{{build_ver}}"
                 imagePullPolicy: Always
                 resources:
                   limits:
@@ -33,7 +32,7 @@
                     cpu: "500m"
                 readinessProbe:
                   httpGet:
-                    path: /node/v1/healthy
+                    path: /node/v1/ready
                     port: 8182
                   initialDelaySeconds: 3
                   periodSeconds: 3
@@ -56,8 +55,7 @@
       kind: Service
       metadata:
         name: plyxchg
-        namespace: default
-        #namespace: "{{cluster_name}}-{{stage}}"
+        namespace: "{{cluster_name}}-{{stage}}"
         #annotations:
         #  cloud.google.com/neg: '{"ingress": true}'
       spec:

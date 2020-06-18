@@ -2,7 +2,7 @@
 - hosts: localhost
   gather_facts: false
   vars:
-    ansible_python_interpreter: "/opt/hostedtoolcache/Python/3.8.2/x64/bin/python3"
+    ansible_python_interpreter: "/opt/hostedtoolcache/Python/3.8.3/x64/bin/python3"
 
   pre_tasks:
     # Verify expected command line params are given

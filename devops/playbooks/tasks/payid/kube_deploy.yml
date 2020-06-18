@@ -8,10 +8,9 @@
       kind: Deployment
       metadata:
         name: payid
-        namespace: default
-        #namespace: "{{cluster_name}}-{{stage}}"
+        namespace: "{{cluster_name}}-{{stage}}"
       spec:
-        replicas: 1
+        replicas: "{{payid_replicas}}"
         selector:
           matchLabels:
             app: payid
@@ -22,7 +21,7 @@
           spec:
             containers:
               - name: payid
-                image: gcr.io/forte-player-exchange/payid:latest
+                image: gcr.io/forte-player-exchange/payid-{{stage}}:latest
                 imagePullPolicy: Always
                 resources:
                   limits:
@@ -61,7 +60,6 @@
       metadata:
         name: payid
         namespace: default
-        #namespace: "{{cluster_name}}-{{stage}}"
         #annotations:
         #  cloud.google.com/neg: '{"ingress": true}'
       spec:

@@ -1,3 +1,9 @@
+- name: "Setup the cloud IP address FAILED IS OK!!!!"
+  raw: >
+    gcloud compute addresses create {{cluster_name}}-{{stage}} --global --quiet
+  ignore_errors: yes
+  no_log: true
+
 - name: Setup Ingress Controller
   k8s:
     state: "{{cluster_state}}"
@@ -6,12 +12,11 @@
       apiVersion: networking.gke.io/v1beta2
       kind: ManagedCertificate
       metadata:
-        name: "{{cluster_name}}"
-        #namespace: "{{cluster_name}}-{{stage}}"
-        namespace: default
+        name: "{{cluster_name}}-{{stage}}"
+        namespace: "{{cluster_name}}-{{stage}}"
       spec:
         domains:
-          - forte.playerexchange.io
+          - "{{stage}}.{{domain_url}}"
 
 - name: Setup Ingress Controller
   k8s:
@@ -22,11 +27,10 @@
       apiVersion: networking.k8s.io/v1beta1
       metadata:
         name: basic-ingress
-        #namespace: "{{cluster_name}}-{{stage}}"
-        namespace: default
+        namespace: "{{cluster_name}}-{{stage}}"
         annotations:
-          kubernetes.io/ingress.global-static-ip-name: "forte-player-exchange"
-          networking.gke.io/managed-certificates: "{{cluster_name}}"
+          kubernetes.io/ingress.global-static-ip-name: "{{cluster_name}}-{{stage}}"
+          networking.gke.io/managed-certificates: "{{cluster_name}}-{{stage}}"
           kubernetes.io/ingress.allow-http: "false"
       spec:
         rules:

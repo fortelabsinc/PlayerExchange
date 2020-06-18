@@ -1,0 +1,4 @@
+- name: Validate the Environment name
+  fail:
+    msg: "Environment {{ environment }} is not in the list {{ environments }}"
+  when: stage is not defined or stage not in environments

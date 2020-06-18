@@ -6,6 +6,7 @@ defmodule Storage.Repo.Migrations.Games do
       add(:name, :string)
       add(:image, :string)
       add(:info, :string)
+      timestamps()
     end
 
     create(unique_index(:games, [:name]))

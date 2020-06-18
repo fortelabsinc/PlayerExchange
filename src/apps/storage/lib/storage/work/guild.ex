@@ -30,6 +30,15 @@ defmodule Storage.Work.Guild do
   # ----------------------------------------------------------------------------
   # Public API
   # ----------------------------------------------------------------------------
+  @doc """
+  Job Posting definition.  This is the record type that will be written/read
+  from the database.
+  """
+  @primary_key false
+  schema "guilds" do
+    field(:name, :string)
+    field(:payid, :string)
+  end
 
   # ----------------------------------------------------------------------------
   # Private API

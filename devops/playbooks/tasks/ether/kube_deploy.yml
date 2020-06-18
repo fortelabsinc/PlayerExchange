@@ -1,5 +1,5 @@
 ---
-- name: Manage rippler Deployment
+- name: Manage Ether Deployment
   k8s:
     state: "{{cluster_state}}"
     wait: yes
@@ -7,21 +7,21 @@
       apiVersion: apps/v1
       kind: Deployment
       metadata:
-        name: rippler
+        name: ether
         namespace: "{{cluster_name}}-{{stage}}"
       spec:
-        replicas: "{{rippler_replicas}}"
+        replicas: "{{ether_replicas}}"
         selector:
           matchLabels:
-            app: rippler
+            app: ether
         template:
           metadata:
             labels:
-              app: rippler
+              app: ether
           spec:
             containers:
-              - name: rippler
-                image: "gcr.io/forte-player-exchange/rippler-{{stage}}:{{build_ver}}"
+              - name: ether
+                image: "gcr.io/forte-player-exchange/ether-{{stage}}:{{build_ver}}"
                 imagePullPolicy: Always
                 resources:
                   limits:
@@ -46,7 +46,7 @@
                   - containerPort: 8180
                     protocol: TCP
 
-- name: Manage rippler Service
+- name: Manage ether Service
   k8s:
     state: "{{cluster_state}}"
     wait: yes
@@ -54,7 +54,7 @@
       apiVersion: v1
       kind: Service
       metadata:
-        name: rippler
+        name: ether
         namespace: "{{cluster_name}}-{{stage}}"
         #annotations:
         #  cloud.google.com/neg: '{"ingress": true}'
@@ -64,4 +64,4 @@
             protocol: TCP
             targetPort: 3000
         selector:
-          app: rippler
+          app: ether

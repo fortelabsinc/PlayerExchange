@@ -23,6 +23,7 @@ defmodule Storage.Repo.Migrations.Postings do
       add(:class_req, :string)
       add(:user_count_req, :integer)
       add(:type_req, :string)
+      timestamps()
     end
 
     create(unique_index(:postings, [:post_id]))
