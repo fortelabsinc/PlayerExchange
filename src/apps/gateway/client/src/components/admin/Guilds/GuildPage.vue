@@ -30,10 +30,10 @@
       <MembersTable :guild_id="guild.guild_id" />
 
       <v-card-actions>
-        <v-spacer />
         <v-btn color="primary" depressed small @click="dialogMember = true">
           Add Member
         </v-btn>
+        <v-spacer />
         <v-btn color="error" depressed small @click="dialog = true">
           Delete Guild
         </v-btn>

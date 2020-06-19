@@ -11,8 +11,8 @@
       :headers="headers"
       :items="membersList"
       :loading="loading"
-      :options.sync="options"
-      :server-items-length="totalItems"
+      :options.sync="guild_id ? options : undefined"
+      :server-items-length="guild_id ? totalItems : undefined"
     >
       <template v-slot:item.actions="{ item }">
         <v-btn color="red" text @click="removeMember(item)">
@@ -61,7 +61,7 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'MembersTable',
-  props: ['guild_id'],
+  props: ['guild_id', 'value'],
   data() {
     return {
       // membersList: [],
@@ -79,7 +79,7 @@ export default {
       membersItemsPerPage: 'guilds/getMembersItemsPerPage',
     }),
     membersList() {
-      return this.membersListGet(this.guild_id)
+      return this.guild_id ? this.membersListGet(this.guild_id) : this.value
     },
     headers() {
       return [
@@ -114,8 +114,10 @@ export default {
     },
   },
   mounted() {
-    this.options.itemsPerPage = this.membersItemsPerPage
-    this.fetchTableData()
+    if (this.guild_id) {
+      this.options.itemsPerPage = this.membersItemsPerPage
+      this.fetchTableData()
+    }
   },
   methods: {
     ...mapActions({
@@ -137,6 +139,11 @@ export default {
       })
     },
     removeMember(item) {
+      if (!this.guild_id) {
+        this.$emit('removed', item)
+        return
+      }
+
       this.currentItem = item
       this.dialog = true
     },
