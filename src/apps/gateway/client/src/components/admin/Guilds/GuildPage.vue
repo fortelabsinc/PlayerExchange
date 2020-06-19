@@ -27,12 +27,54 @@
         label="Description"
       />
 
+      <MembersTable :guild_id="guild.guild_id" />
+
       <v-card-actions>
         <v-spacer />
+        <v-btn color="primary" depressed small @click="dialogMember = true">
+          Add Member
+        </v-btn>
         <v-btn color="error" depressed small @click="dialog = true">
           Delete Guild
         </v-btn>
       </v-card-actions>
+
+      <v-dialog v-model="dialogMember" :persistent="adding" max-width="600px">
+        <v-card>
+          <v-card-title>
+            Add new guild member
+          </v-card-title>
+          <v-divider class="mb-2" />
+          <v-card-text>
+            <v-text-field
+              v-model="currentMember.user_id"
+              type="text"
+              name="user_id"
+              label="User ID"
+            />
+          </v-card-text>
+          <v-card-actions>
+            <v-progress-linear
+              v-if="adding"
+              height="25"
+              :active="true"
+              :indeterminate="true"
+              color="primary"
+            >
+              <strong class="white--text">Adding</strong>
+            </v-progress-linear>
+            <template v-else>
+              <v-spacer />
+              <v-btn text @click="cancelAdd">
+                Cancel
+              </v-btn>
+              <v-btn color="primary" text @click="confirmAdd">
+                Add
+              </v-btn>
+            </template>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
       <v-dialog v-model="dialog" :persistent="deleting" max-width="600px">
         <v-card>
@@ -74,12 +116,14 @@
 import { mapGetters, mapActions } from 'vuex'
 import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
 import EditField from '@/components/common/EditField.vue'
+import MembersTable from '@/components/admin/Guilds/MembersTable.vue'
 
 export default {
   name: 'GuildPage',
   components: {
     AppLayoutPanel,
     EditField,
+    MembersTable,
   },
   data() {
     return {
@@ -90,6 +134,9 @@ export default {
       savingDescription: false,
       savingImageUrl: false,
       deleting: false,
+      dialogMember: false,
+      adding: false,
+      currentMember: {},
     }
   },
   computed: {
@@ -115,6 +162,7 @@ export default {
       apiEditGuildDescription: 'guilds/ApiActionEditGuildDescription',
       apiEditGuildImageUrl: 'guilds/ApiActionEditGuildImageUrl',
       deleteGuild: 'guilds/ApiActionDeleteGuild',
+      addGuildMember: 'guilds/ApiActionAddGuildMember',
     }),
     saveName(name) {
       this.savingName = true
@@ -167,6 +215,30 @@ export default {
           this.$router.push({ name: 'Guilds' })
         } else {
           this.$toast.error(`Error deleting the guild. ${error.message}`)
+        }
+      })
+    },
+    cancelAdd() {
+      this.dialogMember = false
+      this.currentMember = {}
+    },
+    confirmAdd() {
+      if (!this.currentMember.user_id) {
+        return
+      }
+
+      this.adding = true
+      this.addGuildMember({
+        guild_id: this.guild.guild_id,
+        user_id: this.currentMember.user_id,
+      }).then(({ error }) => {
+        this.currentMember = {}
+        this.dialogMember = false
+        this.adding = false
+        if (!error) {
+          this.$toast.success('Guild member added successfully.')
+        } else {
+          this.$toast.error(`Error adding the guild member. ${error.message}`)
         }
       })
     },

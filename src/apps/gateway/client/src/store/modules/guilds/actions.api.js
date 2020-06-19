@@ -6,6 +6,9 @@ import {
   GUILDS_LIST_EDIT,
   GUILDS_LIST_REMOVE,
   GUILDS_LIST_SET_ITEMS_PAGE,
+  GUILD_MEMBERS_LIST_SET,
+  GUILD_MEMBERS_LIST_ADD,
+  GUILD_MEMBERS_LIST_REMOVE,
 } from './mutations'
 
 export const ApiActionFetchAllGuilds = ({ commit }) =>
@@ -42,6 +45,17 @@ export const ApiActionGetGuildById = ({ commit }, { guild_id }) =>
     )
     .catch(apiErrorHandler)
 
+export const ApiActionFetchGuildMembers = ({ commit }, { guild_id }) =>
+  apiAxios
+    .get(`/guild/${guild_id}/members`)
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(GUILD_MEMBERS_LIST_SET, { guild_id, members: payload })
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)
+
 export const ApiActionCreateGuild = ({ commit }, { name, imageUrl }) =>
   apiAxios
     .post('/guild', { name, imageUrl })
@@ -53,12 +67,34 @@ export const ApiActionCreateGuild = ({ commit }, { name, imageUrl }) =>
     )
     .catch(apiErrorHandler)
 
+export const ApiActionAddGuildMember = ({ commit }, { guild_id, user_id }) =>
+  apiAxios
+    .post(`/guild/${guild_id}/members`, { guild_id, user_id })
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(GUILD_MEMBERS_LIST_ADD, { guild_id, member: payload })
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)
+
 export const ApiActionDeleteGuild = ({ commit }, { guild_id }) =>
   apiAxios
     .delete(`/guild/${guild_id}`)
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         commit(GUILDS_LIST_REMOVE, guild_id)
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)
+
+export const ApiActionRemoveGuildMember = ({ commit }, { guild_id, user_id }) =>
+  apiAxios
+    .delete(`/guild/${guild_id}/member/${user_id}`)
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(GUILD_MEMBERS_LIST_REMOVE, { guild_id, user_id })
         return { payload }
       })
     )
