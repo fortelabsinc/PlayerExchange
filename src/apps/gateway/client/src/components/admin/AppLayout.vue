@@ -49,7 +49,7 @@ export default {
     AppLayoutContent,
   },
   data: () => ({
-    mini: true,
+    mini: false,
     items: [
       { title: 'Home', icon: 'mdi-home', routeName: 'Home' },
       {

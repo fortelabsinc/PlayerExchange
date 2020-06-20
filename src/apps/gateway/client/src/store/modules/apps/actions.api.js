@@ -42,12 +42,15 @@ export const ApiActionGetAppById = ({ commit }, { app_id }) =>
     )
     .catch(apiErrorHandler)
 
-export const ApiActionCreateApp = ({ commit }, { name, imageUrl }) =>
+export const ApiActionCreateApp = (
+  { commit },
+  { name, imageUrl, revueSplit }
+) =>
   apiAxios
-    .post('/app', { name, imageUrl })
+    .post('/app', { name, imageUrl, revueSplit })
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
-        commit(APPS_LIST_ADD, { name, imageUrl, app_id: payload })
+        commit(APPS_LIST_ADD, { name, imageUrl, revueSplit, app_id: payload })
         return { payload }
       })
     )
