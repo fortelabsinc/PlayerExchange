@@ -25,7 +25,7 @@ defmodule Storage.Work.Guild do
   """
   require Logger
   use Ecto.Schema
-  # import Ecto.Query
+  import Ecto.Query
 
   # ----------------------------------------------------------------------------
   # Public API
@@ -38,9 +38,56 @@ defmodule Storage.Work.Guild do
   schema "guilds" do
     field(:name, :string)
     field(:payid, :string)
+    field(:meta, :map)
+    timestamps(type: :naive_datetime, autogenerate: {Storage.Repo, :timestamps, []})
+  end
+
+  # ----------------------------------------------------------------------------
+  # Storage.Auth.Posting.t  Struct definition and accessors and settors
+  # ----------------------------------------------------------------------------
+
+  # The basic struct returned from the table.  For now I am just going
+  # to use this struct directly however I did add accessors so that
+  # it can be used without having to know the actual key names
+  # incase I change them in the future
+  @type t :: %Storage.Work.Guild{
+          name: String.t(),
+          payid: String.t(),
+          meta: map,
+          inserted_at: NativeDateTime.t(),
+          updated_at: NativeDateTime.t()
+        }
+
+  @doc """
+  Reads out a page from the system.  This is showing ALL
+  guilds in the system
+  """
+  @spec queryPage(non_neg_integer, non_neg_integer) ::
+          {:ok,
+           %{
+             count: any,
+             first_idx: number,
+             last_idx: any,
+             last_page: number,
+             list: [Storage.Work.Guild.t()],
+             next: boolean,
+             next_page: number,
+             page: number,
+             prev: boolean
+           }}
+  def queryPage(page, count) do
+    rez =
+      Storage.Work.Guild
+      |> order_by(desc: :id)
+      |> Storage.Repo.page(page, count)
+      |> parsePage()
+
+    {:ok, rez}
   end
 
   # ----------------------------------------------------------------------------
   # Private API
   # ----------------------------------------------------------------------------
+
+  defp parsePage(data), do: data
 end

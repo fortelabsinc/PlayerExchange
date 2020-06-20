@@ -57,6 +57,7 @@ defmodule Storage.Work.Posting do
     field(:class_req, :string)
     field(:user_count_req, :integer)
     field(:type_req, :string)
+    timestamps(type: :naive_datetime, autogenerate: {Storage.Repo, :timestamps, []})
   end
 
   # ----------------------------------------------------------------------------
@@ -87,7 +88,9 @@ defmodule Storage.Work.Posting do
           level_req: String.t(),
           class_req: String.t(),
           user_count_req: integer(),
-          type_req: String.t()
+          type_req: String.t(),
+          inserted_at: NativeDateTime.t(),
+          updated_at: NativeDateTime.t()
         }
 
   @doc """
@@ -344,4 +347,37 @@ defmodule Storage.Work.Posting do
   def queryByPostId(id) do
     Storage.Repo.get_by(Storage.Work.Posting, post_id: id)
   end
+
+  @doc """
+  Reads out a page from the system.  This is showing ALL
+  guilds in the system
+  """
+  @spec queryPage(non_neg_integer, non_neg_integer) ::
+          {:ok,
+           %{
+             count: any,
+             first_idx: number,
+             last_idx: any,
+             last_page: number,
+             list: [Storage.Work.Posting.t()],
+             next: boolean,
+             next_page: number,
+             page: number,
+             prev: boolean
+           }}
+  def queryPage(page, count) do
+    rez =
+      Storage.Work.Posting
+      |> order_by(desc: :id)
+      |> Storage.Repo.page(page, count)
+      |> parsePage()
+
+    {:ok, rez}
+  end
+
+  # ----------------------------------------------------------------------------
+  # Private API
+  # ----------------------------------------------------------------------------
+
+  defp parsePage(data), do: data
 end

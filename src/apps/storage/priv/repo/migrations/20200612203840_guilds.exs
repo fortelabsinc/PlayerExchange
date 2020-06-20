@@ -5,6 +5,8 @@ defmodule Storage.Repo.Migrations.Guilds do
     create table(:guild) do
       add(:name, :string)
       add(:payid, :text)
+      add(:meta, :map)
+      timestamps()
     end
 
     create(unique_index(:guild, [:name]))

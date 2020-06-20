@@ -40,6 +40,7 @@ defmodule Storage.Wallet.XRP do
   """
   require Logger
   use Ecto.Schema
+  import Ecto.Query
 
   # ----------------------------------------------------------------------------
   # Public API
@@ -223,6 +224,33 @@ defmodule Storage.Wallet.XRP do
     |> decrypt()
   end
 
+  @doc """
+  Reads out a page from the system.  This is showing ALL
+  order from all app
+  """
+  @spec queryPage(non_neg_integer, non_neg_integer) ::
+          {:ok,
+           %{
+             count: any,
+             first_idx: number,
+             last_idx: any,
+             last_page: number,
+             list: [Storage.Auth.User.t()],
+             next: boolean,
+             next_page: number,
+             page: number,
+             prev: boolean
+           }}
+  def queryPage(page, count) do
+    rez =
+      Storage.Wallet.XRP
+      |> order_by(desc: :id)
+      |> Storage.Repo.page(page, count)
+      |> parsePage()
+
+    {:ok, rez}
+  end
+
   # ----------------------------------------------------------------------------
   # Private API
   # ----------------------------------------------------------------------------
@@ -260,4 +288,6 @@ defmodule Storage.Wallet.XRP do
         publickey: Base.decode64!(xrp.publickey) |> Utils.Crypto.decrypt()
     }
   end
+
+  defp parsePage(data), do: data
 end

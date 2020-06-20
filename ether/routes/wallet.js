@@ -9,11 +9,33 @@ const testKovan = "https://kovan.infura.io/v3/bd759a8d4ecb45eaa6376cf022beeb9d";
 const testRopsten = "https://ropsten.infura.io/v3/bd759a8d4ecb45eaa6376cf022beeb9d"
 const testRinkeby = "https://rinkeby.infura.io/v3/bd759a8d4ecb45eaa6376cf022beeb9d"
 const mainnet = "https://mainnet.infura.io/v3/bd759a8d4ecb45eaa6376cf022beeb9d"
+const apiKey = "N88BS9XGDZPD5HMSYU5Z5MSIBUBKFM4I3U"
 
 const kovan = new Web3(new Web3.providers.HttpProvider(testKovan))
 const ropsten = new Web3(new Web3.providers.HttpProvider(testRopsten))
 const rinkeby = new Web3(new Web3.providers.HttpProvider(testRinkeby))
 const main = new Web3(new Web3.providers.HttpProvider(mainnet))
+
+function getWeb3ByNetwork(network) {
+  let web3;
+  switch (network) {
+    case "kovan":
+      web3 = kovan;
+      break;
+    case "ropsten":
+      web3 = ropsten;
+      break;
+    case "rinkeby":
+      web3 = rinkeby;
+      break;
+
+    default:
+      web3 = main;
+      break;
+  }
+
+  return web3;
+}
 
 const asyncMiddleware = fn =>
   (req, res, next) => {
@@ -36,41 +58,37 @@ Returns the newly created wallet
   "test": bool
 }
 */
-router.post('/create', function(req, res, next) {
+router.post('/create/:network', function(req, res, next) {
+  const wallet = Wallet.generate()
   var obj = {
     publicKey: wallet.getPublicKeyString(),
     privateKey: wallet.getPrivateKeyString(),
     address: wallet.getAddressString(),
-    mnemonic: wallet.mnemonic
   };
   res.send(obj);
 });
 
+// Get the transaction history of a particular account
+router.get('/history/:network/:address', asyncMiddleware(async (req, res, next) => {
+  res.send("Not Implemented");
+}));
+
+router.get('/status/:network/:hash', asyncMiddleware(async (req, res, next) => {
+  res.send("Not Implemented");
+}));
+
+router.get('/payment/:network/:hash', asyncMiddleware(async (req, res, next) => {
+  res.send("Not Implemented");
+}));
+
 /*
 Returns the balance of XRP assigned to the wallet
 
-Returns:  Integer number
+Returns:  Integer number in eth format
 */
 router.get('/balance/:network/:address', asyncMiddleware(async (req, res, next) => {
   var address = req.params.address;
-  var network = req.params.network;
-  let web3;
-  switch (network) {
-    case "kovan":
-      web3 = kovan;
-      break;
-    case "ropsten":
-      web3 = ropsten;
-      break;
-    case "rinkeby":
-      web3 = rinkeby;
-      break;
-
-    default:
-      web3 = main;
-      break;
-  }
-
+  let web3 = getWeb3ByNetwork(req.params.network);
   web3.eth.getBalance(address, function(err, result) {
     if (err) {
       res.send(obj);
@@ -80,16 +98,18 @@ router.get('/balance/:network/:address', asyncMiddleware(async (req, res, next) 
   })
 }));
 
-// Get the transaction history of a particular account
-router.get('/history/:address', asyncMiddleware(async (req, res, next) => {
-  var address = req.params.address;
-}));
-
-router.post('/send', asyncMiddleware(async (req, res, next) => {
+/*
+Send a transaction from one user to another
+*/
+router.post('/send/:network', asyncMiddleware(async (req, res, next) => {
   const info = req.body;
   const amount = BigInt(req.body.amount);
-
+  const from = req.body.from;
+  const to = req.body.to;
+  let web3 = getWeb3ByNetwork(req.params.network);
   var privateKey = new Buffer(info.privateKey, 'hex')
+
+  //console.log(web3.eth.estimateGas({ from: from, to: to, amount: web3.toWei(amount, "ether") }));
 
   var rawTx = {
     nonce: '0x00',
@@ -112,6 +132,7 @@ router.post('/send', asyncMiddleware(async (req, res, next) => {
       res.send("failed")
   });
 }));
+
 
 
 module.exports = router;

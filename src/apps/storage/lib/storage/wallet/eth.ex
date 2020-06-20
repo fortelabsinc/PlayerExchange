@@ -28,7 +28,6 @@ defmodule Storage.Wallet.Eth do
     def change do
       create table(:eth) do
         add(:address, :eth)
-        add(:mnemonic, :eth)
         add(:privatekey, :eth)
         add(:publickey, :eth)
       end
@@ -51,7 +50,6 @@ defmodule Storage.Wallet.Eth do
   @primary_key false
   schema "eth" do
     field(:address, :string, primary_key: true)
-    field(:mnemonic, :string)
     field(:privatekey, :string)
     field(:publickey, :string)
     field(:meta, :map)
@@ -68,7 +66,6 @@ defmodule Storage.Wallet.Eth do
   # incase I change them in the future
   @type t :: %Storage.Wallet.Eth{
           address: String.t(),
-          mnemonic: String.t(),
           privatekey: String.t(),
           publickey: String.t(),
           meta: map,
@@ -83,19 +80,13 @@ defmodule Storage.Wallet.Eth do
   def address(ethT), do: ethT.address
 
   @doc """
-  Storage.Work.Posting.t accessor to mnemonic
-  """
-  @spec mnemonic(Storage.Wallet.Eth.t()) :: String.t()
-  def mnemonic(ethT), do: ethT.mnemonic
-
-  @doc """
-  Storage.Work.Posting.t accessor to mnemonic
+  Storage.Work.Posting.t accessor to privateKey
   """
   @spec privateKey(Storage.Wallet.Eth.t()) :: String.t()
   def privateKey(ethT), do: ethT.privatekey
 
   @doc """
-  Storage.Work.Posting.t accessor to mnemonic
+  Storage.Work.Posting.t accessor to publicKey
   """
   @spec publicKey(Storage.Wallet.Eth.t()) :: String.t()
   def publicKey(ethT), do: ethT.publickey
@@ -115,7 +106,6 @@ defmodule Storage.Wallet.Eth do
   ```
   %{
     "address" => "String value",
-    "mnemonic" => "String value",
     "privatekey" => "String value",
     "publickey" => "String value",
     "meta" => %{}
@@ -126,7 +116,6 @@ defmodule Storage.Wallet.Eth do
   def new(map) do
     %Storage.Wallet.Eth{
       address: map["address"],
-      mnemonic: map["mnemonic"],
       privatekey: map["privateKey"],
       publickey: map["publicKey"],
       meta: %{}
@@ -223,8 +212,7 @@ defmodule Storage.Wallet.Eth do
   defp encrypt(eth) do
     %{
       eth
-      | mnemonic: Utils.Crypto.encrypt(eth.mnemonic) |> Base.encode64(),
-        privatekey: Utils.Crypto.encrypt(eth.privatekey) |> Base.encode64(),
+      | privatekey: Utils.Crypto.encrypt(eth.privatekey) |> Base.encode64(),
         publickey: Utils.Crypto.encrypt(eth.publickey) |> Base.encode64()
     }
   end
@@ -239,8 +227,7 @@ defmodule Storage.Wallet.Eth do
   defp decrypt(eth) do
     %{
       eth
-      | mnemonic: Base.decode64!(eth.mnemonic) |> Utils.Crypto.decrypt(),
-        privatekey: Base.decode64!(eth.privatekey) |> Utils.Crypto.decrypt(),
+      | privatekey: Base.decode64!(eth.privatekey) |> Utils.Crypto.decrypt(),
         publickey: Base.decode64!(eth.publickey) |> Utils.Crypto.decrypt()
     }
   end

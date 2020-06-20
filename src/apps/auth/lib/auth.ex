@@ -89,16 +89,24 @@ defmodule Auth do
           |> Blockchain.Ripple.PayID.format()
 
         # Create the wallet
-        {:ok, wallet} = Blockchain.Ripple.XRP.create()
+        {:ok, xrpWallet} = Blockchain.Ripple.XRP.create()
+        {:ok, ethWallet} = Blockchain.Eth.create()
 
         # Create the PayID Account
         :ok =
-          Blockchain.Ripple.PayID.create("#{userName}$forte.playerexchange.io", wallet["address"])
+          Blockchain.Ripple.PayID.create(
+            "#{userName}$forte.playerexchange.io",
+            %{xrp: xrpWallet["address"], eth_kovan: ethWallet["address"]}
+          )
 
         # Save the wallet info
         {:ok, _} =
-          Storage.Wallet.XRP.new(wallet)
+          Storage.Wallet.XRP.new(xrpWallet)
           |> Storage.Wallet.XRP.write()
+
+        {:ok, _} =
+          Storage.Wallet.Eth.new(ethWallet)
+          |> Storage.Wallet.Eth.write()
 
         rsp
 

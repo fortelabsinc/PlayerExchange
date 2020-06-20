@@ -25,6 +25,7 @@ defmodule Storage.Game do
   """
   require Logger
   use Ecto.Schema
+  import Ecto.Query
 
   # ----------------------------------------------------------------------------
   # Public API
@@ -39,6 +40,8 @@ defmodule Storage.Game do
     field(:name, :string, primary_key: true)
     field(:image, :string)
     field(:info, :string)
+    field(:meta, :map)
+    timestamps(type: :naive_datetime, autogenerate: {Storage.Repo, :timestamps, []})
   end
 
   # ----------------------------------------------------------------------------
@@ -52,7 +55,10 @@ defmodule Storage.Game do
   @type t :: %Storage.Game{
           name: String.t(),
           image: String.t(),
-          info: String.t()
+          info: String.t(),
+          meta: map,
+          inserted_at: NativeDateTime.t(),
+          updated_at: NativeDateTime.t()
         }
 
   @doc """
@@ -119,4 +125,37 @@ defmodule Storage.Game do
   def queryByName(name) do
     Storage.Repo.get_by(Storage.Game, name: name)
   end
+
+  @doc """
+  Reads out a page from the system.  This is showing ALL
+  guilds in the system
+  """
+  @spec queryPage(non_neg_integer, non_neg_integer) ::
+          {:ok,
+           %{
+             count: any,
+             first_idx: number,
+             last_idx: any,
+             last_page: number,
+             list: [Storage.Work.Guild.t()],
+             next: boolean,
+             next_page: number,
+             page: number,
+             prev: boolean
+           }}
+  def queryPage(page, count) do
+    rez =
+      Storage.Game
+      |> order_by(desc: :id)
+      |> Storage.Repo.page(page, count)
+      |> parsePage()
+
+    {:ok, rez}
+  end
+
+  # ----------------------------------------------------------------------------
+  # Private API
+  # ----------------------------------------------------------------------------
+
+  defp parsePage(data), do: data
 end

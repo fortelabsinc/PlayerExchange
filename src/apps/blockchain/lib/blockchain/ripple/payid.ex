@@ -34,9 +34,45 @@ defmodule Blockchain.Ripple.PayID do
   if_prod do
     # TODO:  This data should come from the config files
     @serverName "http://payid.default.svc.cluster.local:8081"
+    @http "https"
+    @domain Application.get_env(:blockchain, :payid_domain, "prod.playerexchange.io")
   else
-    @serverName "http://localhost:8081"
+    @serverName "http://127.0.0.1:8081"
+    @http "http"
+    @domain "127.0.0.1"
   end
+
+  @invalidChars [
+    "@",
+    " ",
+    "+",
+    "=",
+    "!",
+    "|",
+    "~",
+    "?",
+    "@",
+    "#",
+    "$",
+    "%",
+    "^",
+    "&",
+    "*",
+    "(",
+    "\"",
+    ")",
+    "\\",
+    "/",
+    ".",
+    ",",
+    "`",
+    "<",
+    ">",
+    "{",
+    "}",
+    "[",
+    "]"
+  ]
 
   # ----------------------------------------------------------------------------
   # Plug options
@@ -52,15 +88,41 @@ defmodule Blockchain.Ripple.PayID do
   # ----------------------------------------------------------------------------
   # Public API
   # ----------------------------------------------------------------------------
+  @type chainT ::
+          :xrp
+          | :xrp_test
+          | :xrp_dev
+          | :ach
+          | :ilp
+          | :btc
+          | :btc_test
+          | :eth
+          | :eth_ropsten
+          | :eth_rinkeby
+          | :eth_goerli
+          | :eth_kovan
+
+  # ----------------------------------------------------------------------------
+  # Public API
+  # ----------------------------------------------------------------------------
 
   @doc """
-  Format an a username string to be payID safe
+  Format an a username string into a PayID account name
   """
   @spec format(String.t()) :: String.t()
   def format(name) do
-    String.replace(name, "@", "_")
-    |> String.replace(".", "_")
+    String.replace(
+      name,
+      @invalidChars,
+      fn _ -> "_" end
+    ) <> "$" <> domain()
   end
+
+  @doc """
+  Get the domain name for the payid server I am using
+  """
+  @spec domain() :: String.t()
+  def domain(), do: @domain
 
   @doc """
   Looks up a payid account from a public payid server.  This will decode the
@@ -83,7 +145,7 @@ defmodule Blockchain.Ripple.PayID do
   }
   ```
   """
-  @spec lookup(String.t(), :xrp_test) ::
+  @spec lookup(String.t(), chainT()) ::
           {:ok, map} | {:error, String.t()} | {:error, :invalid_format}
   def lookup(payID, type \\ :xrp_test) do
     accountInfo = String.split(payID, "$")
@@ -91,7 +153,7 @@ defmodule Blockchain.Ripple.PayID do
     case accountInfo do
       [name, server] ->
         {:ok, rsp} =
-          Tesla.get("https://#{server}/#{name}",
+          Tesla.get("#{@http}://#{server}:8080/#{name}",
             headers: [{"Accept", header(type)}, {"PayID-Version", "1.0"}]
           )
 
@@ -148,25 +210,24 @@ defmodule Blockchain.Ripple.PayID do
   end
 
   @doc """
-  Creates a new PayID account on the interal server
+  Create a new record on the PayID server.
 
   Arguments:
   payID:  String in the form of <username>$<server address>
+  addresses:  Array of tuples with the first element is a string address
+              and the second element is the atom code for the network name
   """
-  @spec create(String.t(), String.t(), :xrp_test) ::
-          :ok | {:error, :bad_request | :in_use | :server_unavailable}
-  def create(payID, wallet, type \\ :xrp_test) do
+  @spec create(String.t(), {String.t(), chainT()}) ::
+          :ok | {:error, :bad_request | :in_use | :not_found | :server_unavailable}
+  def create(payID, addresses) do
+    addrs =
+      Enum.map(addresses, fn data ->
+        addressBlock(data)
+      end)
+
     data = %{
       payId: payID,
-      addresses: [
-        %{
-          paymentNetwork: network(type),
-          environment: environment(type),
-          details: %{
-            address: wallet
-          }
-        }
-      ]
+      addresses: addrs
     }
 
     {:ok, rsp} = post("/users", data)
@@ -181,25 +242,36 @@ defmodule Blockchain.Ripple.PayID do
   end
 
   @doc """
-  Updates the wallet address assigned to the current payID account
+  Creates a new PayID account on the interal server
 
   Arguments:
   payID:  String in the form of <username>$<server address>
   """
-  @spec update(String.t(), String.t(), :xrp_test) ::
+  @spec create(String.t(), String.t(), chainT()) ::
           :ok | {:error, :bad_request | :in_use | :server_unavailable}
-  def update(payID, wallet, type \\ :xrp_test) do
+  def create(payID, address, type) do
+    create(payID, {address, type})
+  end
+
+  @doc """
+  Does a hard set on the addresses assigned to the given account
+
+  Arguments:
+  payID:  String in the form of <username>$<server address>
+  addresses:  Array of tuples with the first element is a string address
+              and the second element is the atom code for the network name
+  """
+  @spec set(String.t(), [{String.t(), chainT()}]) ::
+          :ok | {:error, :bad_request | :in_use | :not_found | :server_unavailable}
+  def set(payID, addresses) do
+    addrs =
+      Enum.map(addresses, fn data ->
+        addressBlock(data)
+      end)
+
     data = %{
       payId: payID,
-      addresses: [
-        %{
-          paymentNetwork: network(type),
-          environment: environment(type),
-          details: %{
-            address: wallet
-          }
-        }
-      ]
+      addresses: addrs
     }
 
     {:ok, rsp} = put("/users/#{payID}", data)
@@ -213,6 +285,70 @@ defmodule Blockchain.Ripple.PayID do
       503 -> {:error, :server_unavailable}
     end
   end
+
+  @doc """
+  Does a hard set on the addresses assigned to the given account
+
+  Arguments:
+  payID:    String in the form of <username>$<server address>
+  address:  Crypto address to assign to this account
+  type:     Network that this address is on (:eth, :xrp, etc)
+  """
+  @spec set(String.t(), String.t(), chainT()) ::
+          :ok | {:error, :bad_request | :in_use | :server_unavailable}
+  def set(payID, address, type) do
+    set(payID, [{address, type}])
+  end
+
+  @doc """
+  Adds additional payment types assigned to a given address
+  This is an append operation
+
+  Arguments:
+  payID:  String in the form of <username>$<server address>
+  addresses:  Array of tuples with the first element is a string address
+              and the second element is the atom code for the network name
+  """
+  @spec append(String.t(), [{String.t(), chainT()}]) ::
+          :ok | {:error, :bad_request | :in_use | :not_found | :server_unavailable}
+  def append(payID, addresses) do
+    {:ok, info} = lookupFull(payID)
+
+    addrs =
+      processRsp(info["addresses"], []) ++
+        Enum.map(addresses, fn data ->
+          addressBlock(data)
+        end)
+
+    data = %{
+      payId: payID,
+      addresses: addrs
+    }
+
+    {:ok, rsp} = put("/users/#{payID}", data)
+
+    case rsp.status do
+      200 -> :ok
+      201 -> :ok
+      400 -> {:error, :bad_request}
+      404 -> {:error, :not_found}
+      409 -> {:error, :in_use}
+      503 -> {:error, :server_unavailable}
+    end
+  end
+
+  @doc """
+  Adds additional payment types assigned to a given address
+  This is an append operation
+
+  Arguments:
+  payID:    String in the form of <username>$<server address>
+  address:  Crypto address to assign to this account
+  type:     Network that this address is on (:eth, :xrp, etc)
+  """
+  @spec append(String.t(), String.t(), chainT()) ::
+          :ok | {:error, :bad_request | :in_use | :not_found | :server_unavailable}
+  def append(payID, address, type), do: append(payID, [{address, type}])
 
   @doc """
   Deletes a PayID from the internal server
@@ -254,6 +390,41 @@ defmodule Blockchain.Ripple.PayID do
   defp header(:eth_kovan), do: "application/eth-kovan+json"
 
   defp network(:xrp_test), do: "XRPL"
+  defp network(:eth), do: "ETH"
+  defp network(:eth_ropsten), do: "ETH"
+  defp network(:eth_rinkeby), do: "ETH"
+  defp network(:eth_goerli), do: "ETH"
+  defp network(:eth_kovan), do: "ETH"
 
   defp environment(:xrp_test), do: "TESTNET"
+
+  defp environment(:eth), do: "MAINNET"
+  defp environment(:eth_ropsten), do: "ROPSTEN"
+  defp environment(:eth_rinkeby), do: "RINKEBY"
+  defp environment(:eth_goerli), do: "GOERLI"
+  defp environment(:eth_kovan), do: "KOVAN"
+
+  defp addressBlock({address, type}) do
+    %{
+      paymentNetwork: network(type),
+      environment: environment(type),
+      details: %{
+        address: address
+      }
+    }
+  end
+
+  defp processRsp([], rsp), do: rsp
+
+  defp processRsp([entry | rest], rsp) do
+    data = %{
+      paymentNetwork: entry["paymentNetwork"],
+      environment: entry["environment"],
+      details: %{
+        address: entry["details"]["address"]
+      }
+    }
+
+    processRsp(rest, [data | rsp])
+  end
 end

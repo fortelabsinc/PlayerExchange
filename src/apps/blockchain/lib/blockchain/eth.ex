@@ -19,9 +19,9 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-defmodule Blockchain.Ripple.Eth do
+defmodule Blockchain.Eth do
   @moduledoc ~S"""
-  Module for talking to the XRP blockchain
+  Module for talking to the Ethereum blockchain
   """
 
   require Logger
@@ -32,9 +32,9 @@ defmodule Blockchain.Ripple.Eth do
   # Module Consts
   # ----------------------------------------------------------------------------
   if_prod do
-    @serverName "http://rippler.default.svc.cluster.local:3000"
+    @serverName "http://ether.default.svc.cluster.local:3001"
   else
-    @serverName "http://localhost:3000"
+    @serverName "http://localhost:3001"
   end
 
   # ----------------------------------------------------------------------------
@@ -48,11 +48,26 @@ defmodule Blockchain.Ripple.Eth do
   # Public API
   # ----------------------------------------------------------------------------
 
+  def test() do
+    %{
+      "address" => "0xdb8bf403da7cfd6d7fced1d6e37b9d743c33c5c3",
+      "privateKey" => "0xad207ff9c5308e44d295de82faf53ff793e467845128cb1be5638bc8785cee16",
+      "publicKey" =>
+        "0x877045a72fbc532cf5d67e202dd09c77cf9621b1c7d7fe4f79b05a277713c2596891f62a448b14c81db4b6af69a04fc60b7f091228e7f2521b729d87cec492a9"
+    }
+  end
+
   @doc """
-  Converts XRP into the drops format
+  Converts Eth to Wei
   """
-  @spec xrpToDrops(number) :: number
-  def xrpToDrops(xrp), do: xrp * 1_000_000
+  @spec weiToEther(number) :: number
+  def weiToEther(wei), do: wei / 1_000_000_000_000_000_000
+
+  @doc """
+  Converts Wei to Eth
+  """
+  @spec etherToWei(number) :: number
+  def etherToWei(eth), do: eth * 1_000_000_000_000_000_000
 
   @doc """
   Check to make sure we have a full connection to the rippler server
@@ -85,7 +100,7 @@ defmodule Blockchain.Ripple.Eth do
   """
   @spec balance(String.t()) :: {:error, any} | {:ok, String.t()}
   def balance(address) do
-    case get("/wallet/balance/#{address}") do
+    case get("/wallet/balance/kovan/#{address}") do
       {:ok, rsp} ->
         if String.contains?(rsp.body, "NOT_FOUND") do
           {:ok, "0"}
@@ -157,8 +172,8 @@ defmodule Blockchain.Ripple.Eth do
   }
   """
   @spec payment(String.t(), String.t()) :: {:error, any} | {:ok, map}
-  def payment(wallet, hash) do
-    case get("/wallet/payment/#{wallet}/#{hash}") do
+  def payment(_wallet, hash) do
+    case get("/wallet/payment/kovan/#{hash}") do
       {:ok, rsp} ->
         {:ok, rsp.body}
 
@@ -200,7 +215,7 @@ defmodule Blockchain.Ripple.Eth do
   """
   @spec create :: {:error, any} | {:ok, map}
   def create() do
-    case post("/wallet/create", "") do
+    case post("/wallet/create/kovan", "") do
       {:ok, rsp} ->
         {:ok, rsp.body}
 
@@ -241,7 +256,7 @@ defmodule Blockchain.Ripple.Eth do
       type: "mnemonic"
     }
 
-    case post("/wallet/send", data) do
+    case post("/wallet/send/kovan", data) do
       {:ok, rsp} ->
         {:ok, rsp.body}
 

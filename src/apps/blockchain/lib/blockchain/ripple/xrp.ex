@@ -85,7 +85,7 @@ defmodule Blockchain.Ripple.XRP do
   """
   @spec balance(String.t()) :: {:error, any} | {:ok, String.t()}
   def balance(address) do
-    case get("/wallet/balance/#{address}") do
+    case get("/wallet/balance/test/#{address}") do
       {:ok, rsp} ->
         if String.contains?(rsp.body, "NOT_FOUND") do
           {:ok, "0"}

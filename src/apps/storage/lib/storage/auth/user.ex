@@ -26,6 +26,7 @@ defmodule Storage.Auth.User do
   """
   require Logger
   use Ecto.Schema
+  import Ecto.Query
 
   # ----------------------------------------------------------------------------
   # Public API
@@ -395,6 +396,33 @@ defmodule Storage.Auth.User do
     |> getMeta()
   end
 
+  @doc """
+  Reads out a page from the system.  This is showing ALL
+  order from all app
+  """
+  @spec queryPage(non_neg_integer, non_neg_integer) ::
+          {:ok,
+           %{
+             count: any,
+             first_idx: number,
+             last_idx: any,
+             last_page: number,
+             list: [Storage.Auth.User.t()],
+             next: boolean,
+             next_page: number,
+             page: number,
+             prev: boolean
+           }}
+  def queryPage(page, count) do
+    rez =
+      Storage.Auth.User
+      |> order_by(desc: :id)
+      |> Storage.Repo.page(page, count)
+      |> parsePage()
+
+    {:ok, rez}
+  end
+
   # ----------------------------------------------------------------------------
   # Write Operations
   # ----------------------------------------------------------------------------
@@ -438,4 +466,6 @@ defmodule Storage.Auth.User do
   # ----------------------------------------------------------------------------
   defp getMeta(nil), do: %{}
   defp getMeta(map), do: Map.get(map, "meta", %{})
+
+  defp parsePage(data), do: data
 end
