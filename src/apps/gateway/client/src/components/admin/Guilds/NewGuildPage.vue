@@ -143,8 +143,6 @@ export default {
       })
     },
     onMemberRemoved(item) {
-      console.log(item)
-
       this.members = filter(
         this.members,
         (member) => member.user_id !== item.user_id
