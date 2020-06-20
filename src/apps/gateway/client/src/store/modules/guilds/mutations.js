@@ -1,10 +1,13 @@
-import { uniqBy, castArray, filter, includes, findIndex } from 'lodash'
+import { uniqBy, castArray, filter, includes, findIndex, find } from 'lodash'
 
 export const GUILDS_LIST_SET = 'GUILDS_LIST_SET'
 export const GUILDS_LIST_ADD = 'GUILDS_LIST_ADD'
 export const GUILDS_LIST_EDIT = 'GUILDS_LIST_EDIT'
 export const GUILDS_LIST_REMOVE = 'GUILDS_LIST_REMOVE'
 export const GUILDS_LIST_SET_ITEMS_PAGE = 'GUILDS_LIST_SET_ITEMS_PAGE'
+export const GUILD_MEMBERS_LIST_SET = 'GUILD_MEMBERS_LIST_SET'
+export const GUILD_MEMBERS_LIST_ADD = 'GUILD_MEMBERS_LIST_ADD'
+export const GUILD_MEMBERS_LIST_REMOVE = 'GUILD_MEMBERS_LIST_REMOVE'
 
 export default {
   [GUILDS_LIST_SET](state, payload) {
@@ -32,5 +35,42 @@ export default {
   },
   [GUILDS_LIST_SET_ITEMS_PAGE](state, payload) {
     state.itemsPerPage = payload
+  },
+  [GUILD_MEMBERS_LIST_SET](state, payload) {
+    const guild = find(
+      state.list,
+      ({ guild_id }) => guild_id === payload.guild_id
+    )
+    if (guild) {
+      guild.members = payload.members
+    }
+  },
+  [GUILD_MEMBERS_LIST_ADD](state, payload) {
+    const guild = find(
+      state.list,
+      ({ guild_id }) => guild_id === payload.guild_id
+    )
+    if (guild) {
+      guild.members = uniqBy(
+        [...guild.members, ...castArray(payload.member)],
+        'user_id'
+      )
+    }
+  },
+  [GUILD_MEMBERS_LIST_REMOVE](state, payload) {
+    const guild = find(
+      state.list,
+      ({ guild_id }) => guild_id === payload.guild_id
+    )
+    if (guild) {
+      guild.members = uniqBy(
+        [...guild.members, ...castArray(payload.user_id)],
+        'user_id'
+      )
+      guild.members = filter(
+        guild.members,
+        (member) => !includes(castArray(payload.user_id), member.user_id)
+      )
+    }
   },
 }
