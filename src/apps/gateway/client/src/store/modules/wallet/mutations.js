@@ -11,13 +11,10 @@ export default {
     state.list = payload
   },
   [BALANCE_LIST_ADD](state, payload) {
-    state.list = uniqBy([...state.list, ...castArray(payload)], 'balance_id')
+    state.list = uniqBy([...state.list, ...castArray(payload)], 'id')
   },
   [BALANCE_LIST_EDIT](state, payload) {
-    const balanceIndex = findIndex(
-      state.list,
-      ({ balance_id }) => balance_id === payload.balance_id
-    )
+    const balanceIndex = findIndex(state.list, ({ id }) => id === payload.id)
     if (balanceIndex >= 0) {
       const newList = [...state.list]
       newList.splice(balanceIndex, 1, {
@@ -30,7 +27,7 @@ export default {
   [BALANCE_LIST_REMOVE](state, payload) {
     state.list = filter(
       state.list,
-      (posting) => !includes(castArray(payload), posting.balance_id)
+      (posting) => !includes(castArray(payload), posting.id)
     )
   },
   [BALANCE_LIST_SET_ITEMS_PAGE](state, payload) {
