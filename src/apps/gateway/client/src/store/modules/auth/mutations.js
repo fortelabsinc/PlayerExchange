@@ -5,6 +5,7 @@ export const SET_REFRESH_TOKEN = 'SET_REFRESH_TOKEN'
 export const SET_META = 'SET_META'
 export const SET_USER_NAME = 'SET_USER_NAME'
 export const SET_USER_EMAIL = 'SET_USER_EMAIL'
+export const SET_USER_PAYID = 'SET_USER_PAYID'
 
 export default {
   [SET_TOKEN](state, payload) {
@@ -21,5 +22,8 @@ export default {
   },
   [SET_USER_EMAIL](state, payload) {
     Vue.set(state.user, 'email', payload)
+  },
+  [SET_USER_PAYID](state, payload) {
+    Vue.set(state.user, 'payId', payload)
   },
 }

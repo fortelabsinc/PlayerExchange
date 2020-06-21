@@ -16,6 +16,7 @@ export const ApiActionLogin = ({ dispatch }, { email, password }) =>
           user: {
             name: email,
             email,
+            payId: get(payload, 'payId'),
           },
         }
 

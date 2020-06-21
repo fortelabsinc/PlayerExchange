@@ -64,7 +64,6 @@ export default {
       },
       {
         title: 'Games',
-        //icon: 'mdi-play-box-multiple',
         icon: 'mdi-google-controller',
         routeName: 'Apps',
       },

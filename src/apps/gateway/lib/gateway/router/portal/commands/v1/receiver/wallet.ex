@@ -81,7 +81,7 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Wallet do
             end
 
           {:error, errorMessage} ->
-            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            Logger.error("Error getting balance #{inspect(errorMessage)}")
             jsonRsp(conn, 401, %{error: "unauthorized"})
         end
     end

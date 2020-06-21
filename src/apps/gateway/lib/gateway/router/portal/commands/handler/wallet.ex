@@ -47,21 +47,7 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
   """
   @spec balances(String.t()) :: {:ok, [map]} | {:error, String.t()}
   def balances(username) do
-    case getBalanceForUsername(username, :xrp) do
-      {:ok, amt} ->
-        amt = String.to_integer(amt) / 1_000_000.0
-
-        data = [
-          %{id: "XRP", balance: "#{amt}"},
-          %{id: "BTC", balance: "0"},
-          %{id: "ETH", balance: "0"}
-        ]
-
-        {:ok, data}
-
-      err ->
-        err
-    end
+    getBalanceForUsername(username)
   end
 
   @doc """
@@ -70,10 +56,8 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
   @spec payment(String.t(), String.t(), String.t()) ::
           {:error, String.t()} | {:ok, String.t()}
   def payment(amt, username, payId) do
-    fuser = Blockchain.Ripple.PayID.format(username)
-
     info =
-      "#{fuser}$forte.playerexchange.io"
+      Blockchain.Ripple.PayID.format(username)
       |> Blockchain.Ripple.PayID.lookup()
 
     case info do
@@ -110,6 +94,11 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
     end
   end
 
+  @doc """
+  Pay off the posting confirmation amount
+  """
+  @spec payPostingConfirm(String.t(), String.t(), String.t()) ::
+          {:error, any} | {:ok, String.t()}
   def payPostingConfirm(postId, username, payId) do
     case Storage.Work.Posting.queryByPostId(postId) do
       nil ->
@@ -124,6 +113,11 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
     end
   end
 
+  @doc """
+  Pay off the posting complete amount
+  """
+  @spec payPostingComplete(String.t(), String.t(), String.t()) ::
+          {:error, any} | {:ok, String.t()}
   def payPostingComplete(postId, username, payId) do
     case Storage.Work.Posting.queryByPostId(postId) do
       nil ->
@@ -138,6 +132,11 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
     end
   end
 
+  @doc """
+  Pay off the posting bound amount
+  """
+  @spec payPostingBonus(String.t(), String.t(), String.t()) ::
+          {:error, any} | {:ok, String.t()}
   def payPostingBonus(postId, username, payId) do
     case Storage.Work.Posting.queryByPostId(postId) do
       nil ->
@@ -152,13 +151,16 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
     end
   end
 
+  # ----------------------------------------------------------------------------
+  # Public Auth APIs
+  # ----------------------------------------------------------------------------
+
+  # Lets pay off a posting
   defp payPostingAmount(username, postT, payId, amt) do
     # Verify that the user owns the post
     if username == Storage.Work.Posting.userId(postT) do
-      fuser = Blockchain.Ripple.PayID.format(username)
-
       info =
-        "#{fuser}$forte.playerexchange.io"
+        Blockchain.Ripple.PayID.format(username)
         |> Blockchain.Ripple.PayID.lookup()
 
       case info do
@@ -197,31 +199,23 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
     end
   end
 
-  defp getBalanceForUsername(username, :xrp) do
+  # Let's get the balances for these users
+  defp getBalanceForUsername(username) do
     fuser = Blockchain.Ripple.PayID.format(username)
 
-    info =
-      "#{fuser}$forte.playerexchange.io"
-      |> Blockchain.Ripple.PayID.lookup()
-
-    case info do
-      {:ok, rsp} ->
-        from =
-          Map.get(rsp, "addressDetails")
-          |> Map.get("address")
-
-        # Lookup the address info
-        case Storage.Wallet.XRP.query(from) do
-          nil ->
-            {:error, "wallet not found"}
-
-          wallet ->
-            address = Storage.Wallet.XRP.address(wallet)
-            Blockchain.Ripple.XRP.balance(address)
-        end
-
-      _ ->
-        {:error, "could not get PayID wallet"}
+    with {:ok, xrpAddress} <- Blockchain.Ripple.PayID.lookupAddress(fuser, :xrp_test),
+         {:ok, ethAddress} <- Blockchain.Ripple.PayID.lookupAddress(fuser, :eth_kovan),
+         {:ok, xrpBalance} <- Blockchain.Ripple.XRP.balance(xrpAddress),
+         {:ok, ethBalance} <- Blockchain.Eth.balance(ethAddress) do
+      # Success.  All calls worked!
+      {:ok,
+       [
+         %{id: "XRP", balance: xrpBalance, address: xrpAddress},
+         %{id: "BTC", balance: "0", address: "Not Found"},
+         %{id: "ETH", balance: ethBalance, address: ethAddress}
+       ]}
+    else
+      err -> err
     end
   end
 end

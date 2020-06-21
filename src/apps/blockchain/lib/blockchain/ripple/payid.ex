@@ -170,6 +170,34 @@ defmodule Blockchain.Ripple.PayID do
     end
   end
 
+  @spec lookupAddress(String.t(), chainT()) ::
+          {:ok, String.t()} | {:error, String.t()} | {:error, :invalid_format}
+  def lookupAddress(payID, type \\ :xrp_test) do
+    accountInfo = String.split(payID, "$")
+
+    case accountInfo do
+      [name, server] ->
+        {:ok, rsp} =
+          Tesla.get("#{@http}://#{server}:8080/#{name}",
+            headers: [{"Accept", header(type)}, {"PayID-Version", "1.0"}]
+          )
+
+        case rsp.status do
+          200 ->
+            body = Jason.decode!(rsp.body)
+            addresses = List.first(body["addresses"])
+            Logger.debug("*** body = #{inspect(body, pretty: true)}")
+            {:ok, addresses["addressDetails"]["address"]}
+
+          status ->
+            {:error, "status code: #{status}"}
+        end
+
+      _ ->
+        {:error, :invalid_format}
+    end
+  end
+
   @doc """
   Looks up a payid account from the internal payid server.  This will decode
   the payid format and return a map from the payid server.

@@ -121,8 +121,7 @@ defmodule Auth do
   def login(username, password) do
     case Storage.Auth.User.login(username, password) do
       {:ok, res} ->
-        payIdName = Blockchain.Ripple.PayID.format(username)
-        {:ok, Map.put(res, "payId", "#{payIdName}$forte.playerexchange.io")}
+        {:ok, Map.put(res, "payId", Blockchain.Ripple.PayID.format(username))}
 
       err ->
         err
