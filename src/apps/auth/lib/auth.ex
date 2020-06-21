@@ -95,8 +95,8 @@ defmodule Auth do
         # Create the PayID Account
         :ok =
           Blockchain.Ripple.PayID.create(
-            "#{userName}$forte.playerexchange.io",
-            %{xrp: xrpWallet["address"], eth_kovan: ethWallet["address"]}
+            userName,
+            [{xrpWallet["address"], :xrp_test}, {ethWallet["address"], :eth_kovan}]
           )
 
         # Save the wallet info

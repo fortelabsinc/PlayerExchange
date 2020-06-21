@@ -37,6 +37,8 @@ defmodule Blockchain.Ripple.XRP do
     @serverName "http://localhost:3000"
   end
 
+  @network "test"
+
   # ----------------------------------------------------------------------------
   # Plug options
   # ----------------------------------------------------------------------------
@@ -85,7 +87,7 @@ defmodule Blockchain.Ripple.XRP do
   """
   @spec balance(String.t()) :: {:error, any} | {:ok, String.t()}
   def balance(address) do
-    case get("/wallet/balance/test/#{address}") do
+    case get("/wallet/balance/#{@network}/#{address}") do
       {:ok, rsp} ->
         if String.contains?(rsp.body, "NOT_FOUND") do
           {:ok, "0"}
@@ -125,7 +127,7 @@ defmodule Blockchain.Ripple.XRP do
   """
   @spec history(any) :: {:error, any} | {:ok, any}
   def history(address) do
-    case get("/wallet/history/#{address}") do
+    case get("/wallet/history/#{@network}/#{address}") do
       {:ok, rsp} ->
         {:ok, rsp.body}
 
@@ -158,7 +160,7 @@ defmodule Blockchain.Ripple.XRP do
   """
   @spec payment(String.t(), String.t()) :: {:error, any} | {:ok, map}
   def payment(wallet, hash) do
-    case get("/wallet/payment/#{wallet}/#{hash}") do
+    case get("/wallet/payment/#{@network}/#{wallet}/#{hash}") do
       {:ok, rsp} ->
         {:ok, rsp.body}
 
@@ -173,7 +175,7 @@ defmodule Blockchain.Ripple.XRP do
   """
   @spec status(any) :: {:error, any} | {:ok, any}
   def status(hash) do
-    case get("/wallet/status/#{hash}") do
+    case get("/wallet/status/#{@network}/#{hash}") do
       {:ok, rsp} ->
         {:ok, rsp.body}
 
@@ -200,7 +202,7 @@ defmodule Blockchain.Ripple.XRP do
   """
   @spec create :: {:error, any} | {:ok, map}
   def create() do
-    case post("/wallet/create", "") do
+    case post("/wallet/create/#{@network}", "") do
       {:ok, rsp} ->
         body = Map.put(rsp.body, "meta", %{})
         {:ok, body}
@@ -242,7 +244,7 @@ defmodule Blockchain.Ripple.XRP do
       type: "mnemonic"
     }
 
-    case post("/wallet/send", data) do
+    case post("/wallet/send/#{@network}", data) do
       {:ok, rsp} ->
         {:ok, rsp.body}
 

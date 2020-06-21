@@ -59,17 +59,18 @@ export default {
       },
       {
         title: 'Postings',
-        icon: 'mdi-account-box-multiple',
+        icon: 'mdi-sword',
         routeName: 'Postings',
       },
       {
-        title: 'Apps',
-        icon: 'mdi-play-box-multiple',
+        title: 'Games',
+        //icon: 'mdi-play-box-multiple',
+        icon: 'mdi-google-controller',
         routeName: 'Apps',
       },
       {
         title: 'Guilds',
-        icon: 'mdi-star-box-multiple',
+        icon: 'mdi-sword-cross',
         routeName: 'Guilds',
       },
       { title: 'My Account', icon: 'mdi-account', routeName: 'Profile' },
