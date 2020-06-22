@@ -69,4 +69,14 @@ defmodule Utils do
   """
   @spec uuidToBinary(String.t()) :: <<_::128>>
   def uuidToBinary(uuid), do: UUID.string_to_binary!(uuid)
+
+  @doc """
+  Convert a Struct into a map
+  """
+  @spec structToMap(struct() | nil) :: map
+  def structToMap(nil), do: nil
+
+  def structToMap(struct) when is_struct(struct) do
+    Map.delete(struct, :__meta__) |> Map.delete(:__struct__)
+  end
 end

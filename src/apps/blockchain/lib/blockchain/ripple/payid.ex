@@ -111,11 +111,12 @@ defmodule Blockchain.Ripple.PayID do
   """
   @spec format(String.t()) :: String.t()
   def format(name) do
-    String.replace(
-      name,
-      @invalidChars,
-      fn _ -> "_" end
-    ) <> "$" <> domain()
+    (String.replace(
+       name,
+       @invalidChars,
+       fn _ -> "_" end
+     ) <> "$" <> domain())
+    |> String.downcase()
   end
 
   @doc """

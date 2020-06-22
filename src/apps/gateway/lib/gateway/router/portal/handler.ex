@@ -35,6 +35,8 @@ defmodule Gateway.Router.Portal.Handler do
     Gateway.Router.Portal.Commands.Handler.Auth.init()
     Gateway.Router.Portal.Commands.Handler.Profile.init()
     Gateway.Router.Portal.Commands.Handler.Work.init()
+    Gateway.Router.Portal.Commands.Handler.Game.init()
+    Gateway.Router.Portal.Commands.Handler.Guild.init()
     :ok
   end
 end

@@ -1,10 +1,12 @@
-defmodule Blockchain.MixProject do
+defmodule Game.MixProject do
   use Mix.Project
 
   def project do
+    {:ok, vsn} = File.read("../../vsn.txt")
+
     [
-      app: :blockchain,
-      version: "0.1.0",
+      app: :game,
+      version: vsn,
       build_path: "../../_build",
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
@@ -18,23 +20,15 @@ defmodule Blockchain.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger],
+      mod: {Game.Application, []}
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"},
-      # {:sibling_app_in_umbrella, in_umbrella: true}
-      {:tesla, "~> 1.3"},
-
-      # optional, but recommended adapter
-      {:hackney, "~> 1.15"},
-
-      # optional, required by JSON middleware
-      {:jason, "~> 1.2"},
+      {:blockchain, in_umbrella: true},
       {:storage, in_umbrella: true},
       {:utils, in_umbrella: true}
     ]

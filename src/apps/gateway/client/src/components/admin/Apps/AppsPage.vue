@@ -1,7 +1,7 @@
 <template>
   <AppLayoutPanel>
     <v-toolbar flat color="white">
-      <v-toolbar-title>Applications</v-toolbar-title>
+      <v-toolbar-title>Games</v-toolbar-title>
       <v-spacer />
       <v-btn color="primary" class="mb-2" @click="newItem()">New App</v-btn>
     </v-toolbar>
