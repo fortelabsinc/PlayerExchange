@@ -3,13 +3,17 @@ defmodule Storage.Repo.Migrations.Games do
 
   def change do
     create table(:games) do
+      add(:game_id, :string)
       add(:name, :string)
+      add(:owner, :string)
+      add(:pay_id, :string)
       add(:image, :string)
-      add(:info, :string)
+      add(:description, :string)
+      add(:active, :boolean)
       add(:meta, :map)
       timestamps()
     end
 
-    create(unique_index(:games, [:name]))
+    create(unique_index(:games, [:game_id]))
   end
 end

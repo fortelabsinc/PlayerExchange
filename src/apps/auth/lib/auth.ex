@@ -76,43 +76,23 @@ defmodule Auth do
   """
   @spec confirm(any) :: {:error, <<_::200>>} | {:ok, any}
   def confirm(confirmId) do
-    case Storage.Auth.User.confirm(confirmId) do
-      {:ok, _data} = rsp ->
+    rsp = Storage.Auth.User.confirm(confirmId)
+
+    case rsp do
+      {:ok, _data} ->
         # We need all the data for this guy.  Let's make
         # another pull
         info = Storage.Auth.User.queryByConfirmId(confirmId)
 
-        # I need to format the payID to fix the fact
-        # that it is based on email..
-        userName =
+        {:ok, _} =
           Storage.Auth.User.userName(info)
-          |> Blockchain.Ripple.PayID.format()
+          |> Blockchain.createAccount()
 
-        # Create the wallet
-        {:ok, xrpWallet} = Blockchain.Ripple.XRP.create()
-        {:ok, ethWallet} = Blockchain.Eth.create()
-
-        # Create the PayID Account
-        :ok =
-          Blockchain.Ripple.PayID.create(
-            userName,
-            [{xrpWallet["address"], :xrp_test}, {ethWallet["address"], :eth_kovan}]
-          )
-
-        # Save the wallet info
-        {:ok, _} =
-          Storage.Wallet.XRP.new(xrpWallet)
-          |> Storage.Wallet.XRP.write()
-
-        {:ok, _} =
-          Storage.Wallet.Eth.new(ethWallet)
-          |> Storage.Wallet.Eth.write()
-
-        rsp
-
-      rsp ->
-        rsp
+      err ->
+        Logger.error("[Auth.confirm] Error: #{inspect(err)}")
     end
+
+    rsp
   end
 
   @doc """
@@ -121,7 +101,7 @@ defmodule Auth do
   def login(username, password) do
     case Storage.Auth.User.login(username, password) do
       {:ok, res} ->
-        {:ok, Map.put(res, "payId", Blockchain.Ripple.PayID.format(username))}
+        {:ok, Map.put(res, "payId", Blockchain.formatPayId(username))}
 
       err ->
         err
@@ -148,6 +128,4 @@ defmodule Auth do
   """
   @spec forgotUsername(any) :: {:error, <<_::152>>} | {:ok, <<_::256>>}
   def forgotUsername(email), do: Storage.Auth.User.forgotUserName(email)
-
-  def hello, do: :world
 end

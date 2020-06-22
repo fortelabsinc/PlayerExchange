@@ -64,6 +64,12 @@ defmodule Gateway.Router.Portal do
   # route all wallet to the receiver
   forward("/portal/commands/v1/wallet/", to: Gateway.Router.Portal.Commands.V1.Receiver.Wallet)
 
+  # route all game to the receiver
+  forward("/portal/commands/v1/game/", to: Gateway.Router.Portal.Commands.V1.Receiver.Game)
+
+  # route all guild to the receiver
+  forward("/portal/commands/v1/guild/", to: Gateway.Router.Portal.Commands.V1.Receiver.Guild)
+
   # ----------------------------------------------------------------------------
   # Public API
   # ----------------------------------------------------------------------------
