@@ -9,7 +9,9 @@ export default {
       name: 'Home',
       path: '/home',
       component: () =>
-        import(/* webpackChunkName: "home" */ '@/components/admin/Home.vue'),
+        import(
+          /* webpackChunkName: "home" */ '@/components/admin/Home/Home.vue'
+        ),
       default: true,
       meta: {
         requireAuth: true,
