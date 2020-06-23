@@ -3,6 +3,9 @@
     <v-toolbar flat color="white">
       <v-toolbar-title>My Postings</v-toolbar-title>
       <v-spacer />
+      <v-btn color="success" class="mb-2 mr-2" @click="newPayment">
+        Make a Payment
+      </v-btn>
       <v-btn color="primary" class="mb-2" @click="newItem()">New Post</v-btn>
     </v-toolbar>
 
@@ -22,9 +25,30 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-btn color="primary" text @click="payItem(item)">
-          pay
-        </v-btn>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              class="mr-3"
+              color="primary"
+              small
+              dark
+              outlined
+              v-bind="attrs"
+              v-on="on"
+            >
+              Pay
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="type in payOptions"
+              :key="type"
+              @click="payItem(item, type)"
+            >
+              <v-list-item-title>{{ type }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
         <v-icon small color="red" @click="deleteItem(item)">
           mdi-delete
         </v-icon>
@@ -63,17 +87,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <MakePayment v-model="dialogPayment" :data="paymentData" />
   </AppLayoutPanel>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
+import MakePayment from './MakePayment.vue'
 
 export default {
   name: 'MyPostingsPage',
   components: {
     AppLayoutPanel,
+    MakePayment,
   },
   data() {
     return {
@@ -88,11 +116,14 @@ export default {
       //   },
       // ],
       dialog: false,
+      dialogPayment: false,
       currentItem: {},
       loading: false,
       deleting: false,
       totalItems: 0,
       options: {},
+      payOptions: ['Confirm', 'Complete', 'Bonus'],
+      paymentData: null,
     }
   },
   computed: {
@@ -171,11 +202,26 @@ export default {
         }
       )
     },
+    newPayment() {
+      this.paymentData = null
+      this.dialogPayment = true
+    },
     newItem() {
       this.$router.push('/postings/new')
     },
-    payItem(item) {
-      this.$router.push(`/postings/id/${item.posting_id}`)
+    payItem(item, type) {
+      this.paymentData = {}
+      if (type === 'Confirm') {
+        this.paymentData.amount = item.confirm_pay_amt
+        this.paymentData.type = item.confirm_pay_type
+      } else if (type === 'Complete') {
+        this.paymentData.amount = item.complete_pay_amt
+        this.paymentData.type = item.complete_pay_type
+      } else {
+        this.paymentData.amount = item.bonus_pay_amt
+        this.paymentData.type = item.bonus_pay_type
+      }
+      this.dialogPayment = true
     },
     deleteItem(item) {
       this.currentItem = item

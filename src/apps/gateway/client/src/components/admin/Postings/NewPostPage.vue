@@ -174,7 +174,7 @@ export default {
       apiCreatePost: 'work/ApiActionCreatePosting',
     }),
     cancelNewPost() {
-      this.$router.push({ name: 'Postings' })
+      this.$router.push({ name: 'My Postings' })
     },
     onSubmit() {
       if (!this.$refs.form.validate()) {
@@ -199,7 +199,7 @@ export default {
       }).then(({ error }) => {
         this.creating = false
         if (!error) {
-          this.$router.push({ name: 'Postings' })
+          this.$router.push({ name: 'My Postings' })
           this.$toast.success('Post created successfully.')
         } else {
           this.$toast.error(`Error creating the post. ${error.message}`)
