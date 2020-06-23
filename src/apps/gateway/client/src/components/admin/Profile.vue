@@ -41,8 +41,8 @@
           <v-toolbar-title>My Currencies</v-toolbar-title>
 
           <v-spacer></v-spacer>
-          <v-btn icon>
-            <v-icon large class="mr-4" @click="getTheBalances()">
+          <v-btn icon class="m-4" @click="getTheBalances()">
+            <v-icon large>
               mdi-refresh
             </v-icon>
           </v-btn>
