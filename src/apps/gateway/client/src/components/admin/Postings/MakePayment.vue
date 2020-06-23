@@ -65,13 +65,13 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'MakePayment',
-  props: ['value'],
+  props: ['value', 'data'],
   data() {
     return {
       content: this.value,
-      payId: '',
-      amount: 0,
-      type: '',
+      payId: this.data ? this.data.payId : '',
+      amount: this.data ? this.data.amount : '',
+      type: this.data ? this.data.type : '',
       paying: false,
       valid: true,
     }
@@ -84,6 +84,11 @@ export default {
   watch: {
     value(val) {
       this.content = val
+    },
+    data(val) {
+      this.payId = val ? val.payId : ''
+      this.amount = val ? val.amount : ''
+      this.type = val ? val.type : ''
     },
     content(val) {
       this.$emit('input', val)
