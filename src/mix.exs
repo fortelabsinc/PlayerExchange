@@ -40,6 +40,7 @@ defmodule Playerexchange.MixProject do
         blockchain: :permanent,
         auth: :permanent,
         storage: :permanent,
+        game: :permanent,
         gateway: :permanent
       ]
     ]

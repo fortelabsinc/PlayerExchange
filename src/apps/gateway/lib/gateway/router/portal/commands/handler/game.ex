@@ -45,142 +45,103 @@ defmodule Gateway.Router.Portal.Commands.Handler.Game do
   @spec ping :: <<_::32>>
   def ping(), do: "pong"
 
-  #  @doc """
-  #  Retister
-  #  """
-  #  @spec registerApp(String.t(), String.t(), String.t(), String.t()) ::
-  #          {:ok, String.t()} | {:error, String.t()}
-  #  def registerApp(name, hook, publicKey, email) do
-  #    # Before we send this off to billing, lets double check
-  #    # that the live user game us an HTTPS based endpoint
-  #    if nil == hook or String.contains?(hook, "https://") do
-  #      # Let's make sure this is valid RSA public key too
-  #      if Utils.Crypto.RSA.valid?(publicKey) do
-  #        Billing.registerApp(name, hook, publicKey, email, %{})
-  #      else
-  #        {:error, "Invalid RSA public key."}
-  #      end
-  #    else
-  #      {:error, "Invalid Webhook API.  Must be https"}
-  #    end
-  #  end
-  #
-  #  @doc """
-  #  Get the app info from the billing data
-  #  """
-  #  @spec getApp(String.t()) :: {:ok, map} | {:error, :not_found}
-  #  def getApp(appId) do
-  #    case Billing.app(appId) do
-  #      {:ok, data} ->
-  #        {:ok, stripAppInfo(data)}
-  #
-  #      {:error, _term} = err ->
-  #        err
-  #    end
-  #  end
-  #
-  #  @doc """
-  #  """
-  #  @spec getAppsPage(integer, integer) :: {:ok, map} | {:error, :not_found}
-  #  def getAppsPage(page, count) do
-  #    case Billing.appsPage(page, count) do
-  #      {:ok, data} ->
-  #        data = Map.put(data, :list, Enum.map(data.list, fn item -> stripAppInfo(item) end))
-  #        {:ok, data}
-  #
-  #      {:error, _term} = err ->
-  #        err
-  #    end
-  #  end
-  #
-  #  @doc """
-  #  Read all the apps
-  #  """
-  #  @spec getApps() :: {:ok, [map]}
-  #  def getApps() do
-  #    {:ok, data} = Billing.apps()
-  #    # Strip out any of the data we don't want seen
-  #    {:ok, Enum.map(data, fn entry -> stripAppInfo(entry) end)}
-  #  end
-  #
-  #  @doc """
-  #  Forward to the billing system to update the email field
-  #  """
-  #  @spec updateAppEmail(String.t(), String.t()) :: :ok | {:error, :update_failed}
-  #  def updateAppEmail(appId, email) do
-  #    case Billing.updateAppEmail(appId, email) do
-  #      {:ok, _} -> :ok
-  #      err -> err
-  #    end
-  #  end
-  #
-  #  @doc """
-  #  Forward to the billing system to update the name field
-  #  """
-  #  @spec updateAppName(String.t(), String.t()) :: :ok | {:error, :update_failed}
-  #  def updateAppName(appId, name) do
-  #    case Billing.updateAppName(appId, name) do
-  #      {:ok, _} -> :ok
-  #      err -> err
-  #    end
-  #  end
-  #
-  #  @doc """
-  #  Forward to the billing system to update the key field
-  #  """
-  #  @spec updateAppKey(String.t(), String.t()) ::
-  #          :ok | {:error, :update_failed | :invalid_key_format}
-  #  def updateAppKey(appId, key) do
-  #    if Utils.Crypto.RSA.valid?(key) do
-  #      case Billing.updateAppKey(appId, key) do
-  #        {:ok, _} -> :ok
-  #        err -> err
-  #      end
-  #    else
-  #      {:error, :invalid_key_format}
-  #    end
-  #  end
-  #
-  #  @doc """
-  #  Forward to the billing system to update the hook field
-  #  """
-  #  @spec updateAppHook(String.t(), String.t()) ::
-  #          :ok | {:error, :update_failed | :invalid_webhook_format}
-  #  def updateAppHook(appId, hook) do
-  #    if nil == hook or String.contains?(hook, "https://") do
-  #      case Billing.updateAppHook(appId, hook) do
-  #        {:ok, _} -> :ok
-  #        err -> err
-  #      end
-  #    else
-  #      {:error, :invalid_webhook_format}
-  #    end
-  #  end
-  #
-  #  @doc """
-  #  Forward to the billing system to update the meta field
-  #  """
-  #  @spec updateAppMeta(String.t(), map) :: :ok | {:error, :update_failed}
-  #  def updateAppMeta(appId, meta) do
-  #    case Billing.updateAppMeta(appId, meta) do
-  #      {:ok, _} -> :ok
-  #      err -> err
-  #    end
-  #  end
-  #
-  #  @doc """
-  #  Remove an App from the system
-  #  """
-  #  @spec removeApp(String.t()) :: :ok
-  #  def removeApp(appId), do: Billing.removeApp(appId)
-  #
-  #  # ----------------------------------------------------------------------------
-  #  # Private API
-  #  # ----------------------------------------------------------------------------
-  #
-  #  defp stripAppInfo(data) do
-  #    Map.delete(data, :public)
-  #    |> Map.delete(:internal)
-  #    |> Map.delete(:external)
-  #  end
+  @doc """
+  Create a new Game in the system
+  """
+  @spec create(String.t(), String.t(), String.t(), String.t()) ::
+          {:ok, map} | {:error, any}
+  def create(name, owner, image, description) do
+    Game.create(name, owner, image, description)
+  end
+
+  @doc """
+  Get the app info from the billing data
+  """
+  @spec info(String.t()) :: {:ok, map} | {:error, :not_found}
+  def info(gameId), do: Game.info(gameId)
+
+  @doc """
+  Delete the game from the system
+  """
+  @spec delete(String.t(), String.t()) :: :ok | {:error, atom}
+  def delete(gameId, userId), do: Game.delete(gameId, userId)
+
+  @doc """
+  """
+  @spec page(integer, integer) :: {:ok, map} | {:error, :not_found}
+  def page(page, count), do: Game.page(page, count)
+
+  @doc """
+  Read all the apps
+  """
+  @spec all() :: {:ok, [Storage.gameT()]}
+  def all(), do: Game.all()
+
+  @doc """
+  """
+  @spec updateName(String.t(), String.t(), String.t()) ::
+          {:ok, map} | {:error, :update_failed}
+  def updateName(gameId, userId, name) do
+    Game.updateName(gameId, userId, name)
+  end
+
+  @doc """
+  """
+  @spec updateOwner(String.t(), String.t(), String.t()) ::
+          {:ok, map} | {:error, :update_failed}
+  def updateOwner(gameId, userId, ownerId) do
+    Game.updateOwner(gameId, userId, ownerId)
+  end
+
+  @doc """
+  """
+  @spec updateImage(String.t(), String.t(), String.t()) ::
+          {:ok, map} | {:error, :update_failed}
+  def updateImage(gameId, userId, url) do
+    Game.updateImage(gameId, userId, url)
+  end
+
+  @doc """
+  """
+  @spec updateImage(String.t(), String.t(), String.t()) ::
+          {:ok, map} | {:error, :update_failed}
+  def updateImage(gameId, userId, description) do
+    Game.updateDescription(gameId, userId, description)
+  end
+
+  @doc """
+  """
+  @spec updateMeta(String.t(), String.t(), map) ::
+          {:ok, map} | {:error, :update_failed}
+  def updateMeta(gameId, userId, meta) do
+    Game.updateMeta(gameId, userId, meta)
+  end
+
+  @doc """
+  """
+  @spec balance(String.t(), String.t()) ::
+          {:ok, [map]} | {:error, any}
+  def balance(gameId, userId) do
+    Game.balance(gameId, userId)
+  end
+
+  @doc """
+  """
+  @spec pay(String.t(), String.t(), String.t(), String.t()) ::
+          :ok | {:error, any}
+  def pay(_gameId, _userId, "XRP", _amount) do
+    {:error, "not_implemented"}
+  end
+
+  def pay(_gameId, _userId, "ETH", _amount) do
+    {:error, "not_implemented"}
+  end
+
+  def pay(_gameId, _userId, "BTC", _amount) do
+    {:error, "not_implemented"}
+  end
+
+  # ----------------------------------------------------------------------------
+  # Private API
+  # ----------------------------------------------------------------------------
 end

@@ -19,7 +19,6 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-
 defmodule Game do
   @moduledoc """
   Main interface module for the Game system.  NOTE:  this for now will just
@@ -34,6 +33,7 @@ defmodule Game do
   # ----------------------------------------------------------------------------
 
   @doc """
+  Create a new game in the system
   """
   def create(name, owner, image, description, meta \\ %{}) do
     # Let's create the game wallets
@@ -50,50 +50,182 @@ defmodule Game do
 
   @doc """
   Read all the games from the system
+
+  NOTE:  This will only succeed if the owner field matchs the userId
   """
-  def all() do
-    :foo
-  end
+  @spec all() :: {:ok, [Storage.gameT()]}
+  def all(), do: Storage.games()
+
+  @doc """
+  Read a page of apps from the system
+
+  NOTE:  This will only succeed if the owner field matchs the userId
+  """
+  @spec page(non_neg_integer(), non_neg_integer()) ::
+          {:ok, Storage.page()} | {:error, any}
+  def page(page, count), do: Storage.gamePage(page, count)
 
   @doc """
   Look up a specific games info
+
+  NOTE:  This will only succeed if the owner field matchs the userId
   """
-  def info(_gameID) do
-  end
-
-  def updateName(_gameId, _name) do
-  end
-
-  def updateOwner(_gameId, _owner) do
-  end
-
-  def updateImage(_gameId, _image) do
-  end
-
-  def updateDescription(_gameId, _description) do
-  end
-
-  def updateMeta(_gameId, _meta) do
+  @spec info(String.t()) ::
+          {:ok, Storage.gameT()} | {:error, :not_found}
+  def info(gameId) do
+    case Storage.game(gameId) do
+      nil -> {:error, :not_found}
+      data -> {:ok, data}
+    end
   end
 
   @doc """
-  Update the fields in a map.  It is assumed that
-  the if any of the following fields are defined
-  it will update them
+  Update the name field for the game
 
-  MapFields:
-
-  ```
-  %{
-    name: "new string name",
-    owner: "user id of who should now own this game",
-    image: "string url to the image asset to discribe the gamae",
-    description: "String description of the game"
-    meta: "new meta map of data"
-  }
-  ```
+  NOTE:  This will only succeed if the owner field matchs the userId
   """
-  @spec update(String.t(), map) :: {:ok, map} | {:error, String.t()}
-  def update(_gameId, _map) do
+  @spec updateName(String.t(), String.t(), String.t()) ::
+          {:ok, map} | {:error, atom}
+  def updateName(gameId, userId, name) do
+    case Storage.game(gameId) do
+      nil ->
+        {:error, :not_found}
+
+      data ->
+        if data.owner == userId do
+          Storage.gameSetName(gameId, name)
+        else
+          {:error, :not_owner}
+        end
+    end
+  end
+
+  @doc """
+  Update the game owner field
+
+  NOTE:  This will only succeed if the owner field matchs the userId
+  """
+  @spec updateOwner(String.t(), String.t(), String.t()) ::
+          {:ok, map} | {:error, atom}
+  def updateOwner(gameId, userId, owner) do
+    case Storage.game(gameId) do
+      nil ->
+        {:error, :not_found}
+
+      data ->
+        if data.owner == userId do
+          # now lets verify that the new owner is also a member
+          Storage.gameSetOwner(gameId, owner)
+        else
+          {:error, :not_owner}
+        end
+    end
+  end
+
+  @doc """
+  Update the game image field
+
+  NOTE:  This will only succeed if the owner field matchs the userId
+  """
+  @spec updateImage(String.t(), String.t(), String.t()) ::
+          {:ok, map} | {:error, atom}
+  def updateImage(gameId, userId, image) do
+    case Storage.game(gameId) do
+      nil ->
+        {:error, :not_found}
+
+      data ->
+        if data.owner == userId do
+          # now lets verify that the new owner is also a member
+          Storage.gameSetImage(gameId, image)
+        else
+          {:error, :not_owner}
+        end
+    end
+  end
+
+  @doc """
+  Update the game description field
+
+  NOTE:  This will only succeed if the owner field matchs the userId
+  """
+  @spec updateDescription(String.t(), String.t(), String.t()) ::
+          {:ok, map} | {:error, atom}
+  def updateDescription(gameId, userId, description) do
+    case Storage.game(gameId) do
+      nil ->
+        {:error, :not_found}
+
+      data ->
+        if data.owner == userId do
+          # now lets verify that the new owner is also a member
+          Storage.gameSetDescription(gameId, description)
+        else
+          {:error, :not_owner}
+        end
+    end
+  end
+
+  @doc """
+  Update the game metat field
+
+  NOTE:  This will only succeed if the owner field matchs the userId
+  """
+  @spec updateMeta(String.t(), String.t(), String.t()) ::
+          {:ok, map} | {:error, atom}
+  def updateMeta(gameId, userId, meta) do
+    case Storage.game(gameId) do
+      nil ->
+        {:error, :not_found}
+
+      data ->
+        if data.owner == userId do
+          # now lets verify that the new owner is also a member
+          Storage.gameSetMeta(gameId, meta)
+        else
+          {:error, :not_owner}
+        end
+    end
+  end
+
+  @doc """
+  Delete the game from the system
+
+  NOTE:  This will only succeed if the owner field matchs the userId
+  """
+  @spec delete(String.t(), String.t()) ::
+          {:ok, map} | {:error, atom}
+  def delete(gameId, userId) do
+    case Storage.game(gameId) do
+      nil ->
+        {:error, :not_found}
+
+      data ->
+        if data.owner == userId do
+          # now lets verify that the new owner is also a member
+          Storage.gameDelete(gameId)
+        else
+          {:error, :not_owner}
+        end
+    end
+  end
+
+  @doc """
+  """
+  @spec balance(String.t(), String.t()) ::
+          {:ok, [map]} | {:error, any}
+  def balance(gameId, userId) do
+    case Storage.game(gameId) do
+      nil ->
+        {:error, :not_found}
+
+      data ->
+        if data.owner == userId do
+          # now lets verify that the new owner is also a member
+          Blockchain.walletBalances(data.pay_id)
+        else
+          {:error, :not_owner}
+        end
+    end
   end
 end

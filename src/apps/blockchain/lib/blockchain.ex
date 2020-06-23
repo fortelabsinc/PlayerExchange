@@ -93,4 +93,21 @@ defmodule Blockchain do
   def formatPayId(name) do
     Blockchain.Ripple.PayID.format(name)
   end
+
+  def walletBalances(payId) do
+    with {:ok, xrpAddress} <- Blockchain.Ripple.PayID.lookupAddress(payId, :xrp_test),
+         {:ok, ethAddress} <- Blockchain.Ripple.PayID.lookupAddress(payId, :eth_kovan),
+         {:ok, xrpBalance} <- Blockchain.Ripple.XRP.balance(xrpAddress),
+         {:ok, ethBalance} <- Blockchain.Eth.balance(ethAddress) do
+      # Success.  All calls worked!
+      {:ok,
+       [
+         %{id: "XRP", balance: xrpBalance, address: xrpAddress},
+         %{id: "BTC", balance: "0", address: "Not Found"},
+         %{id: "ETH", balance: ethBalance, address: ethAddress}
+       ]}
+    else
+      err -> err
+    end
+  end
 end

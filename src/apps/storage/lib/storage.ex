@@ -208,6 +208,17 @@ defmodule Storage do
     end
   end
 
+  @doc """
+  Set the game Meta field
+  """
+  @spec gameSetMeta(String.t(), map) :: {:ok, gameT()} | {:error, any}
+  def gameSetMeta(gameId, meta) do
+    case Storage.Game.setMeta(gameId, meta) do
+      {:ok, data} -> {:ok, gameParse(data)}
+      err -> err
+    end
+  end
+
   # ----------------------------------------------------------------------------
   # Guild API
   # ----------------------------------------------------------------------------

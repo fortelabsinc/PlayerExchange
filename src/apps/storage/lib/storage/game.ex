@@ -191,6 +191,15 @@ defmodule Storage.Game do
     |> writeChanges(gameId)
   end
 
+  @doc """
+  Set the game meta data field
+  """
+  @spec setMeta(String.t(), map) :: {:ok, Storage.Game.t()}
+  def setMeta(gameId, meta) do
+    Storage.Repo.changeSetField(%{}, :meta, meta)
+    |> writeChanges(gameId)
+  end
+
   # ----------------------------------------------------------------------------
   # Query Operations
   # ----------------------------------------------------------------------------

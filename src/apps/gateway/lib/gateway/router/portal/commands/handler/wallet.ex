@@ -201,21 +201,7 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
 
   # Let's get the balances for these users
   defp getBalanceForUsername(username) do
-    fuser = Blockchain.Ripple.PayID.format(username)
-
-    with {:ok, xrpAddress} <- Blockchain.Ripple.PayID.lookupAddress(fuser, :xrp_test),
-         {:ok, ethAddress} <- Blockchain.Ripple.PayID.lookupAddress(fuser, :eth_kovan),
-         {:ok, xrpBalance} <- Blockchain.Ripple.XRP.balance(xrpAddress),
-         {:ok, ethBalance} <- Blockchain.Eth.balance(ethAddress) do
-      # Success.  All calls worked!
-      {:ok,
-       [
-         %{id: "XRP", balance: xrpBalance, address: xrpAddress},
-         %{id: "BTC", balance: "0", address: "Not Found"},
-         %{id: "ETH", balance: ethBalance, address: ethAddress}
-       ]}
-    else
-      err -> err
-    end
+    Blockchain.Ripple.PayID.format(username)
+    |> Blockchain.walletBalances()
   end
 end
