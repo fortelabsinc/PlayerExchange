@@ -65,7 +65,7 @@
         command: start --insecure
         ports:
           - "26257:26257"
-          #- "8080:8080"
+          - "8881:8080"
         networks_cli_compatible: yes
         state: "{{ action_class }}"
 

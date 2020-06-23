@@ -10,7 +10,7 @@ defmodule Storage.Repo.Migrations.Guilds do
       add(:image, :string)
       add(:description, :string)
       add(:members, :map)
-      add(:games, {:array, :string})
+      add(:games, :map)
       add(:active, :boolean)
       add(:meta, :map)
       timestamps()

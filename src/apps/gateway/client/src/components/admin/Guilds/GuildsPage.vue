@@ -122,7 +122,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getGuildsPage: 'guilds/ApiActionFetchAllGuilds',
+      getGuildsPage: 'guilds/ApiActionGetGuildsPage',
       deleteGuild: 'guilds/ApiActionDeleteGuild',
     }),
     fetchTableData() {
@@ -131,7 +131,7 @@ export default {
       this.getGuildsPage({ page: page - 1, count: itemsPerPage }).then(
         ({ payload }) => {
           if (payload) {
-            // this.totalItems = payload.count
+            this.totalItems = payload.count
           }
           this.loading = false
         }

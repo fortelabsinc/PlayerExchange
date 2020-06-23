@@ -37,14 +37,14 @@ defmodule Storage.Guild do
   """
   @primary_key false
   schema "guilds" do
-    field(:guild_id, :string)
+    field(:guild_id, :string, primary_key: true)
     field(:name, :string)
     field(:owner, :string)
     field(:pay_id, :string)
     field(:image, :string)
     field(:description, :string)
     field(:members, :map)
-    field(:games, {:array, :string})
+    field(:games, :map)
     field(:active, :boolean)
     field(:meta, :map)
     timestamps(type: :naive_datetime, autogenerate: {Storage.Repo, :timestamps, []})
@@ -66,7 +66,7 @@ defmodule Storage.Guild do
           image: Stringt.t(),
           description: Stringt.t(),
           members: map(),
-          games: [Stringt.t()],
+          games: map(),
           active: boolean,
           meta: map,
           inserted_at: NativeDateTime.t(),
@@ -86,7 +86,7 @@ defmodule Storage.Guild do
       image: image,
       description: description,
       members: %{owner => 100},
-      games: [],
+      games: %{},
       active: true,
       meta: meta
     }
@@ -155,9 +155,12 @@ defmodule Storage.Guild do
   member lists be managed outside of the DB
 
   Note:
-  ["game_id_1", "game_id_2", "game_id_3"]
+  {
+    "game_id_1" => true/false,
+    "game_id_2" => true/false
+  }
   """
-  @spec setGames(String.t(), [String.t()]) :: {:ok, Storage.Guild.t()}
+  @spec setGames(String.t(), map) :: {:ok, Storage.Guild.t()}
   def setGames(guildId, games) do
     Storage.Repo.changeSetField(%{}, :games, games)
     |> writeChanges(guildId)
@@ -231,8 +234,7 @@ defmodule Storage.Guild do
   @spec queryUser(String.t()) :: nil | [Storage.Guild.t()]
   def queryUser(userId) do
     Enum.filter(queryAll(), fn x ->
-      Map.has_key?(x, userId)
-      Enum.member?(x.members, userId)
+      Map.has_key?(x.members, userId)
     end)
   end
 
@@ -246,7 +248,7 @@ defmodule Storage.Guild do
   @spec queryGame(String.t()) :: nil | [Storage.Guild.t()]
   def queryGame(gameId) do
     Enum.filter(queryAll(), fn x ->
-      Enum.member?(x.games, gameId)
+      Map.has_key?(x.games, gameId)
     end)
   end
 

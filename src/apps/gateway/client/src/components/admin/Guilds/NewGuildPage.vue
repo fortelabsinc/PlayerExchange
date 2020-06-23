@@ -24,7 +24,9 @@
       />
     </v-form>
 
+    <!--
     <MembersTable :value="members" @removed="onMemberRemoved" />
+    !-->
 
     <v-card-actions>
       <v-progress-linear
@@ -89,14 +91,14 @@
 <script>
 import { mapActions } from 'vuex'
 import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
-import MembersTable from '@/components/admin/Guilds/MembersTable.vue'
+//import MembersTable from '@/components/admin/Guilds/MembersTable.vue'
 import { filter, map } from 'lodash'
 
 export default {
   name: 'NewGuildPage',
   components: {
     AppLayoutPanel,
-    MembersTable,
+    //MembersTable,
   },
   data() {
     return {
@@ -130,7 +132,7 @@ export default {
       this.apiCreateGuild({
         name: this.name,
         description: this.description,
-        imageUrl: this.imageUrl,
+        image: this.imageUrl,
         members: map(this.members, (member) => member.user_id),
       }).then(({ error }) => {
         this.creating = false
