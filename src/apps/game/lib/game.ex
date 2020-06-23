@@ -50,16 +50,12 @@ defmodule Game do
 
   @doc """
   Read all the games from the system
-
-  NOTE:  This will only succeed if the owner field matchs the userId
   """
   @spec all() :: {:ok, [Storage.gameT()]}
   def all(), do: Storage.games()
 
   @doc """
   Read a page of apps from the system
-
-  NOTE:  This will only succeed if the owner field matchs the userId
   """
   @spec page(non_neg_integer(), non_neg_integer()) ::
           {:ok, Storage.page()} | {:error, any}
@@ -67,8 +63,6 @@ defmodule Game do
 
   @doc """
   Look up a specific games info
-
-  NOTE:  This will only succeed if the owner field matchs the userId
   """
   @spec info(String.t()) ::
           {:ok, Storage.gameT()} | {:error, :not_found}
@@ -194,7 +188,7 @@ defmodule Game do
   NOTE:  This will only succeed if the owner field matchs the userId
   """
   @spec delete(String.t(), String.t()) ::
-          {:ok, map} | {:error, atom}
+          :ok | {:error, atom}
   def delete(gameId, userId) do
     case Storage.game(gameId) do
       nil ->

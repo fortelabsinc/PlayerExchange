@@ -41,6 +41,7 @@ defmodule Playerexchange.MixProject do
         auth: :permanent,
         storage: :permanent,
         game: :permanent,
+        guild: :permanent,
         gateway: :permanent
       ]
     ]

@@ -19,19 +19,47 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-defmodule Game.Application do
-  @moduledoc false
-
-  use Application
+defmodule Guild.MixProject do
+  use Mix.Project
 
   # ----------------------------------------------------------------------------
   # Public API
   # ----------------------------------------------------------------------------
 
-  def start(_type, _args) do
-    children = []
+  def project do
+    {:ok, vsn} = File.read("../../vsn.txt")
 
-    opts = [strategy: :one_for_one, name: Game.Supervisor]
-    Supervisor.start_link(children, opts)
+    [
+      app: :guild,
+      version: vsn,
+      build_path: "../../_build",
+      config_path: "../../config/config.exs",
+      deps_path: "../../deps",
+      lockfile: "../../mix.lock",
+      elixir: "~> 1.10",
+      start_permanent: Mix.env() == :prod,
+      deps: deps()
+    ]
+  end
+
+  # Run "mix help compile.app" to learn about applications.
+  def application do
+    [
+      extra_applications: [:logger],
+      mod: {Guild.Application, []}
+    ]
+  end
+
+  # ----------------------------------------------------------------------------
+  # Private API
+  # ----------------------------------------------------------------------------
+
+  # Run "mix help deps" to learn about dependencies.
+  defp deps do
+    [
+      {:blockchain, in_umbrella: true},
+      {:storage, in_umbrella: true},
+      {:utils, in_umbrella: true}
+    ]
   end
 end

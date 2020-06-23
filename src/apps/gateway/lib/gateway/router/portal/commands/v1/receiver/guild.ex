@@ -56,254 +56,550 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Guild do
     send_resp(conn, 200, Gateway.Router.Portal.Commands.Handler.Guild.ping())
   end
 
-  #  get "/" do
-  #    {:ok, data} = Gateway.Router.Portal.Commands.Handler.App.getApps()
-  #    jsonRsp(conn, 200, %{ok: data})
-  #  end
-  #
-  #  get "/page/:page/:count" do
-  #    page = String.to_integer(page)
-  #    count = String.to_integer(count)
-  #    {:ok, data} = Gateway.Router.Portal.Commands.Handler.Game.getAppsPage(page, count)
-  #    jsonRsp(conn, 200, %{ok: data})
-  #  end
-  #
-  #  get "/:gameId" do
-  #    case Gateway.Router.Portal.Commands.Handler.Game.getApp(appId) do
-  #      {:ok, data} ->
-  #        jsonRsp(conn, 200, %{ok: data})
-  #
-  #      {:error, msg} ->
-  #        jsonRsp(conn, 404, %{error: msg})
-  #    end
-  #  end
-  #
-  #  delete "/:gameId" do
-  #    :ok = Gateway.Router.Portal.Commands.Handler.Game.removeApp(appId)
-  #    jsonRsp(conn, 200, %{ok: "ok"})
-  #  end
-  #
-  #  # Post request to create a new app.  Need an auth handling service
-  #  post "/" do
-  #    case conn.body_params do
-  #      nil ->
-  #        jsonRsp(conn, 422, %{error: "Missing boday parameters"})
-  #
-  #      params ->
-  #        if Gateway.Router.Portal.Commands.V1.Receiver.Schema.validate(:register_app_req, params) do
-  #          # Break out the needed fields for the handler
-  #          webhook = Map.get(params, "hook")
-  #          publicKey = Map.get(params, "key")
-  #          name = Map.get(params, "name")
-  #          email = Map.get(params, "email")
-  #
-  #          case Gateway.Router.Portal.Commands.Handler.Game.registerApp(
-  #                 name,
-  #                 webhook,
-  #                 publicKey,
-  #                 email
-  #               ) do
-  #            {:ok, id} ->
-  #              jsonRsp(conn, 201, %{ok: %{id: id}})
-  #
-  #            {:error, errorMessage} ->
-  #              Logger.error(
-  #                "[Gateway.Router.Service.V1.Receiver] Error Register app #{inspect(errorMessage)}"
-  #              )
-  #
-  #              jsonRsp(conn, 500, %{error: errorMessage})
-  #          end
-  #        else
-  #          Logger.error(
-  #            "[Gateway.Router.Service.V1.Receiver] Error Register request schema violation #{
-  #              inspect(params)
-  #            }"
-  #          )
-  #
-  #          jsonRsp(conn, 500, %{error: "unauthorized"})
-  #        end
-  #    end
-  #  end
-  #
-  #  post "/:gameId/email" do
-  #    case conn.body_params do
-  #      nil ->
-  #        send_resp(conn, 422, "Missing boday parameters")
-  #
-  #      params ->
-  #        if Gateway.Router.Portal.Commands.V1.Receiver.Schema.validate(:update_app_email, params) do
-  #          # Break out the needed fields for the handler
-  #          appId = Map.get(params, "id")
-  #          email = Map.get(params, "email")
-  #
-  #          case Gateway.Router.Portal.Commands.Handler.Game.updateAppEmail(appId, email) do
-  #            :ok ->
-  #              jsonRsp(conn, 200, %{ok: "ok"})
-  #
-  #            {:error, errorMessage} ->
-  #              Logger.error(
-  #                "[Gateway.Router.Service.V1.Receiver] Error update app email #{
-  #                  inspect(errorMessage)
-  #                }"
-  #              )
-  #
-  #              jsonRsp(conn, 500, %{error: errorMessage})
-  #          end
-  #        else
-  #          Logger.error(
-  #            "[Gateway.Router.Service.V1.Receiver] Error Update email request schema violation #{
-  #              inspect(params)
-  #            }"
-  #          )
-  #
-  #          jsonRsp(conn, 500, %{error: "unauthorized"})
-  #        end
-  #    end
-  #  end
-  #
-  #  post "/:gameId/name" do
-  #    case conn.body_params do
-  #      nil ->
-  #        send_resp(conn, 422, "Missing boday parameters")
-  #
-  #      params ->
-  #        if Gateway.Router.Portal.Commands.V1.Receiver.Schema.validate(:update_app_name, params) do
-  #          # Break out the needed fields for the handler
-  #          appId = Map.get(params, "id")
-  #          email = Map.get(params, "name")
-  #
-  #          case Gateway.Router.Portal.Commands.Handler.Game.updateAppName(appId, email) do
-  #            :ok ->
-  #              jsonRsp(conn, 200, %{ok: "ok"})
-  #
-  #            {:error, errorMessage} ->
-  #              Logger.error(
-  #                "[Gateway.Router.Service.V1.Receiver] Error update app name #{
-  #                  inspect(errorMessage)
-  #                }"
-  #              )
-  #
-  #              jsonRsp(conn, 500, %{error: errorMessage})
-  #          end
-  #        else
-  #          Logger.error(
-  #            "[Gateway.Router.Service.V1.Receiver] Error Update name request schema violation #{
-  #              inspect(params)
-  #            }"
-  #          )
-  #
-  #          jsonRsp(conn, 500, %{error: "unauthorized"})
-  #        end
-  #    end
-  #  end
-  #
-  #  post "/:gameId/key" do
-  #    case conn.body_params do
-  #      nil ->
-  #        send_resp(conn, 422, "Missing boday parameters")
-  #
-  #      params ->
-  #        if Gateway.Router.Portal.Commands.V1.Receiver.Schema.validate(:update_app_key, params) do
-  #          # Break out the needed fields for the handler
-  #          appId = Map.get(params, "id")
-  #          key = Map.get(params, "key")
-  #
-  #          case Gateway.Router.Portal.Commands.Handler.Game.updateAppKey(appId, key) do
-  #            :ok ->
-  #              jsonRsp(conn, 200, %{ok: "ok"})
-  #
-  #            {:error, errorMessage} ->
-  #              Logger.error(
-  #                "[Gateway.Router.Service.V1.Receiver] Error update app key #{
-  #                  inspect(errorMessage)
-  #                }"
-  #              )
-  #
-  #              jsonRsp(conn, 500, %{error: errorMessage})
-  #          end
-  #        else
-  #          Logger.error(
-  #            "[Gateway.Router.Service.V1.Receiver] Error Update key request schema violation #{
-  #              inspect(params)
-  #            }"
-  #          )
-  #
-  #          jsonRsp(conn, 500, %{error: "unauthorized"})
-  #        end
-  #    end
-  #  end
-  #
-  #  post "/:gameId/hook" do
-  #    case conn.body_params do
-  #      nil ->
-  #        send_resp(conn, 422, "Missing boday parameters")
-  #
-  #      params ->
-  #        if Gateway.Router.Portal.Commands.V1.Receiver.Schema.validate(:update_app_hook, params) do
-  #          # Break out the needed fields for the handler
-  #          appId = Map.get(params, "id")
-  #          hook = Map.get(params, "hook")
-  #
-  #          case Gateway.Router.Portal.Commands.Handler.Game.updateAppHook(appId, hook) do
-  #            :ok ->
-  #              jsonRsp(conn, 200, %{ok: "ok"})
-  #
-  #            {:error, errorMessage} ->
-  #              Logger.error(
-  #                "[Gateway.Router.Service.V1.Receiver] Error update app hook #{
-  #                  inspect(errorMessage)
-  #                }"
-  #              )
-  #
-  #              jsonRsp(conn, 500, %{error: errorMessage})
-  #          end
-  #        else
-  #          Logger.error(
-  #            "[Gateway.Router.Service.V1.Receiver] Error Update key request schema violation #{
-  #              inspect(params)
-  #            }"
-  #          )
-  #
-  #          jsonRsp(conn, 500, %{error: "unauthorized"})
-  #        end
-  #    end
-  #  end
-  #
-  #  post "/:gameId/meta" do
-  #    case conn.body_params do
-  #      nil ->
-  #        send_resp(conn, 422, "Missing boday parameters")
-  #
-  #      params ->
-  #        if Gateway.Router.Portal.Commands.V1.Receiver.Schema.validate(:update_app_meta, params) do
-  #          # Break out the needed fields for the handler
-  #          appId = Map.get(params, "id")
-  #          meta = Map.get(params, "meta")
-  #
-  #          case Gateway.Router.Portal.Commands.Handler.Game.updateAppMeta(appId, meta) do
-  #            :ok ->
-  #              jsonRsp(conn, 200, %{ok: "ok"})
-  #
-  #            {:error, errorMessage} ->
-  #              Logger.error(
-  #                "[Gateway.Router.Service.V1.Receiver] Error update app Meta #{
-  #                  inspect(errorMessage)
-  #                }"
-  #              )
-  #
-  #              jsonRsp(conn, 500, %{error: errorMessage})
-  #          end
-  #        else
-  #          Logger.error(
-  #            "[Gateway.Router.Service.V1.Receiver] Error Update Meta request schema violation #{
-  #              inspect(params)
-  #            }"
-  #          )
-  #
-  #          jsonRsp(conn, 500, %{error: "unauthorized"})
-  #        end
-  #    end
-  #  end
+  # Pull all the games from the system
+  get "/" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, _data} ->
+            {:ok, data} = Gateway.Router.Portal.Commands.Handler.Guild.all()
+            jsonRsp(conn, 200, %{ok: data})
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
+  # Pull the games based on a page set of info
+  get "/page/:page/:count" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, _data} ->
+            page = String.to_integer(page)
+            count = String.to_integer(count)
+            {:ok, data} = Gateway.Router.Portal.Commands.Handler.Guild.page(page, count)
+            jsonRsp(conn, 200, %{ok: data})
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
+  get "/:guildId" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, _data} ->
+            case Gateway.Router.Portal.Commands.Handler.Guild.info(guildId) do
+              {:ok, data} ->
+                jsonRsp(conn, 200, %{ok: data})
+
+              {:error, msg} ->
+                jsonRsp(conn, 404, %{error: msg})
+            end
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
+  get "/:guildId/balance" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, data} ->
+            userId = data.user_id
+
+            case Gateway.Router.Portal.Commands.Handler.Guild.balance(guildId, userId) do
+              {:ok, data} ->
+                jsonRsp(conn, 200, %{ok: data})
+
+              {:error, msg} ->
+                jsonRsp(conn, 404, %{error: msg})
+            end
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
+  delete "/:guildId" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, data} ->
+            userId = data.user_id
+            :ok = Gateway.Router.Portal.Commands.Handler.Guild.delete(guildId, userId)
+            jsonRsp(conn, 200, %{ok: "ok"})
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
+  # Post request to create a new app.  Need an auth handling service
+  post "/" do
+    case conn.body_params do
+      nil ->
+        jsonRsp(conn, 422, %{error: "Missing boday parameters"})
+
+      params ->
+        case getHeaderValue(conn, "access-token") do
+          nil ->
+            send_resp(conn, 422, "Missing request parameters: access-token")
+
+          token ->
+            case Auth.check(token) do
+              {:ok, data} ->
+                owner = data.user_id
+                # Break out the needed fields for the handler
+                name = Map.get(params, "name")
+                # Need to pull out the current session user ID
+                image = Map.get(params, "image")
+
+                description = Map.get(params, "description")
+
+                case Gateway.Router.Portal.Commands.Handler.Guild.create(
+                       name,
+                       owner,
+                       image,
+                       description
+                     ) do
+                  {:ok, info} ->
+                    jsonRsp(conn, 201, %{ok: info})
+
+                  {:error, errorMessage} ->
+                    Logger.error(
+                      "[Gateway.Router.Service.V1.Receiver] Error Create Game #{
+                        inspect(errorMessage)
+                      }"
+                    )
+
+                    jsonRsp(conn, 500, %{error: errorMessage})
+                end
+
+              {:error, errorMessage} ->
+                Logger.error("Error Checking Token #{inspect(errorMessage)}")
+                jsonRsp(conn, 401, %{error: "unauthorized"})
+            end
+        end
+    end
+  end
+
+  post "/:guildId/name" do
+    case conn.body_params do
+      nil ->
+        send_resp(conn, 422, "Missing boday parameters")
+
+      params ->
+        case getHeaderValue(conn, "access-token") do
+          nil ->
+            send_resp(conn, 422, "Missing request parameters: access-token")
+
+          token ->
+            case Auth.check(token) do
+              {:ok, data} ->
+                userId = data.user_id
+                name = Map.get(params, "name")
+
+                case Gateway.Router.Portal.Commands.Handler.Guild.updateName(
+                       guildId,
+                       userId,
+                       name
+                     ) do
+                  :ok ->
+                    jsonRsp(conn, 200, %{ok: "ok"})
+
+                  {:error, errorMessage} ->
+                    Logger.error(
+                      "[Gateway.Router.Service.V1.Receiver] Error update app email #{
+                        inspect(errorMessage)
+                      }"
+                    )
+
+                    jsonRsp(conn, 500, %{error: errorMessage})
+                end
+
+              {:error, errorMessage} ->
+                Logger.error("Error Checking Token #{inspect(errorMessage)}")
+                jsonRsp(conn, 401, %{error: "unauthorized"})
+            end
+        end
+    end
+  end
+
+  post "/:guildId/owner" do
+    case conn.body_params do
+      nil ->
+        send_resp(conn, 422, "Missing boday parameters")
+
+      params ->
+        case getHeaderValue(conn, "access-token") do
+          nil ->
+            send_resp(conn, 422, "Missing request parameters: access-token")
+
+          token ->
+            case Auth.check(token) do
+              {:ok, data} ->
+                userId = data.user_id
+                owner = Map.get(params, "user_id")
+
+                case Gateway.Router.Portal.Commands.Handler.Guild.updateOwner(
+                       guildId,
+                       userId,
+                       owner
+                     ) do
+                  :ok ->
+                    jsonRsp(conn, 200, %{ok: "ok"})
+
+                  {:error, errorMessage} ->
+                    Logger.error(
+                      "[Gateway.Router.Service.V1.Receiver] Error update app email #{
+                        inspect(errorMessage)
+                      }"
+                    )
+
+                    jsonRsp(conn, 500, %{error: errorMessage})
+                end
+
+              {:error, errorMessage} ->
+                Logger.error("Error Checking Token #{inspect(errorMessage)}")
+                jsonRsp(conn, 401, %{error: "unauthorized"})
+            end
+        end
+    end
+  end
+
+  post "/:guildId/image" do
+    case conn.body_params do
+      nil ->
+        send_resp(conn, 422, "Missing boday parameters")
+
+      params ->
+        case getHeaderValue(conn, "access-token") do
+          nil ->
+            send_resp(conn, 422, "Missing request parameters: access-token")
+
+          token ->
+            case Auth.check(token) do
+              {:ok, data} ->
+                userId = data.user_id
+                image = Map.get(params, "image")
+
+                case Gateway.Router.Portal.Commands.Handler.Guild.updateImage(
+                       guildId,
+                       userId,
+                       image
+                     ) do
+                  :ok ->
+                    jsonRsp(conn, 200, %{ok: "ok"})
+
+                  {:error, errorMessage} ->
+                    Logger.error(
+                      "[Gateway.Router.Service.V1.Receiver] Error update app email #{
+                        inspect(errorMessage)
+                      }"
+                    )
+
+                    jsonRsp(conn, 500, %{error: errorMessage})
+                end
+
+              {:error, errorMessage} ->
+                Logger.error("Error Checking Token #{inspect(errorMessage)}")
+                jsonRsp(conn, 401, %{error: "unauthorized"})
+            end
+        end
+    end
+  end
+
+  post "/:guildId/meta" do
+    case conn.body_params do
+      nil ->
+        send_resp(conn, 422, "Missing boday parameters")
+
+      params ->
+        case getHeaderValue(conn, "access-token") do
+          nil ->
+            send_resp(conn, 422, "Missing request parameters: access-token")
+
+          token ->
+            case Auth.check(token) do
+              {:ok, data} ->
+                userId = data.user_id
+                meta = Map.get(params, "meta")
+
+                case Gateway.Router.Portal.Commands.Handler.Guild.updateMeta(
+                       guildId,
+                       userId,
+                       meta
+                     ) do
+                  :ok ->
+                    jsonRsp(conn, 200, %{ok: "ok"})
+
+                  {:error, errorMessage} ->
+                    Logger.error(
+                      "[Gateway.Router.Service.V1.Receiver] Error update app email #{
+                        inspect(errorMessage)
+                      }"
+                    )
+
+                    jsonRsp(conn, 500, %{error: errorMessage})
+                end
+
+              {:error, errorMessage} ->
+                Logger.error("Error Checking Token #{inspect(errorMessage)}")
+                jsonRsp(conn, 401, %{error: "unauthorized"})
+            end
+        end
+    end
+  end
+
+  put "/:guildId/user/:userId" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, data} ->
+            ownerId = data.user_id
+
+            case Gateway.Router.Portal.Commands.Handler.Guild.addUser(
+                   guildId,
+                   ownerId,
+                   userId
+                 ) do
+              :ok ->
+                jsonRsp(conn, 200, %{ok: "ok"})
+
+              {:error, errorMessage} ->
+                Logger.error(
+                  "[Gateway.Router.Service.V1.Receiver] Error update app email #{
+                    inspect(errorMessage)
+                  }"
+                )
+
+                jsonRsp(conn, 500, %{error: errorMessage})
+            end
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
+  put "/:guildId/user/:userId/:stake" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, data} ->
+            ownerId = data.user_id
+            stake = String.to_integer(stake)
+
+            case Gateway.Router.Portal.Commands.Handler.Guild.updateUserStake(
+                   guildId,
+                   ownerId,
+                   userId,
+                   stake
+                 ) do
+              :ok ->
+                jsonRsp(conn, 200, %{ok: "ok"})
+
+              {:error, errorMessage} ->
+                Logger.error(
+                  "[Gateway.Router.Service.V1.Receiver] Error update app email #{
+                    inspect(errorMessage)
+                  }"
+                )
+
+                jsonRsp(conn, 500, %{error: errorMessage})
+            end
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
+  delete "/:guildId/user/:userId" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, data} ->
+            ownerId = data.user_id
+
+            case Gateway.Router.Portal.Commands.Handler.Guild.removeUser(
+                   guildId,
+                   ownerId,
+                   userId
+                 ) do
+              :ok ->
+                jsonRsp(conn, 200, %{ok: "ok"})
+
+              {:error, errorMessage} ->
+                Logger.error(
+                  "[Gateway.Router.Service.V1.Receiver] Error update app email #{
+                    inspect(errorMessage)
+                  }"
+                )
+
+                jsonRsp(conn, 500, %{error: errorMessage})
+            end
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
+  put "/:guildId/game/:gameId" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, data} ->
+            ownerId = data.user_id
+
+            case Gateway.Router.Portal.Commands.Handler.Guild.addGame(
+                   guildId,
+                   ownerId,
+                   gameId
+                 ) do
+              :ok ->
+                jsonRsp(conn, 200, %{ok: "ok"})
+
+              {:error, errorMessage} ->
+                Logger.error(
+                  "[Gateway.Router.Service.V1.Receiver] Error update app email #{
+                    inspect(errorMessage)
+                  }"
+                )
+
+                jsonRsp(conn, 500, %{error: errorMessage})
+            end
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
+  delete "/:guildId/game/:gameId" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, data} ->
+            ownerId = data.user_id
+
+            case Gateway.Router.Portal.Commands.Handler.Guild.removeGame(
+                   guildId,
+                   ownerId,
+                   gameId
+                 ) do
+              :ok ->
+                jsonRsp(conn, 200, %{ok: "ok"})
+
+              {:error, errorMessage} ->
+                Logger.error(
+                  "[Gateway.Router.Service.V1.Receiver] Error update app email #{
+                    inspect(errorMessage)
+                  }"
+                )
+
+                jsonRsp(conn, 500, %{error: errorMessage})
+            end
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
+  post "/:guildId/pay" do
+    case conn.body_params do
+      nil ->
+        send_resp(conn, 422, "Missing boday parameters")
+
+      params ->
+        case getHeaderValue(conn, "access-token") do
+          nil ->
+            send_resp(conn, 422, "Missing request parameters: access-token")
+
+          token ->
+            case Auth.check(token) do
+              {:ok, data} ->
+                userId = data.user_id
+                amount = Map.get(params, "amount")
+                type = Map.get(params, "type")
+
+                case Gateway.Router.Portal.Commands.Handler.Guild.pay(
+                       guildId,
+                       userId,
+                       type,
+                       amount
+                     ) do
+                  :ok ->
+                    jsonRsp(conn, 200, %{ok: "ok"})
+
+                  {:error, errorMessage} ->
+                    Logger.error(
+                      "[Gateway.Router.Service.V1.Receiver] Error update app email #{
+                        inspect(errorMessage)
+                      }"
+                    )
+
+                    jsonRsp(conn, 500, %{error: errorMessage})
+                end
+
+              {:error, errorMessage} ->
+                Logger.error("Error Checking Token #{inspect(errorMessage)}")
+                jsonRsp(conn, 401, %{error: "unauthorized"})
+            end
+        end
+    end
+  end
 
   match _ do
     Logger.error(
@@ -317,16 +613,16 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Guild do
   # Private API
   # ---------------------------------------------------------------------------
 
-  # defp jsonRsp(conn, status, obj) do
-  #  put_resp_content_type(conn, "application/json")
-  #  |> send_resp(status, Jason.encode!(obj))
-  #  |> halt()
-  # end
+  defp jsonRsp(conn, status, obj) do
+    put_resp_content_type(conn, "application/json")
+    |> send_resp(status, Jason.encode!(obj))
+    |> halt()
+  end
 
-  # defp getHeaderValue(conn, val) do
-  #  case conn |> get_req_header(val) do
-  #    [val] -> val
-  #    _ -> nil
-  #  end
-  # end
+  defp getHeaderValue(conn, val) do
+    case conn |> get_req_header(val) do
+      [val] -> val
+      _ -> nil
+    end
+  end
 end

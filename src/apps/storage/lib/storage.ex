@@ -380,6 +380,17 @@ defmodule Storage do
     end
   end
 
+  @doc """
+  Set the guild meta
+  """
+  @spec guildSetMeta(String.t(), map) :: {:ok, guildT()} | {:error, any}
+  def guildSetMeta(guildId, meta) do
+    case Storage.Guild.setMeta(guildId, meta) do
+      {:ok, data} -> {:ok, guildParse(data)}
+      err -> err
+    end
+  end
+
   # ----------------------------------------------------------------------------
   # Private APIs
   # ----------------------------------------------------------------------------

@@ -49,7 +49,7 @@ defmodule Gateway.Router.Portal.Commands.Handler.Game do
   Create a new Game in the system
   """
   @spec create(String.t(), String.t(), String.t(), String.t()) ::
-          {:ok, map} | {:error, any}
+          {:ok, Storage.gameT()} | {:error, any}
   def create(name, owner, image, description) do
     Game.create(name, owner, image, description)
   end
@@ -57,7 +57,7 @@ defmodule Gateway.Router.Portal.Commands.Handler.Game do
   @doc """
   Get the app info from the billing data
   """
-  @spec info(String.t()) :: {:ok, map} | {:error, :not_found}
+  @spec info(String.t()) :: {:ok, Storage.gameT()} | {:error, :not_found}
   def info(gameId), do: Game.info(gameId)
 
   @doc """
@@ -68,7 +68,7 @@ defmodule Gateway.Router.Portal.Commands.Handler.Game do
 
   @doc """
   """
-  @spec page(integer, integer) :: {:ok, map} | {:error, :not_found}
+  @spec page(integer, integer) :: {:ok, Storage.pageT()} | {:error, :not_found}
   def page(page, count), do: Game.page(page, count)
 
   @doc """
@@ -80,7 +80,7 @@ defmodule Gateway.Router.Portal.Commands.Handler.Game do
   @doc """
   """
   @spec updateName(String.t(), String.t(), String.t()) ::
-          {:ok, map} | {:error, :update_failed}
+          {:ok, Storage.gameT()} | {:error, :update_failed}
   def updateName(gameId, userId, name) do
     Game.updateName(gameId, userId, name)
   end
@@ -88,7 +88,7 @@ defmodule Gateway.Router.Portal.Commands.Handler.Game do
   @doc """
   """
   @spec updateOwner(String.t(), String.t(), String.t()) ::
-          {:ok, map} | {:error, :update_failed}
+          {:ok, Storage.gameT()} | {:error, :update_failed}
   def updateOwner(gameId, userId, ownerId) do
     Game.updateOwner(gameId, userId, ownerId)
   end
@@ -96,7 +96,7 @@ defmodule Gateway.Router.Portal.Commands.Handler.Game do
   @doc """
   """
   @spec updateImage(String.t(), String.t(), String.t()) ::
-          {:ok, map} | {:error, :update_failed}
+          {:ok, Storage.gameT()} | {:error, :update_failed}
   def updateImage(gameId, userId, url) do
     Game.updateImage(gameId, userId, url)
   end
@@ -104,15 +104,15 @@ defmodule Gateway.Router.Portal.Commands.Handler.Game do
   @doc """
   """
   @spec updateImage(String.t(), String.t(), String.t()) ::
-          {:ok, map} | {:error, :update_failed}
-  def updateImage(gameId, userId, description) do
+          {:ok, Storage.gameT()} | {:error, :update_failed}
+  def updateDescription(gameId, userId, description) do
     Game.updateDescription(gameId, userId, description)
   end
 
   @doc """
   """
   @spec updateMeta(String.t(), String.t(), map) ::
-          {:ok, map} | {:error, :update_failed}
+          {:ok, Storage.gameT()} | {:error, :update_failed}
   def updateMeta(gameId, userId, meta) do
     Game.updateMeta(gameId, userId, meta)
   end

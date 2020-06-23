@@ -190,6 +190,15 @@ defmodule Storage.Guild do
     |> writeChanges(guildId)
   end
 
+  @doc """
+  Set the guild Meta
+  """
+  @spec setMeta(String.t(), map) :: {:ok, Storage.Guild.t()}
+  def setMeta(guildId, meta) do
+    Storage.Repo.changeSetField(%{}, :meta, meta)
+    |> writeChanges(guildId)
+  end
+
   ## ----------------------------------------------------------------------------
   ## Query Operations
   ## ----------------------------------------------------------------------------

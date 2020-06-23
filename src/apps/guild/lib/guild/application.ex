@@ -19,7 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-defmodule Game.Application do
+defmodule Guild.Application do
   @moduledoc false
 
   use Application
@@ -31,7 +31,7 @@ defmodule Game.Application do
   def start(_type, _args) do
     children = []
 
-    opts = [strategy: :one_for_one, name: Game.Supervisor]
+    opts = [strategy: :one_for_one, name: Guild.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
