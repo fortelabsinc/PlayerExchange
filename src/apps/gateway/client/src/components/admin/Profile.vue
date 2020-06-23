@@ -95,7 +95,8 @@ export default {
     this.getBalances().then((rsp) => {
       if (undefined != rsp.error) {
         this.$toast.error(
-          'Error getting balances: ' + JSON.stringify(rsp.error.message))
+          'Error getting balances: ' + JSON.stringify(rsp.error.message)
+        )
       }
     })
   },
@@ -103,13 +104,13 @@ export default {
     ...mapActions({
       getBalances: 'wallet/ApiActionFetchBalances',
     }),
-    getTheBalances: function(){
+    getTheBalances: function() {
       this.getBalances().then((rsp) => {
         if (undefined != rsp.error) {
           this.$toast.error(
-            'Error getting balances: ' + JSON.stringify(rsp.error.message))
-        }
-        else {
+            'Error getting balances: ' + JSON.stringify(rsp.error.message)
+          )
+        } else {
           this.$toast.success('Info updated')
         }
       })
