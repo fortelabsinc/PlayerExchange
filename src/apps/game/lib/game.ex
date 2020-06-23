@@ -35,13 +35,21 @@ defmodule Game do
   @doc """
   Create a new game in the system
   """
-  def create(name, owner, image, description, meta \\ %{}) do
+  @spec create(String.t(), String.t(), String.t(), String.t() | float, String.t(), map) ::
+          {:ok, Storage.gameT()} | {:error, any}
+  def create(name, owner, image, fee, description, meta \\ %{})
+
+  def create(name, owner, image, fee, description, meta) when is_float(fee) do
+    create(name, owner, image, Float.to_string(fee), description, meta)
+  end
+
+  def create(name, owner, image, fee, description, meta) do
     # Let's create the game wallets
     case Blockchain.createAccount(name) do
       {:ok, payId} ->
         # Let's create the record entry in the database
         # for this guy
-        Storage.gameCreate(name, owner, payId, image, description, meta)
+        Storage.gameCreate(name, owner, payId, image, fee, description, meta)
 
       err ->
         err
@@ -132,6 +140,28 @@ defmodule Game do
         if data.owner == userId do
           # now lets verify that the new owner is also a member
           Storage.gameSetImage(gameId, image)
+        else
+          {:error, :not_owner}
+        end
+    end
+  end
+
+  @doc """
+  Update the game fee
+
+  NOTE:  This will only succeed if the owner field matchs the userId
+  """
+  @spec updateImage(String.t(), String.t(), String.t() | float()) ::
+          {:ok, map} | {:error, atom}
+  def updateFee(gameId, userId, fee) do
+    case Storage.game(gameId) do
+      nil ->
+        {:error, :not_found}
+
+      data ->
+        if data.owner == userId do
+          # now lets verify that the new owner is also a member
+          Storage.gameSetFee(gameId, fee)
         else
           {:error, :not_owner}
         end

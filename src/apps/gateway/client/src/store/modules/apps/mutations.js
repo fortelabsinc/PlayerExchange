@@ -5,10 +5,15 @@ export const APPS_LIST_ADD = 'APPS_LIST_ADD'
 export const APPS_LIST_EDIT = 'APPS_LIST_EDIT'
 export const APPS_LIST_REMOVE = 'APPS_LIST_REMOVE'
 export const APPS_LIST_SET_ITEMS_PAGE = 'APPS_LIST_SET_ITEMS_PAGE'
+export const APPS_LIST_BALANCE = 'APPS_LIST_BALANCE'
+export const APPS_LIST_PAY = 'APPS_LIST_PAY'
 
 export default {
   [APPS_LIST_SET](state, payload) {
     state.list = payload
+  },
+  [APPS_LIST_BALANCE](state, payload) {
+    state.balance = payload
   },
   [APPS_LIST_ADD](state, payload) {
     state.list = uniqBy([...state.list, ...castArray(payload)], 'app_id')
@@ -33,4 +38,10 @@ export default {
   [APPS_LIST_SET_ITEMS_PAGE](state, payload) {
     state.itemsPerPage = payload
   },
+
+  [APPS_LIST_PAY](state, payload) {
+    console.log("State: " + JSON.stringify(state));
+    console.log("Payload: " + JSON.stringify(payload));
+  },
+
 }

@@ -16,3 +16,14 @@ export const apiErrorHandler = (error) => {
   console.log('Exception thrown: ' + error)
   return { error }
 }
+
+export const apiResponseHandlerDirect = (response) => {
+  const payload = get(response, 'data.ok')
+  if (!payload) {
+    const error = get(response, 'error')
+    if (error) {
+      throw error
+    }
+  }
+  return payload
+}

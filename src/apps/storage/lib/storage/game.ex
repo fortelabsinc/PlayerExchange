@@ -42,6 +42,7 @@ defmodule Storage.Game do
     field(:owner, :string)
     field(:pay_id, :string)
     field(:image, :string)
+    field(:fee, :string)
     field(:description, :string)
     field(:active, :boolean)
     field(:meta, :map)
@@ -62,6 +63,7 @@ defmodule Storage.Game do
           owner: String.t(),
           pay_id: String.t(),
           image: String.t(),
+          fee: String.t(),
           description: String.t(),
           active: boolean,
           meta: map,
@@ -72,14 +74,16 @@ defmodule Storage.Game do
   @doc """
   Create a new record struct for the game
   """
-  @spec new(String.t(), String.t(), String.t(), String.t(), String.t(), map) :: Storage.Game.t()
-  def new(name, owner, payId, image, description, meta \\ %{}) do
+  @spec new(String.t(), String.t(), String.t(), String.t(), String.t(), String.t(), map) ::
+          Storage.Game.t()
+  def new(name, owner, payId, image, fee, description, meta \\ %{}) do
     %Storage.Game{
       game_id: Utils.uuid4(),
       name: name,
       owner: owner,
       pay_id: payId,
       image: image,
+      fee: fee,
       description: description,
       active: true,
       meta: meta
@@ -109,6 +113,12 @@ defmodule Storage.Game do
   """
   @spec image(Storage.Game.t()) :: String.t()
   def image(gameT), do: gameT.image
+
+  @doc """
+  Storage.Game.t accessor to fee
+  """
+  @spec fee(Storage.Game.t()) :: String.t()
+  def fee(gameT), do: gameT.fee
 
   @doc """
   Storage.Game.t accessor to description
@@ -200,6 +210,15 @@ defmodule Storage.Game do
     |> writeChanges(gameId)
   end
 
+  @doc """
+  Set the game meta data field
+  """
+  @spec setFee(String.t(), map) :: {:ok, Storage.Game.t()}
+  def setFee(gameId, fee) do
+    Storage.Repo.changeSetField(%{}, :fee, fee)
+    |> writeChanges(gameId)
+  end
+
   # ----------------------------------------------------------------------------
   # Query Operations
   # ----------------------------------------------------------------------------
@@ -210,7 +229,7 @@ defmodule Storage.Game do
   """
   @spec queryAll :: [Storage.Game.t()]
   def queryAll() do
-    Storage.Repo.get_by(Storage.Game, active: true)
+    Storage.Repo.all(Storage.Game)
   end
 
   @doc """

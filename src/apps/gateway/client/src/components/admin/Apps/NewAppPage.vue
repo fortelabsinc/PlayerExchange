@@ -10,10 +10,10 @@
         :rules="rules.name"
       />
       <v-text-field
-        v-model="revueSplit"
+        v-model="fee"
         type="text"
-        name="revueSplit"
-        label="Revue Split"
+        name="fee"
+        label="Fee Percentage"
         required
       />
       <v-text-field
@@ -21,6 +21,12 @@
         type="text"
         name="imageUrl"
         label="ImageUrl"
+      />
+      <v-text-field
+        v-model="description"
+        type="text"
+        name="description"
+        label="Description"
       />
     </v-form>
 
@@ -54,8 +60,9 @@ export default {
   data() {
     return {
       name: '',
-      revueSplit: '',
+      fee: '',
       imageUrl: '',
+      description: '',
       valid: true,
       rules: {
         name: [(v) => v.length >= 4 || 'Min 4 characters'],
@@ -78,8 +85,9 @@ export default {
       this.creating = true
       this.apiCreateApp({
         name: this.name,
-        revueSplit: this.revueSplit,
+        fee: this.fee,
         imageUrl: this.imageUrl,
+        description: this.description,
       }).then(({ error }) => {
         this.creating = false
         if (!error) {

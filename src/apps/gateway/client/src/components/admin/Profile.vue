@@ -30,6 +30,14 @@
               type="text"
               readonly
             />
+            
+            <v-text-field
+              v-model="user_id"
+              name="user_id"
+              label="User ID"
+              type="text"
+              readonly
+            />
           </v-col>
         </v-row>
       </AppLayoutPanel>
@@ -88,6 +96,7 @@ export default {
       username: 'auth/getUserName',
       email: 'auth/getEmail',
       pay_id: 'auth/getPayId',
+      user_id: 'auth/getUserId',
       balance: 'wallet/getBalances',
     }),
   },

@@ -4,13 +4,15 @@ import {
   APPS_LIST_SET,
   APPS_LIST_ADD,
   APPS_LIST_EDIT,
+  APPS_LIST_BALANCE,
   APPS_LIST_REMOVE,
   APPS_LIST_SET_ITEMS_PAGE,
+  APPS_LIST_PAY,
 } from './mutations'
 
 export const ApiActionFetchAllApps = ({ commit }) =>
   apiAxios
-    .get('/app')
+    .get('/game')
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         commit(APPS_LIST_SET, payload)
@@ -21,7 +23,7 @@ export const ApiActionFetchAllApps = ({ commit }) =>
 
 export const ApiActionGetAppsPage = ({ commit }, { page, count }) =>
   apiAxios
-    .get(`/app/page/${page}/${count}`)
+    .get(`/game/page/${page}/${count}`)
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         commit(APPS_LIST_SET, payload.list)
@@ -33,7 +35,7 @@ export const ApiActionGetAppsPage = ({ commit }, { page, count }) =>
 
 export const ApiActionGetAppById = ({ commit }, { app_id }) =>
   apiAxios
-    .get(`/app/${app_id}`)
+    .get(`/game/${app_id}`)
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         commit(APPS_LIST_ADD, payload)
@@ -44,13 +46,13 @@ export const ApiActionGetAppById = ({ commit }, { app_id }) =>
 
 export const ApiActionCreateApp = (
   { commit },
-  { name, imageUrl, revueSplit }
+  { name, imageUrl, fee, description }
 ) =>
   apiAxios
-    .post('/app', { name, imageUrl, revueSplit })
+    .post('/game', { name, imageUrl, fee, description })
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
-        commit(APPS_LIST_ADD, { name, imageUrl, revueSplit, app_id: payload })
+        commit(APPS_LIST_ADD, { name, imageUrl, fee, description, app_id: payload })
         return { payload }
       })
     )
@@ -58,7 +60,7 @@ export const ApiActionCreateApp = (
 
 export const ApiActionDeleteApp = ({ commit }, { app_id }) =>
   apiAxios
-    .delete(`/app/${app_id}`)
+    .delete(`/game/${app_id}`)
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         commit(APPS_LIST_REMOVE, app_id)
@@ -67,9 +69,20 @@ export const ApiActionDeleteApp = ({ commit }, { app_id }) =>
     )
     .catch(apiErrorHandler)
 
+export const ApiActionBalanceApp = ({ commit }, { app_id }) =>
+  apiAxios
+    .get(`/game/${app_id}/balance`)
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(APPS_LIST_BALANCE, payload)
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)
+
 export const ApiActionEditApp = ({ commit }, { app_id, path, prop, value }) =>
   apiAxios
-    .post(`/app/${app_id}/${path}`, { id: app_id, [prop]: value })
+    .post(`/game/${app_id}/${path}`, { id: app_id, [prop]: value })
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         commit(APPS_LIST_EDIT, { app_id, [prop]: value })
@@ -86,18 +99,37 @@ export const ApiActionEditAppName = (context, { app_id, name }) =>
     value: name,
   })
 
-export const ApiActionEditAppRevueSplit = (context, { app_id, revueSplit }) =>
+export const ApiActionEditAppOwner = (context, { app_id, revueSplit }) =>
   ApiActionEditApp(context, {
     app_id,
-    path: 'revueSplit',
-    prop: 'revueSplit',
+    path: 'owner',
+    prop: 'owner',
     value: revueSplit,
   })
 
 export const ApiActionEditAppImageUrl = (context, { app_id, imageUrl }) =>
   ApiActionEditApp(context, {
     app_id,
-    path: 'imageUrl',
-    prop: 'imageUrl',
+    path: 'image',
+    prop: 'image',
     value: imageUrl,
   })
+
+export const ApiActionEditAppMeta = (context, { app_id, meta }) =>
+  ApiActionEditApp(context, {
+    app_id,
+    path: 'meta',
+    prop: 'meta',
+    value: meta,
+  })
+
+export const ApiActionPayOutApp = ({ commit }, { app_id, type, amount }) =>
+  apiAxios
+    .post(`/game/${app_id}/pay`, { type: type, amount: amount })
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(APPS_LIST_PAY, payload)
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)

@@ -83,10 +83,10 @@ defmodule Storage do
   Creates a new game in the storage system.  As part of the map returned the newly
   create game_id also attached to the map
   """
-  @spec gameCreate(String.t(), String.t(), String.t(), String.t(), String.t(), map) ::
+  @spec gameCreate(String.t(), String.t(), String.t(), String.t(), String.t(), String.t(), map) ::
           {:ok, gameT()} | {:error, any}
-  def gameCreate(name, owner, payId, image, description, meta \\ %{}) do
-    info = Storage.Game.new(name, owner, payId, image, description, meta)
+  def gameCreate(name, owner, payId, image, fee, description, meta \\ %{}) do
+    info = Storage.Game.new(name, owner, payId, image, fee, description, meta)
 
     case Storage.Game.write(info) do
       {:ok, data} ->
@@ -192,6 +192,21 @@ defmodule Storage do
   @spec gameSetImage(String.t(), String.t()) :: {:ok, gameT()} | {:error, any}
   def gameSetImage(gameId, url) do
     case Storage.Game.setImage(gameId, url) do
+      {:ok, data} -> {:ok, gameParse(data)}
+      err -> err
+    end
+  end
+
+  @doc """
+  Set the game fee
+  """
+  @spec gameSetFee(String.t(), String.t() | float()) :: {:ok, gameT()} | {:error, any}
+  def gameSetFee(gameId, fee) when is_float(fee) do
+    gameSetFee(gameId, Float.to_string(fee))
+  end
+
+  def gameSetFee(gameId, fee) do
+    case Storage.Game.setFee(gameId, fee) do
       {:ok, data} -> {:ok, gameParse(data)}
       err -> err
     end

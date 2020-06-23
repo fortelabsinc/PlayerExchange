@@ -93,15 +93,19 @@ export default {
     headers() {
       return [
         {
-          text: 'ID',
+          text: 'Image',
           align: 'start',
-          value: 'app_id',
+          value: 'image',
           sortable: false,
         },
         {
           text: 'Name',
-          align: 'start',
           value: 'name',
+          sortable: false,
+        },
+        {
+          text: 'ID',
+          value: 'game_id',
           sortable: false,
         },
         { text: '', align: 'end', value: 'actions', sortable: false },
@@ -122,16 +126,16 @@ export default {
   },
   methods: {
     ...mapActions({
-      getAppsPage: 'apps/ApiActionFetchAllApps',
+      getAppsPage: 'apps/ApiActionGetAppsPage',
       deleteApp: 'apps/ApiActionDeleteApp',
     }),
     fetchTableData() {
       const { page, itemsPerPage } = this.options
       this.loading = true
       this.getAppsPage({ page: page - 1, count: itemsPerPage }).then(
-        ({ payload }) => {
+        ({payload}) => {
           if (payload) {
-            // this.totalItems = payload.count
+             this.totalItems = payload.count
           }
           this.loading = false
         }

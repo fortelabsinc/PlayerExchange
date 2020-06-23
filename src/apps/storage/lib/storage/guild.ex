@@ -209,7 +209,7 @@ defmodule Storage.Guild do
   """
   @spec queryAll :: [Storage.Guild.t()]
   def queryAll() do
-    Storage.Repo.get_by(Storage.Guild, active: true)
+    Storage.Repo.all(Storage.Guild)
   end
 
   @doc """

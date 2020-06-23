@@ -4,3 +4,4 @@ export const getMeta = ({ meta }) => meta
 export const getUserName = ({ user }) => user.name
 export const getEmail = ({ user }) => user.email
 export const getPayId = ({ user }) => user.payId
+export const getUserId = ({ user }) => user.userId

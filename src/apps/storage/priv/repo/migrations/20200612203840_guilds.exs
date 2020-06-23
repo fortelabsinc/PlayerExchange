@@ -2,7 +2,7 @@ defmodule Storage.Repo.Migrations.Guilds do
   use Ecto.Migration
 
   def change do
-    create table(:guild) do
+    create table(:guilds) do
       add(:guild_id, :string)
       add(:name, :string)
       add(:owner, :string)
@@ -16,6 +16,6 @@ defmodule Storage.Repo.Migrations.Guilds do
       timestamps()
     end
 
-    create(unique_index(:guild, [:guild_id]))
+    create(unique_index(:guilds, [:guild_id]))
   end
 end

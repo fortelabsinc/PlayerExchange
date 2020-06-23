@@ -48,10 +48,10 @@ defmodule Gateway.Router.Portal.Commands.Handler.Game do
   @doc """
   Create a new Game in the system
   """
-  @spec create(String.t(), String.t(), String.t(), String.t()) ::
+  @spec create(String.t(), String.t(), String.t(), String.t() | float(), String.t()) ::
           {:ok, Storage.gameT()} | {:error, any}
-  def create(name, owner, image, description) do
-    Game.create(name, owner, image, description)
+  def create(name, owner, image, fee, description) do
+    Game.create(name, owner, image, fee, description)
   end
 
   @doc """
@@ -99,6 +99,14 @@ defmodule Gateway.Router.Portal.Commands.Handler.Game do
           {:ok, Storage.gameT()} | {:error, :update_failed}
   def updateImage(gameId, userId, url) do
     Game.updateImage(gameId, userId, url)
+  end
+
+  @doc """
+  """
+  @spec updateFee(String.t(), String.t(), String.t() | float()) ::
+          {:ok, Storage.gameT()} | {:error, :update_failed}
+  def updateFee(gameId, userId, fee) do
+    Game.updateFee(gameId, userId, fee)
   end
 
   @doc """
