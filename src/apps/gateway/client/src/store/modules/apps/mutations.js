@@ -40,8 +40,7 @@ export default {
   },
 
   [APPS_LIST_PAY](state, payload) {
-    console.log("State: " + JSON.stringify(state));
-    console.log("Payload: " + JSON.stringify(payload));
+    console.log('State: ' + JSON.stringify(state))
+    console.log('Payload: ' + JSON.stringify(payload))
   },
-
 }

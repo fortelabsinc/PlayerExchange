@@ -30,7 +30,7 @@
               type="text"
               readonly
             />
-            
+
             <v-text-field
               v-model="user_id"
               name="user_id"
@@ -56,7 +56,7 @@
           </v-btn>
         </v-toolbar>
         <v-row>
-          <v-col>
+          <v-col lg="4">
             <v-text-field
               v-for="item in balance"
               :key="item.id"
@@ -67,7 +67,7 @@
               readonly
             />
           </v-col>
-          <v-col>
+          <v-col lg="8">
             <v-text-field
               v-for="item in balance"
               :key="item.id"

@@ -3,7 +3,7 @@
     <v-toolbar flat color="white">
       <v-toolbar-title>Games</v-toolbar-title>
       <v-spacer />
-      <v-btn color="primary" class="mb-2" @click="newItem()">New App</v-btn>
+      <v-btn color="primary" class="mb-2" @click="newItem()">New Game</v-btn>
     </v-toolbar>
 
     <v-data-table
@@ -133,9 +133,9 @@ export default {
       const { page, itemsPerPage } = this.options
       this.loading = true
       this.getAppsPage({ page: page - 1, count: itemsPerPage }).then(
-        ({payload}) => {
+        ({ payload }) => {
           if (payload) {
-             this.totalItems = payload.count
+            this.totalItems = payload.count
           }
           this.loading = false
         }

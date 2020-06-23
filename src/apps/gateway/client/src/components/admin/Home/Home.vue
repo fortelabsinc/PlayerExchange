@@ -1,38 +1,37 @@
 <template>
   <div>
-    <v-row no-gutters>
-      <v-col class="mr-3">
-        <AppLayoutPanel>
+    <v-row>
+      <v-col lg="6">
+        <v-card>
           <v-toolbar flat color="white">
             <v-toolbar-title>Games</v-toolbar-title>
           </v-toolbar>
           <GamesChart />
-        </AppLayoutPanel>
+        </v-card>
       </v-col>
-      <v-col>
-        <AppLayoutPanel>
+      <v-col lg="6">
+        <v-card>
           <v-toolbar flat color="white">
             <v-toolbar-title>Guilds</v-toolbar-title>
           </v-toolbar>
           <GuildsChart />
-        </AppLayoutPanel>
+        </v-card>
       </v-col>
     </v-row>
     <v-row>
       <v-col>
-        <AppLayoutPanel>
+        <v-card>
           <v-toolbar flat color="white">
             <v-toolbar-title>Payments</v-toolbar-title>
           </v-toolbar>
           <PaymentsChart />
-        </AppLayoutPanel>
+        </v-card>
       </v-col>
     </v-row>
   </div>
 </template>
 
 <script>
-import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
 import GamesChart from './GamesChart'
 import GuildsChart from './GuildsChart'
 import PaymentsChart from './PaymentsChart'
@@ -40,7 +39,6 @@ import PaymentsChart from './PaymentsChart'
 export default {
   name: 'Home',
   components: {
-    AppLayoutPanel,
     GamesChart,
     GuildsChart,
     PaymentsChart,

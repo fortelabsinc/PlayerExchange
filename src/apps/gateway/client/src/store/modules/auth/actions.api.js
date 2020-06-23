@@ -37,7 +37,8 @@ export const ApiActionCheckAuth = ({ dispatch, state }) => {
     if (localStorageToken) {
       setApiAuthToken(localStorageToken)
     } else {
-      throw 'No token found'
+      return Promise.resolve({ error: { message: 'No token found' } })
+      // throw 'No token found'
     }
   }
 
@@ -46,7 +47,7 @@ export const ApiActionCheckAuth = ({ dispatch, state }) => {
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         payload = {
-          token: get(payload, 'access_token'),
+          token: getToken(state) || getLocalStorageToken(), //get(payload, 'access_token'),
           refreshToken: get(payload, 'refresh_token'),
           meta: get(payload, 'meta'),
           user: {

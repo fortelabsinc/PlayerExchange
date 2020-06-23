@@ -52,7 +52,13 @@ export const ApiActionCreateApp = (
     .post('/game', { name, imageUrl, fee, description })
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
-        commit(APPS_LIST_ADD, { name, imageUrl, fee, description, app_id: payload })
+        commit(APPS_LIST_ADD, {
+          name,
+          imageUrl,
+          fee,
+          description,
+          app_id: payload,
+        })
         return { payload }
       })
     )
