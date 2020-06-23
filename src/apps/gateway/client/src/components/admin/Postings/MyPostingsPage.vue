@@ -3,6 +3,9 @@
     <v-toolbar flat color="white">
       <v-toolbar-title>My Postings</v-toolbar-title>
       <v-spacer />
+      <v-btn color="success" class="mb-2 mr-2" @click="dialogPayment = true">
+        Make a Payment
+      </v-btn>
       <v-btn color="primary" class="mb-2" @click="newItem()">New Post</v-btn>
     </v-toolbar>
 
@@ -63,17 +66,21 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <MakePayment v-model="dialogPayment" />
   </AppLayoutPanel>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
+import MakePayment from './MakePayment.vue'
 
 export default {
   name: 'MyPostingsPage',
   components: {
     AppLayoutPanel,
+    MakePayment,
   },
   data() {
     return {
@@ -88,6 +95,7 @@ export default {
       //   },
       // ],
       dialog: false,
+      dialogPayment: false,
       currentItem: {},
       loading: false,
       deleting: false,
