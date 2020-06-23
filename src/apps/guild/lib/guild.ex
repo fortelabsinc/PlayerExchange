@@ -274,10 +274,11 @@ defmodule Guild do
         if data.owner == ownerId do
           games = data.games
 
-          if Enum.member?(data.games, gameId) do
+          if Map.has_key?(games, gameId) do
             {:error, :already_member}
           else
-            Storage.guildSetGames(guildId, [gameId | games])
+            games = Map.put(games, gameId, true)
+            Storage.guildSetGames(guildId, games)
           end
         else
           {:error, :not_owner}
@@ -298,8 +299,8 @@ defmodule Guild do
         if data.owner == ownerId do
           games = data.games
 
-          if Enum.member?(games, gameId) do
-            games = List.delete(games, gameId)
+          if Map.has_key?(games, gameId) do
+            games = Map.delete(games, gameId)
             Storage.guildSetGames(guildId, games)
           else
             {:error, :not_member}

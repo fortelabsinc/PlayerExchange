@@ -52,7 +52,7 @@ defmodule Storage do
           image: Stringt.t(),
           description: Stringt.t(),
           members: map(),
-          games: [Stringt.t()],
+          games: map,
           active: boolean,
           meta: map,
           inserted_at: NativeDateTime.t(),
@@ -343,7 +343,7 @@ defmodule Storage do
   @doc """
   Hard set the games of the guild
   """
-  @spec guildSetGames(String.t(), [String.t()]) :: {:ok, guildT()} | {:error, any}
+  @spec guildSetGames(String.t(), map) :: {:ok, guildT()} | {:error, any}
   def guildSetGames(guildId, games) do
     case Storage.Guild.setGames(guildId, games) do
       {:ok, data} -> {:ok, guildParse(data)}

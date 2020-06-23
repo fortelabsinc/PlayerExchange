@@ -58,13 +58,13 @@ export const ApiActionFetchGuildMembers = ({ commit }, { guild_id }) =>
 
 export const ApiActionCreateGuild = (
   { commit },
-  { name, imageUrl, description, members }
+  { name, image, description, members }
 ) =>
   apiAxios
-    .post('/guild', { name, imageUrl, description, members })
+    .post('/guild', { name, image, description, members })
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
-        commit(GUILDS_LIST_ADD, { name, imageUrl, guild_id: payload })
+        commit(GUILDS_LIST_ADD, { name, image, guild_id: payload })
         return { payload }
       })
     )
