@@ -1,6 +1,6 @@
 ---
 cluster_name: forte-player-exchange
-cluster_machine_type: e2-micro
+cluster_machine_type: n1-standard-2
 cluster_num_nodes: 3
 cluster_machine_preemptible: false
 domain_url: "playerexchange.io"
@@ -8,7 +8,7 @@ environments: ["dev", "prod", "test"]
 cockroach_replicas: 3
 rippler_replicas: 3
 ether_replicas: 3
-payid_replicas: 3
-plyxchg_replicas: 3
+payid_replicas: 1
+plyxchg_replicas: 1
 # plyxchg_replicants: 3
 # crdb_replicants: 3
