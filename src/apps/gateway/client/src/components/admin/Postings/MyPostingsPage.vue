@@ -207,14 +207,16 @@ export default {
     fetchTableData() {
       const { page, itemsPerPage } = this.options
       this.loading = true
-      this.getPostingsPage({ user_id: this.userId, page: page - 1, count: itemsPerPage }).then(
-        ({ payload }) => {
-          if (payload) {
-            this.totalItems = payload.count
-          }
-          this.loading = false
+      this.getPostingsPage({
+        user_id: this.userId,
+        page: page - 1,
+        count: itemsPerPage,
+      }).then(({ payload }) => {
+        if (payload) {
+          this.totalItems = payload.count
         }
-      )
+        this.loading = false
+      })
     },
     newPayment() {
       this.paymentData = null
@@ -224,7 +226,7 @@ export default {
       this.$router.push('/postings/new')
     },
     payItem(item, type) {
-      this.paymentData = { typeLabel: type }
+      this.paymentData = { typeLabel: type, postId: item.post_id }
       if (type === 'Confirm') {
         this.paymentData.amount = item.confirm_pay_amt
         this.paymentData.type = item.confirm_pay_type

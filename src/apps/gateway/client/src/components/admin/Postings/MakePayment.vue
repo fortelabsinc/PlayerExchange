@@ -73,6 +73,8 @@ export default {
       payId: this.data ? this.data.payId : '',
       amount: this.data ? this.data.amount : '',
       type: this.data ? this.data.type : '',
+      postId: this.data ? this.data.postId : '',
+      postType: this.data ? this.data.postType : '',
       paying: false,
       valid: true,
       editable: false,
@@ -93,6 +95,8 @@ export default {
       this.amount = val ? val.amount : ''
       this.type = val ? val.type : ''
       this.label = val ? val.typeLabel : ''
+      this.postId = val ? val.postId : ''
+      this.postType = val ? val.postType : ''
       this.editable = !!val
     },
     content(val) {
@@ -113,8 +117,10 @@ export default {
       this.paying = true
       this.makePayment({
         pay_id: this.payId,
-        amt: String(this.amount),
+        amt: String(this.amount) ,
         type: this.type,
+        post_id: this.postId ? this.postId : "direct",
+        post_type: this.postType ? this.postType : "direct",
       }).then(({ error }) => {
         this.content = false
         this.paying = false

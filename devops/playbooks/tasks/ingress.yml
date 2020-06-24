@@ -43,16 +43,16 @@
                 - path: /portal
                   backend:
                     serviceName: plyxchg
-                    servicePort: 8180
+                    servicePort: 8181
                 - path: /portal/*
                   backend:
                     serviceName: plyxchg
-                    servicePort: 8180
+                    servicePort: 8181
                 - path: /portal/client/*
                   backend:
                     serviceName: plyxchg
-                    servicePort: 8180
+                    servicePort: 8181
                 - path: /portal/client/v1/*
                   backend:
                     serviceName: plyxchg
-                    servicePort: 8180
+                    servicePort: 8181

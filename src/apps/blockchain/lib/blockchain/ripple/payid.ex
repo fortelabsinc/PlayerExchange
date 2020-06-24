@@ -35,10 +35,12 @@ defmodule Blockchain.Ripple.PayID do
     # TODO:  This data should come from the config files
     @serverName "http://payid.default.svc.cluster.local:8081"
     @http "https"
+    @port "443"
     @domain Application.get_env(:blockchain, :payid_domain, "prod.playerexchange.io")
   else
     @serverName "http://127.0.0.1:8081"
     @http "http"
+    @port "8080"
     @domain "127.0.0.1"
   end
 
@@ -160,7 +162,7 @@ defmodule Blockchain.Ripple.PayID do
     case accountInfo do
       [name, server] ->
         {:ok, rsp} =
-          Tesla.get("#{@http}://#{server}:8080/#{name}",
+          Tesla.get("#{@http}://#{server}:#{@port}/#{name}",
             headers: [{"Accept", header(type)}, {"PayID-Version", "1.0"}]
           )
 
@@ -191,7 +193,7 @@ defmodule Blockchain.Ripple.PayID do
     case accountInfo do
       [name, server] ->
         {:ok, rsp} =
-          Tesla.get("#{@http}://#{server}:8080/#{name}",
+          Tesla.get("#{@http}://#{server}:#{@port}/#{name}",
             headers: [{"Accept", header(type)}, {"PayID-Version", "1.0"}]
           )
 

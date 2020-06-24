@@ -21,7 +21,7 @@
           spec:
             containers:
               - name: payid
-                image: gcr.io/forte-player-exchange/payid-{{stage}}:latest
+                image: gcr.io/forte-player-exchange/payid:latest
                 imagePullPolicy: Always
                 resources:
                   limits:
@@ -59,7 +59,7 @@
       kind: Service
       metadata:
         name: payid
-        namespace: default
+        namespace: "{{cluster_name}}-{{stage}}"
         #annotations:
         #  cloud.google.com/neg: '{"ingress": true}'
       spec:
