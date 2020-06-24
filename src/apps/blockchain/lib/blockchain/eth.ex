@@ -33,8 +33,8 @@ defmodule Blockchain.Eth do
   # ----------------------------------------------------------------------------
   if_prod do
     @serverName "http://ether." <>
-                  Application.get_env(:blockchain, namespace, "forte-player-exchange-dev") <>
-                  ".svc.cluster.local:3000"
+                  Application.get_env(:blockchain, :namespace, "forte-player-exchange-dev") <>
+                  ".svc.cluster.local:3001"
   else
     @serverName "http://localhost:3001"
   end

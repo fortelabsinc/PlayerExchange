@@ -34,7 +34,7 @@ defmodule Blockchain.Ripple.PayID do
   if_prod do
     # TODO:  This data should come from the config files
     @serverName "http://payid." <>
-                  Application.get_env(:blockchain, namespace, "forte-player-exchange-dev") <>
+                  Application.get_env(:blockchain, :namespace, "forte-player-exchange-dev") <>
                   ".svc.cluster.local:3000"
     @http "https"
     @port "443"
