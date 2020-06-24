@@ -19,6 +19,13 @@
             :isSaving="savingRevueSplit"
             label="Revue Split"
           />
+          <v-img
+            v-if="app.image"
+            :src="app.image"
+            aspect-ratio="1"
+            height="200"
+            width="200"
+          />
           <EditField
             :value="app.image"
             :onSave="saveImageUrl"

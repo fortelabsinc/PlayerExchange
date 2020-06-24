@@ -16,10 +16,16 @@
       :server-items-length="totalItems"
     >
       <template v-slot:item.image="{ item }">
-        <v-img :src="item.image" aspect-ratio="1" height="44" width="44" />
+        <v-img
+          v-if="item.image"
+          :src="item.image"
+          aspect-ratio="1"
+          height="44"
+          width="44"
+        />
       </template>
 
-      <template v-slot:item.order_id="{ item }">
+      <template v-slot:item.game_id="{ item }">
         <router-link :to="`/apps/id/${item.game_id}`">
           {{ item.game_id }}
         </router-link>
@@ -102,13 +108,13 @@ export default {
           sortable: false,
         },
         {
-          text: 'Name',
-          value: 'name',
+          text: 'ID',
+          value: 'game_id',
           sortable: false,
         },
         {
-          text: 'ID',
-          value: 'game_id',
+          text: 'Name',
+          value: 'name',
           sortable: false,
         },
         { text: '', align: 'end', value: 'actions', sortable: false },
