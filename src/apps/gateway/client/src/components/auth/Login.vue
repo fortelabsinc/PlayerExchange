@@ -3,12 +3,12 @@
     <v-card-text>
       <v-form ref="form" v-model="valid" lazy-validation>
         <v-text-field
-          v-model="email"
+          v-model="username"
           type="text"
-          name="email"
-          label="Email"
+          name="username"
+          label="Username"
           required
-          :rules="rules.email"
+          :rules="rules.username"
         />
         <v-text-field
           id="password"
@@ -38,12 +38,9 @@ export default {
       valid: true,
       rules: {
         password: [(v) => v.length >= 6 || 'Min 6 characters'],
-        email: [
-          (v) => !!v || 'E-mail is required',
-          (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
-        ],
+        username: [(v) => !!v || 'Username is required'],
       },
-      email: '',
+      username: '',
       password: '',
       keepLoggedIn: true,
     }
@@ -74,9 +71,10 @@ export default {
       }
 
       this.login({
-        email: this.email,
+        username: this.username,
         password: this.password,
       }).then((data) => {
+        console.log('data', data)
         if (undefined != data['payload']) {
           this.$router.push({ name: 'Home' })
         } else {
