@@ -45,6 +45,11 @@ if nil == System.get_env("PLYXCHG_APP_KEYS", nil) do
   raise "Environment Variable not found PLYXCHG_APP_KEYS"
 end
 
+defaultNamespace = "forte-player-exchange-dev"
+
+config :blockchain,
+  namespace: System.get_env("PLYXCHG_NAMESPACE", defaultNamespace)
+
 config :storage,
   ecto_repos: [Storage.Repo],
   database: System.get_env("PLYXCHG_DB_HOST", defaultHost)

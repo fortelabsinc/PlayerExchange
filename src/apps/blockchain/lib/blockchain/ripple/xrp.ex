@@ -32,7 +32,9 @@ defmodule Blockchain.Ripple.XRP do
   # Module Consts
   # ----------------------------------------------------------------------------
   if_prod do
-    @serverName "http://rippler.forte-player-exchange-dev.svc.cluster.local:3000"
+    @serverName "http://rippler." <>
+                  Application.get_env(:blockchain, namespace, "forte-player-exchange-dev") <>
+                  ".svc.cluster.local:3000"
   else
     @serverName "http://localhost:3000"
   end

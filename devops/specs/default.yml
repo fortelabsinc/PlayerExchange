@@ -6,9 +6,7 @@ cluster_machine_preemptible: false
 domain_url: "playerexchange.io"
 environments: ["dev", "prod", "test"]
 cockroach_replicas: 3
-rippler_replicas: 3
-ether_replicas: 3
+rippler_replicas: 1
+ether_replicas: 1
 payid_replicas: 1
 plyxchg_replicas: 1
-# plyxchg_replicants: 3
-# crdb_replicants: 3

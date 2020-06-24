@@ -3,8 +3,6 @@ name: Forte Player Exchange Develop Build
 on:
   push:
     branches: [develop]
-  pull_request:
-    branches: [develop]
 
 env:
   GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
@@ -12,7 +10,8 @@ env:
   GKE_ZONE: us-central1-a
   IMAGE: plyxchg
   DEPLOYMENT: dev
-  PLYXCHG_DB_HOST: ${{ secrets.PLYXCHG_DB_HOST }}
+  PLYXCHG_DB_HOST: ${{ secrets.PLYXCHG_DB_HOST_DEV }}
+  PLYXCHG_NAMESPACE: ${{ secrets.PLYXCHG_NAMESPACE_DEV }}
   PLYXCHG_APP_KEYS: ${{ secrets.PLYXCHG_APP_KEYS }}
 
 jobs:
@@ -136,3 +135,8 @@ jobs:
         working-directory: src/docker/plyxchg
         run: |
           docker push gcr.io/$GKE_PROJECT/plyxchg-$DEPLOYMENT
+
+      - name: Deploy the environment
+        working-directory: devops
+        run: |
+          ./ops --deploy --env $DEPLOYMENT --ver $GITHUB_SHA
