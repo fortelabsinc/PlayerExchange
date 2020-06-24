@@ -13,6 +13,13 @@
             :isSaving="savingName"
             label="Name"
           />
+          <v-img
+            v-if="guild.image"
+            :src="guild.image"
+            aspect-ratio="1"
+            height="200"
+            width="200"
+          />
           <EditField
             :value="guild.image"
             :onSave="saveImageUrl"
