@@ -78,6 +78,13 @@ defmodule Guild do
   end
 
   @doc """
+  Look up a bunch of guild names based on the passed in IDs
+  """
+  @spec names([String.t()]) ::
+          {:ok, %{String.t() => String.t()}} | {:error, :not_found}
+  def names(ids), do: Storage.gameNames(ids)
+
+  @doc """
   Update the name field for the game
 
   NOTE:  This will only succeed if the owner field matchs the userId

@@ -75,6 +75,12 @@ defmodule Storage do
   # Public API
   # ----------------------------------------------------------------------------
 
+  @doc """
+  Get all names for a given setup of IDs
+  """
+  @spec userNames([String.t()]) :: {:ok, %{String.t() => String.t()}} | {:error, any}
+  def userNames(ids), do: Storage.Auth.User.queryNames(ids)
+
   # ----------------------------------------------------------------------------
   # Game API
   # ----------------------------------------------------------------------------
@@ -141,6 +147,12 @@ defmodule Storage do
         err
     end
   end
+
+  @doc """
+  Get all names for a given setup of IDs
+  """
+  @spec gameNames([String.t()]) :: {:ok, %{String.t() => String.t()}} | {:error, any}
+  def gameNames(ids), do: Storage.Game.queryNames(ids)
 
   @doc """
   Hard set the name of the game
@@ -280,6 +292,12 @@ defmodule Storage do
   """
   @spec guildDelete(String.t()) :: :ok
   def guildDelete(gameId), do: Storage.Guild.delete(gameId)
+
+  @doc """
+  Get all names for a given setup of IDs
+  """
+  @spec guildNames([String.t()]) :: {:ok, [String.t()]} | {:error, any}
+  def guildNames(ids), do: Storage.Guild.queryNames(ids)
 
   @doc """
   read out a guild page in the standard pagenated format

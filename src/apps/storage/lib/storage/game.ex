@@ -268,6 +268,31 @@ defmodule Storage.Game do
     {:ok, rez}
   end
 
+  @doc """
+  Get all the guild names
+  """
+  @spec queryNames([String.t()]) :: {:ok, map} | {:error, any}
+  def queryNames(gameIds) do
+    query =
+      from(g in "games",
+        where: g.game_id in ^gameIds,
+        select: {g.game_id, g.name}
+      )
+
+    case Storage.Repo.all(query) do
+      nil ->
+        {:ok, %{}}
+
+      data ->
+        rez =
+          Enum.reduce(data, %{}, fn {id, name}, acc ->
+            Map.put(acc, id, name)
+          end)
+
+        {:ok, rez}
+    end
+  end
+
   # ----------------------------------------------------------------------------
   # Private API
   # ----------------------------------------------------------------------------

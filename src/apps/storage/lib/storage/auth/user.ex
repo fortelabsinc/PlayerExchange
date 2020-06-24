@@ -423,6 +423,31 @@ defmodule Storage.Auth.User do
     {:ok, rez}
   end
 
+  @doc """
+  Get all the guild names
+  """
+  @spec queryNames([String.t()]) :: {:ok, map} | {:error, any}
+  def queryNames(userIds) do
+    query =
+      from(g in "users",
+        where: g.user_id in ^userIds,
+        select: {g.user_id, g.username}
+      )
+
+    case Storage.Repo.all(query) do
+      nil ->
+        {:ok, %{}}
+
+      data ->
+        rez =
+          Enum.reduce(data, %{}, fn {id, name}, acc ->
+            Map.put(acc, id, name)
+          end)
+
+        {:ok, rez}
+    end
+  end
+
   # ----------------------------------------------------------------------------
   # Write Operations
   # ----------------------------------------------------------------------------

@@ -128,4 +128,11 @@ defmodule Auth do
   """
   @spec forgotUsername(any) :: {:error, <<_::152>>} | {:ok, <<_::256>>}
   def forgotUsername(email), do: Storage.Auth.User.forgotUserName(email)
+
+  @doc """
+  Look up a bunch of games names based on the passed in IDs
+  """
+  @spec names([String.t()]) ::
+          {:ok, %{String.t() => String.t()}} | {:error, :not_found}
+  def names(ids), do: Storage.userNames(ids)
 end
