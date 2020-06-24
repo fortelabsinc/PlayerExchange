@@ -49,14 +49,14 @@ defaultNamespace = "forte-player-exchange-dev"
 defaultPayIdDomain = "dev.playerexchange.io"
 
 config :blockchain,
-  namespace: System.get_env("PLYXCHG_NAMESPACE", defaultNamespace)
+  namespace: System.get_env("PLYXCHG_NAMESPACE", defaultNamespace),
   payid_domain: System.get_env("PLYXCHG_PAY_ID_DOMAIN", defaultPayIdDomain)
 
 config :storage,
   ecto_repos: [Storage.Repo],
-  ecto_host: System.get_env("PLYXCHG_DB_HOST", defaultHost)
-  ecto_user: System.get_env("PLYXCH_DB_USER", "root")
-  ecto_pass: System.get_env("PLYXCH_DB_PASS", "pass")
+  ecto_host: System.get_env("PLYXCHG_DB_HOST", defaultHost),
+  ecto_user: System.get_env("PLYXCH_DB_USER", "root"),
+  ecto_pass: System.get_env("PLYXCH_DB_PASS", "pass"),
   ecto_port: System.get_env("PLYXCH_DB_PORT", "26257")
 
 config :access_pass, AccessPass.Mailer,
