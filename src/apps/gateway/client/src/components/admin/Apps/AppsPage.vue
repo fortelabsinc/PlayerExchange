@@ -15,9 +15,13 @@
       :options.sync="options"
       :server-items-length="totalItems"
     >
+      <template v-slot:item.image="{ item }">
+        <v-img :src="item.image" aspect-ratio="1" height="44" width="44" />
+      </template>
+
       <template v-slot:item.order_id="{ item }">
-        <router-link :to="`/apps/id/${item.app_id}`">
-          {{ item.app_id }}
+        <router-link :to="`/apps/id/${item.game_id}`">
+          {{ item.game_id }}
         </router-link>
       </template>
 
@@ -38,7 +42,7 @@
         </v-card-title>
         <v-divider class="mb-2" />
         <v-card-text>
-          <p>App ID: {{ currentItem.app_id }}</p>
+          <p>App ID: {{ currentItem.game_id }}</p>
           <p>Name: {{ currentItem.name }}</p>
         </v-card-text>
         <v-card-actions>
@@ -145,7 +149,7 @@ export default {
       this.$router.push('/apps/new')
     },
     editItem(item) {
-      this.$router.push(`/apps/id/${item.app_id}`)
+      this.$router.push(`/apps/id/${item.game_id}`)
     },
     deleteItem(item) {
       this.currentItem = item
@@ -157,16 +161,18 @@ export default {
     },
     confirmDelete() {
       this.deleting = true
-      this.deleteApp({ app_id: this.currentItem.app_id }).then(({ error }) => {
-        this.currentItem = {}
-        this.dialog = false
-        this.deleting = false
-        if (!error) {
-          this.$toast.success('App deleted successfully.')
-        } else {
-          this.$toast.error(`Error deleting the app. ${error.message}`)
+      this.deleteApp({ game_id: this.currentItem.game_id }).then(
+        ({ error }) => {
+          this.currentItem = {}
+          this.dialog = false
+          this.deleting = false
+          if (!error) {
+            this.$toast.success('App deleted successfully.')
+          } else {
+            this.$toast.error(`Error deleting the app. ${error.message}`)
+          }
         }
-      })
+      )
     },
   },
 }

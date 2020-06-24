@@ -16,7 +16,7 @@ export default (to, from, next) => {
       next({ name: 'Home' })
     }
   } else if (isEmpty(token) && get(to, 'meta.requireAuth')) {
-    next({ name: 'Login', query: { redirect: to.name } })
+    next({ name: 'Login', query: { redirect: to.name, params: to.params } })
   } else {
     next()
   }

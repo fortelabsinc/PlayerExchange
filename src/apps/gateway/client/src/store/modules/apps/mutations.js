@@ -16,12 +16,12 @@ export default {
     state.balance = payload
   },
   [APPS_LIST_ADD](state, payload) {
-    state.list = uniqBy([...state.list, ...castArray(payload)], 'app_id')
+    state.list = uniqBy([...state.list, ...castArray(payload)], 'game_id')
   },
   [APPS_LIST_EDIT](state, payload) {
     const appIndex = findIndex(
       state.list,
-      ({ app_id }) => app_id === payload.app_id
+      ({ game_id }) => game_id === payload.game_id
     )
     if (appIndex >= 0) {
       const newList = [...state.list]
@@ -32,7 +32,7 @@ export default {
   [APPS_LIST_REMOVE](state, payload) {
     state.list = filter(
       state.list,
-      (app) => !includes(castArray(payload), app.app_id)
+      (app) => !includes(castArray(payload), app.game_id)
     )
   },
   [APPS_LIST_SET_ITEMS_PAGE](state, payload) {

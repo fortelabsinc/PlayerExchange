@@ -52,8 +52,11 @@ export default {
     const self = this
     this.checkAuth().then(({ payload }) => {
       if (payload) {
-        if (self.$route.query) {
-          self.$router.push({ name: self.$route.query.redirect })
+        if (self.$route.query && self.$route.query.redirect) {
+          self.$router.push({
+            name: self.$route.query.redirect,
+            params: self.$route.query.params,
+          })
         } else {
           self.$router.push({ name: 'Home' })
         }
