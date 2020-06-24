@@ -32,7 +32,7 @@ defmodule Blockchain.Eth do
   # Module Consts
   # ----------------------------------------------------------------------------
   if_prod do
-    @serverName "http://ether.default.svc.cluster.local:3001"
+    @serverName "http://ether.forte-player-exchange-dev.svc.cluster.local:3001"
   else
     @serverName "http://localhost:3001"
   end
