@@ -1,7 +1,7 @@
 ---
 cluster_name: forte-player-exchange
 cluster_machine_type: n1-standard-2
-cluster_num_nodes: 3
+cluster_num_nodes: 4
 cluster_machine_preemptible: false
 domain_url: "playerexchange.io"
 environments: ["dev", "prod", "test"]

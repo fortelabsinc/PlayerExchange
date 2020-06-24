@@ -33,13 +33,13 @@
                 readinessProbe:
                   httpGet:
                     path: /node/healthy
-                    port: 3000
+                    port: 3001
                   initialDelaySeconds: 3
                   periodSeconds: 3
                 livenessProbe:
                   httpGet:
                     path: /node/healthy
-                    port: 3000
+                    port: 3001
                   initialDelaySeconds: 3
                   periodSeconds: 3
                 ports:
@@ -60,8 +60,8 @@
         #  cloud.google.com/neg: '{"ingress": true}'
       spec:
         ports:
-          - port: 3000
+          - port: 3001
             protocol: TCP
-            targetPort: 3000
+            targetPort: 3001
         selector:
           app: ether

@@ -21,7 +21,7 @@
           spec:
             containers:
               - name: plyxchg
-                image: "gcr.io/payment-processing-service/plyxchg-{{stage}}:{{build_ver}}"
+                image: "gcr.io/forte-player-exchange/plyxchg-{{stage}}:{{build_ver}}"
                 imagePullPolicy: Always
                 resources:
                   limits:
@@ -60,9 +60,9 @@
         #  cloud.google.com/neg: '{"ingress": true}'
       spec:
         ports:
-          - port: 8180
+          - port: 8181
             protocol: TCP
-            targetPort: 8180
+            targetPort: 8181
         selector:
           app: plyxchg
         type: NodePort
