@@ -97,7 +97,7 @@ jobs:
         working-directory: rippler
         run: |
           export BUILD_VSN=$(cat ../src/vsn.txt) &&
-          docker build -t gcr.io/$GKE_PROJECT/rippler-$DEPLOYMENT:$BUILD_VSN -t gcr.io/$GKE_PROJECT/rippler--$DEPLOYMENT:$GITHUB_SHA \
+          docker build -t gcr.io/$GKE_PROJECT/rippler-$DEPLOYMENT:$BUILD_VSN -t gcr.io/$GKE_PROJECT/rippler--$DEPLOYMENT:$GITHUB_SHA -t gcr.io/$GKE_PROJECT/rippler--$DEPLOYMENT:latest\
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="$GITHUB_REF" .
 
@@ -112,7 +112,7 @@ jobs:
         working-directory: ether
         run: |
           export BUILD_VSN=$(cat ../src/vsn.txt) &&
-          docker build -t gcr.io/$GKE_PROJECT/ether-$DEPLOYMENT:$BUILD_VSN -t gcr.io/$GKE_PROJECT/ether-$DEPLOYMENT:$GITHUB_SHA \
+          docker build -t gcr.io/$GKE_PROJECT/ether-$DEPLOYMENT:$BUILD_VSN -t gcr.io/$GKE_PROJECT/ether-$DEPLOYMENT:$GITHUB_SHA -t gcr.io/$GKE_PROJECT/ether-$DEPLOYMENT:latest\
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="$GITHUB_REF" .
 
@@ -127,7 +127,7 @@ jobs:
         working-directory: src/docker/plyxchg
         run: |
           export BUILD_VSN=$(cat ../../vsn.txt) &&
-          docker build -t gcr.io/$GKE_PROJECT/plyxchg-$DEPLOYMENT:$BUILD_VSN -t gcr.io/$GKE_PROJECT/plyxchg-$DEPLOYMENT:$GITHUB_SHA \
+          docker build -t gcr.io/$GKE_PROJECT/plyxchg-$DEPLOYMENT:$BUILD_VSN -t gcr.io/$GKE_PROJECT/plyxchg-$DEPLOYMENT:$GITHUB_SHA -t gcr.io/$GKE_PROJECT/plyxchg-$DEPLOYMENT:latest\
             --build-arg GITHUB_SHA="$GITHUB_SHA" \
             --build-arg GITHUB_REF="$GITHUB_REF" .
 
