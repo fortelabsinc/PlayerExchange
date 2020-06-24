@@ -142,15 +142,18 @@ defmodule Storage.Repo do
     [
       database:
         System.get_env("PLYXCH_DB", Application.get_env(:storage, :ecto_db, "storage_repo")),
-      username: System.get_env("PLYXCH_DB_USER", Application.get_env(:storage, :ecto_us, "root")),
+      username:
+        System.get_env("PLYXCH_DB_USER", Application.get_env(:storage, :ecto_user, "root")),
       password:
         System.get_env(
           "PLYXCH_DB_PASS",
-          Application.get_env(:storage, :ecto_pa, "dbpassword")
+          Application.get_env(:storage, :ecto_pass, "dbpassword")
         ),
       hostname:
         System.get_env("PLYXCH_DB_HOST", Application.get_env(:storage, :ecto_host, "localhost")),
-      port: System.get_env("PLYXCH_DB_PORT", "26257") |> String.to_integer()
+      port:
+        System.get_env("PLYXCH_DB_PORT", Application.get_env(:storage, :ecto_port, "26257"))
+        |> String.to_integer()
     ]
     |> removeEmptyOpts()
     |> mergeOpts(opts)
