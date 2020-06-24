@@ -4,9 +4,9 @@ import { getLocalStorageToken } from '../../localStorage'
 import { getToken } from './getters'
 import { apiResponseHandler, apiErrorHandler } from '../../utils/api'
 
-export const ApiActionLogin = ({ dispatch }, { email, password }) =>
+export const ApiActionLogin = ({ dispatch }, { username, password }) =>
   apiAxios
-    .post('/auth/login', { username: email, password })
+    .post('/auth/login', { username: username, password })
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         payload = {
@@ -14,8 +14,7 @@ export const ApiActionLogin = ({ dispatch }, { email, password }) =>
           refreshToken: get(payload, 'refresh_token'),
           meta: get(payload, 'meta'),
           user: {
-            name: email,
-            email,
+            name: username,
             payId: get(payload, 'payId'),
             userId: get(payload, 'user_id'),
           },
