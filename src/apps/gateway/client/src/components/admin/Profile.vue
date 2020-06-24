@@ -1,52 +1,51 @@
 <template>
-  <v-row>
-    <v-col>
-      <AppLayoutPanel>
-        <v-toolbar flat color="white">
-          <v-toolbar-title>My Profile</v-toolbar-title>
-        </v-toolbar>
-        <v-row>
-          <v-col>
-            <v-text-field
-              v-model="username"
-              name="Name"
-              label="Name"
-              type="text"
-              readonly
-            />
+  <div>
+    <v-tabs v-model="tab" background-color="normal">
+      <v-tab>My Profile</v-tab>
+      <v-tab>My Currencies</v-tab>
+    </v-tabs>
+    <v-tabs-items v-model="tab">
+      <v-tab-item key="0">
+        <AppLayoutPanel>
+          <v-text-field
+            v-model="username"
+            name="Name"
+            label="Name"
+            type="text"
+            readonly
+          />
 
-            <v-text-field
-              v-model="email"
-              name="Email"
-              label="Email"
-              type="text"
-              readonly
-            />
+          <v-text-field
+            v-model="email"
+            name="Email"
+            label="Email"
+            type="text"
+            readonly
+          />
 
-            <v-text-field
-              v-model="pay_id"
-              name="pay_id"
-              label="pay_id"
-              type="text"
-              readonly
-            />
+          <v-text-field
+            v-model="pay_id"
+            name="pay_id"
+            label="pay_id"
+            type="text"
+            readonly
+          />
 
-            <v-text-field
-              v-model="user_id"
-              name="user_id"
-              label="User ID"
-              type="text"
-              readonly
-            />
-          </v-col>
-        </v-row>
-      </AppLayoutPanel>
-    </v-col>
+          <v-text-field
+            v-model="user_id"
+            name="user_id"
+            label="User ID"
+            type="text"
+            readonly
+          />
+        </AppLayoutPanel>
+      </v-tab-item>
 
-    <v-col>
-      <CurrenciesPanel />
-    </v-col>
-  </v-row>
+      <v-tab-item key="1">
+        <CurrenciesPanel />
+      </v-tab-item>
+    </v-tabs-items>
+  </div>
 </template>
 
 <script>
@@ -59,6 +58,11 @@ export default {
   components: {
     AppLayoutPanel,
     CurrenciesPanel,
+  },
+  data() {
+    return {
+      tab: null,
+    }
   },
   computed: {
     ...mapGetters({

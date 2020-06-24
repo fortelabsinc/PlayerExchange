@@ -1,20 +1,18 @@
 <template>
   <AppLayoutPanel>
-    <v-toolbar flat color="white">
-      <v-toolbar-title>Game Currencies</v-toolbar-title>
-      <v-btn icon class="ml-2" @click="getTheBalances()">
-        <v-icon large>
-          mdi-refresh
-        </v-icon>
-      </v-btn>
-
-      <v-spacer />
-
+    <div class="d-flex">
       <v-btn color="success" @click="dialogPayment = true">
         Make a Payment
       </v-btn>
       <MakePayment v-model="dialogPayment" />
-    </v-toolbar>
+      <v-spacer />
+
+      <v-btn icon @click="getTheBalances()">
+        <v-icon large>
+          mdi-refresh
+        </v-icon>
+      </v-btn>
+    </div>
     <v-row>
       <v-col lg="4">
         <v-text-field
