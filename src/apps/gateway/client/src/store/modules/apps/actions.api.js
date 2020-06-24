@@ -61,7 +61,7 @@ export const ApiActionCreateApp = (
   { name, imageUrl, fee, description }
 ) =>
   apiAxios
-    .post('/game', { name, imageUrl, fee, description })
+    .post('/game', { name, image: imageUrl, fee, description })
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         commit(APPS_LIST_ADD, {
