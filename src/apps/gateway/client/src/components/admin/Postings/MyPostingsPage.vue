@@ -32,10 +32,13 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
+        <v-btn color="primary" small dark outlined @click="showDetails(item)">
+          Details
+        </v-btn>
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
-              class="mr-3"
+              class="mx-3"
               color="primary"
               small
               dark
@@ -62,15 +65,16 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="dialog" :persistent="deleting" max-width="600px">
+    <v-dialog v-model="dialogDelete" :persistent="deleting" max-width="600px">
       <v-card>
         <v-card-title>
           Are you sure you want to delete this posting?
         </v-card-title>
         <v-divider class="mb-2" />
         <v-card-text>
-          <p>Post ID: {{ currentItem.posting_id }}</p>
-          <p>Name: {{ currentItem.postingName }}</p>
+          <p>Post ID: {{ currentItem.post_id }}</p>
+          <p>User ID: {{ currentItem.user_id }}</p>
+          <p>Game: {{ games[currentItem.game_id] }}</p>
         </v-card-text>
         <v-card-actions>
           <v-progress-linear
@@ -95,6 +99,7 @@
       </v-card>
     </v-dialog>
 
+    <PostDetails v-model="dialog" :posting="currentItem" />
     <MakePayment v-model="dialogPayment" :data="paymentData" />
   </AppLayoutPanel>
 </template>
@@ -103,12 +108,14 @@
 import { mapGetters, mapActions } from 'vuex'
 import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
 import MakePayment from '@/components/common/MakePayment.vue'
+import PostDetails from '@/components/admin/Postings/PostDetails.vue'
 
 export default {
   name: 'MyPostingsPage',
   components: {
     AppLayoutPanel,
     MakePayment,
+    PostDetails,
   },
   data() {
     return {
@@ -123,6 +130,7 @@ export default {
       //   },
       // ],
       dialog: false,
+      dialogDelete: false,
       dialogPayment: false,
       currentItem: {},
       loading: false,
@@ -235,18 +243,18 @@ export default {
     },
     deleteItem(item) {
       this.currentItem = item
-      this.dialog = true
+      this.dialogDelete = true
     },
     cancelDelete() {
       this.currentItem = {}
-      this.dialog = false
+      this.dialogDelete = false
     },
     confirmDelete() {
       this.deleting = true
       this.deletePosting({ posting_id: this.currentItem.posting_id }).then(
         ({ error }) => {
           this.currentItem = {}
-          this.dialog = false
+          this.dialogDelete = false
           this.deleting = false
           if (!error) {
             this.$toast.success('Posting deleted successfully.')
@@ -255,6 +263,10 @@ export default {
           }
         }
       )
+    },
+    showDetails(item) {
+      this.currentItem = item
+      this.dialog = true
     },
   },
 }

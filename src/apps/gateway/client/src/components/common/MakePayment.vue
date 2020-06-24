@@ -117,10 +117,10 @@ export default {
       this.paying = true
       this.makePayment({
         pay_id: this.payId,
-        amt: String(this.amount) ,
+        amt: String(this.amount),
         type: this.type,
-        post_id: this.postId ? this.postId : "direct",
-        post_type: this.postType ? this.postType : "direct",
+        post_id: this.postId ? this.postId : 'direct',
+        post_type: this.postType ? this.postType : 'direct',
       }).then(({ error }) => {
         this.content = false
         this.paying = false

@@ -35,23 +35,7 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="dialog">
-      <v-card>
-        <v-card-title>
-          Post Details
-        </v-card-title>
-        <v-divider class="mb-2" />
-        <v-card-text>
-          <PostDetails :posting="currentItem" />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" text @click="closeDetails">
-            Close
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <PostDetails v-model="dialog" :posting="currentItem" />
   </AppLayoutPanel>
 </template>
 
@@ -172,10 +156,6 @@ export default {
     showDetails(item) {
       this.currentItem = item
       this.dialog = true
-    },
-    closeDetails() {
-      this.currentItem = {}
-      this.dialog = false
     },
   },
 }

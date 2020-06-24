@@ -23,6 +23,7 @@
               :onSave="saveRevueSplit"
               :isSaving="savingRevueSplit"
               label="Revue Split"
+              prefix="%"
             />
             <v-img
               v-if="app.image"
