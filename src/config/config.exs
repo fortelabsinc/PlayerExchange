@@ -54,9 +54,10 @@ config :blockchain,
 
 config :storage,
   ecto_repos: [Storage.Repo],
+  ecto_db: System.get_env("PLYXCHG_DB", "storage_repo"),
   ecto_host: System.get_env("PLYXCHG_DB_HOST", defaultHost),
   ecto_user: System.get_env("PLYXCH_DB_USER", "root"),
-  ecto_pass: System.get_env("PLYXCH_DB_PASS", "pass"),
+  ecto_pass: System.get_env("PLYXCH_DB_PASS", "dbpassword"),
   ecto_port: System.get_env("PLYXCH_DB_PORT", "26257")
 
 config :access_pass, AccessPass.Mailer,
