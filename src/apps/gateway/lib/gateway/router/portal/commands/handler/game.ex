@@ -78,6 +78,18 @@ defmodule Gateway.Router.Portal.Commands.Handler.Game do
   def all(), do: Game.all()
 
   @doc """
+  Read all names for a list of game IDs
+  """
+  @spec names([String.t()]) :: {:ok, %{String.t() => String.t()}}
+  def names(ids), do: Game.names(ids)
+
+  @doc """
+  Read all names for a list of game IDs
+  """
+  @spec names() :: {:ok, %{String.t() => String.t()}}
+  def names(), do: Game.names()
+
+  @doc """
   """
   @spec updateName(String.t(), String.t(), String.t()) ::
           {:ok, Storage.gameT()} | {:error, :update_failed}

@@ -61,6 +61,18 @@ defmodule Gateway.Router.Portal.Commands.Handler.Guild do
   def info(gameId), do: Guild.info(gameId)
 
   @doc """
+  Read all names for a list of guild IDs
+  """
+  @spec names() :: {:ok, %{String.t() => String.t()}}
+  def names(), do: Guild.names()
+
+  @doc """
+  Read all names for a list of guild IDs
+  """
+  @spec names([String.t()]) :: {:ok, %{String.t() => String.t()}}
+  def names(ids), do: Guild.names(ids)
+
+  @doc """
   Delete the game from the system
   """
   @spec delete(String.t(), String.t()) :: :ok | {:error, atom}

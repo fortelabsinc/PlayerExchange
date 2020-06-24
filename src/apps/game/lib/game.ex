@@ -82,6 +82,20 @@ defmodule Game do
   end
 
   @doc """
+  Look up a bunch of games names based on the passed in IDs
+  """
+  @spec names([String.t()]) ::
+          {:ok, %{String.t() => String.t()}} | {:error, :not_found}
+  def names(ids), do: Storage.gameNames(ids)
+
+  @doc """
+  Look up all the games name and ids
+  """
+  @spec names() ::
+          {:ok, %{String.t() => String.t()}} | {:error, :not_found}
+  def names(), do: Storage.gameNames()
+
+  @doc """
   Update the name field for the game
 
   NOTE:  This will only succeed if the owner field matchs the userId

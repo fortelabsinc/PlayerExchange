@@ -253,6 +253,55 @@ defmodule Storage.Guild do
   end
 
   @doc """
+  Get all the guild names
+  """
+  @spec queryNames([String.t()]) :: {:ok, map} | {:error, any}
+  def queryNames(guildIds) do
+    query =
+      from(g in "guilds",
+        where: g.guild_id in ^guildIds,
+        select: {g.guild_id, g.name}
+      )
+
+    case Storage.Repo.all(query) do
+      nil ->
+        {:ok, %{}}
+
+      data ->
+        rez =
+          Enum.reduce(data, %{}, fn {id, name}, acc ->
+            Map.put(acc, id, name)
+          end)
+
+        {:ok, rez}
+    end
+  end
+
+  @doc """
+  Get all the guild names
+  """
+  @spec queryNames() :: {:ok, map} | {:error, any}
+  def queryNames() do
+    query =
+      from(g in "guilds",
+        select: {g.guild_id, g.name}
+      )
+
+    case Storage.Repo.all(query) do
+      nil ->
+        {:ok, %{}}
+
+      data ->
+        rez =
+          Enum.reduce(data, %{}, fn {id, name}, acc ->
+            Map.put(acc, id, name)
+          end)
+
+        {:ok, rez}
+    end
+  end
+
+  @doc """
   Reads out a page from the system.
   """
   @spec queryPage(non_neg_integer, non_neg_integer) ::

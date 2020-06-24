@@ -96,6 +96,35 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Guild do
     end
   end
 
+  get "/names" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, _data} ->
+            case Gateway.Router.Portal.Commands.Handler.Guild.names() do
+              {:ok, nameMap} ->
+                jsonRsp(conn, 200, %{ok: nameMap})
+
+              {:error, errorMessage} ->
+                Logger.error(
+                  "[Gateway.Router.Service.V1.Receiver] Error update app email #{
+                    inspect(errorMessage)
+                  }"
+                )
+
+                jsonRsp(conn, 500, %{error: errorMessage})
+            end
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
   get "/:guildId" do
     case getHeaderValue(conn, "access-token") do
       nil ->
@@ -197,6 +226,43 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Guild do
                   {:error, errorMessage} ->
                     Logger.error(
                       "[Gateway.Router.Service.V1.Receiver] Error Create Game #{
+                        inspect(errorMessage)
+                      }"
+                    )
+
+                    jsonRsp(conn, 500, %{error: errorMessage})
+                end
+
+              {:error, errorMessage} ->
+                Logger.error("Error Checking Token #{inspect(errorMessage)}")
+                jsonRsp(conn, 401, %{error: "unauthorized"})
+            end
+        end
+    end
+  end
+
+  post "/names" do
+    case conn.body_params do
+      nil ->
+        send_resp(conn, 422, "Missing boday parameters")
+
+      params ->
+        case getHeaderValue(conn, "access-token") do
+          nil ->
+            send_resp(conn, 422, "Missing request parameters: access-token")
+
+          token ->
+            case Auth.check(token) do
+              {:ok, _data} ->
+                ids = Map.get(params, "ids")
+
+                case Gateway.Router.Portal.Commands.Handler.Guild.names(ids) do
+                  {:ok, nameMap} ->
+                    jsonRsp(conn, 200, %{ok: nameMap})
+
+                  {:error, errorMessage} ->
+                    Logger.error(
+                      "[Gateway.Router.Service.V1.Receiver] Error update app email #{
                         inspect(errorMessage)
                       }"
                     )

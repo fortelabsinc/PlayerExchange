@@ -98,7 +98,6 @@ export default {
       return [
         {
           text: 'Image',
-          align: 'start',
           value: 'image',
           sortable: false,
         },

@@ -8,6 +8,7 @@ import {
   APPS_LIST_REMOVE,
   APPS_LIST_SET_ITEMS_PAGE,
   APPS_LIST_PAY,
+  APPS_NAME_SET,
 } from './mutations'
 
 export const ApiActionFetchAllApps = ({ commit }) =>
@@ -16,6 +17,17 @@ export const ApiActionFetchAllApps = ({ commit }) =>
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         commit(APPS_LIST_SET, payload)
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)
+
+export const ApiActionFetchAllAppNames = ({ commit }) =>
+  apiAxios
+    .get('/game/names')
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(APPS_NAME_SET, payload)
         return { payload }
       })
     )

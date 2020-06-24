@@ -96,4 +96,10 @@ defmodule Gateway.Router.Portal.Commands.Handler.Auth do
   """
   @spec forgotUsername(any) :: {:error, <<_::152>>} | {:ok, <<_::256>>}
   def forgotUsername(email), do: Auth.forgotUsername(email)
+
+  @doc """
+  Read all names for a list of guild IDs
+  """
+  @spec names([String.t()]) :: {:ok, %{String.t() => String.t()}}
+  def names(ids), do: Auth.names(ids)
 end
