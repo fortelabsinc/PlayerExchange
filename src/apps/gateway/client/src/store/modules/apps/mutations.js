@@ -7,6 +7,7 @@ export const APPS_LIST_REMOVE = 'APPS_LIST_REMOVE'
 export const APPS_LIST_SET_ITEMS_PAGE = 'APPS_LIST_SET_ITEMS_PAGE'
 export const APPS_LIST_BALANCE = 'APPS_LIST_BALANCE'
 export const APPS_LIST_PAY = 'APPS_LIST_PAY'
+export const APPS_NAME_SET = 'APPS_NAME_SET'
 
 export default {
   [APPS_LIST_SET](state, payload) {
@@ -37,6 +38,10 @@ export default {
   },
   [APPS_LIST_SET_ITEMS_PAGE](state, payload) {
     state.itemsPerPage = payload
+  },
+
+  [APPS_NAME_SET](state, payload) {
+    state.appNames = payload
   },
 
   [APPS_LIST_PAY](state, payload) {

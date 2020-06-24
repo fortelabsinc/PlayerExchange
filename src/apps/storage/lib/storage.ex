@@ -155,6 +155,12 @@ defmodule Storage do
   def gameNames(ids), do: Storage.Game.queryNames(ids)
 
   @doc """
+  Get all names
+  """
+  @spec gameNames() :: {:ok, %{String.t() => String.t()}} | {:error, any}
+  def gameNames(), do: Storage.Game.queryNames()
+
+  @doc """
   Hard set the name of the game
   """
   @spec gameSetName(String.t(), String.t()) :: {:ok, gameT()} | {:error, any}
@@ -298,6 +304,12 @@ defmodule Storage do
   """
   @spec guildNames([String.t()]) :: {:ok, [String.t()]} | {:error, any}
   def guildNames(ids), do: Storage.Guild.queryNames(ids)
+
+  @doc """
+  Get all names for the guilds with their IDs
+  """
+  @spec guildNames() :: {:ok, [String.t()]} | {:error, any}
+  def guildNames(), do: Storage.Guild.queryNames()
 
   @doc """
   read out a guild page in the standard pagenated format

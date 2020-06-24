@@ -80,9 +80,16 @@ defmodule Guild do
   @doc """
   Look up a bunch of guild names based on the passed in IDs
   """
+  @spec names() ::
+          {:ok, %{String.t() => String.t()}} | {:error, :not_found}
+  def names(), do: Storage.guildNames()
+
+  @doc """
+  Look up a bunch of guild names based on the passed in IDs
+  """
   @spec names([String.t()]) ::
           {:ok, %{String.t() => String.t()}} | {:error, :not_found}
-  def names(ids), do: Storage.gameNames(ids)
+  def names(ids), do: Storage.guildNames(ids)
 
   @doc """
   Update the name field for the game

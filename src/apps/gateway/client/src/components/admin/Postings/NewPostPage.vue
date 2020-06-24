@@ -5,9 +5,10 @@
         <v-col>
           <v-select
             v-model="game"
-            name="game"
+            label="Game"
             :items="games"
-            label="Game Name"
+            item-text="name"
+            item-value="game_id"
             required
           />
         </v-col>
@@ -144,6 +145,7 @@ export default {
   },
   data() {
     return {
+      games: [],
       game: '',
       player_count: '',
       type: '',
@@ -164,15 +166,30 @@ export default {
   },
   computed: {
     ...mapGetters({
-      games: 'options/getGames',
       currencies: 'options/getCurrencies',
       types: 'options/getTypes',
     }),
   },
+  mounted() {
+    this.fetchAppNames()
+  },
   methods: {
     ...mapActions({
       apiCreatePost: 'work/ApiActionCreatePosting',
+      getAllAppNames: 'apps/ApiActionFetchAllAppNames',
     }),
+    fetchAppNames() {
+      this.getAllAppNames().then(
+        ({ payload }) => {
+          if (payload) {
+            var result = Object.keys(payload).map(function(key) {
+              return {game_id: key, name: payload[key]};
+            });
+            this.games = result
+          }
+        }
+      )
+    },
     cancelNewPost() {
       this.$router.push({ name: 'My Postings' })
     },
