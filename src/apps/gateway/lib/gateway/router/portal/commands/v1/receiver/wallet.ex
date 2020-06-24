@@ -107,7 +107,9 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Wallet do
                     params["amt"],
                     params["type"],
                     info.username,
-                    params["pay_id"]
+                    params["pay_id"],
+                    Map.get(params, "post_id", "direct"),
+                    Map.get(params, "post_type", "direct")
                   )
 
                 jsonRsp(conn, 200, %{ok: "ok"})

@@ -21,8 +21,7 @@
           spec:
             containers:
               - name: plyxchg
-                image: "gcr.io/forte-player-exchange/plyxchg-{{stage}}:{{build_ver}}"
-                imagePullPolicy: Always
+                image: "gcr.io/forte-player-exchange/plyxchg-{{stage}}:latest"
                 resources:
                   limits:
                     memory: "2Gi"
