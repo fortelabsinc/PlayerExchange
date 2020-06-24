@@ -179,16 +179,14 @@ export default {
       getAllAppNames: 'apps/ApiActionFetchAllAppNames',
     }),
     fetchAppNames() {
-      this.getAllAppNames().then(
-        ({ payload }) => {
-          if (payload) {
-            var result = Object.keys(payload).map(function(key) {
-              return {game_id: key, name: payload[key]};
-            });
-            this.games = result
-          }
+      this.getAllAppNames().then(({ payload }) => {
+        if (payload) {
+          var result = Object.keys(payload).map(function(key) {
+            return { game_id: key, name: payload[key] }
+          })
+          this.games = result
         }
-      )
+      })
     },
     cancelNewPost() {
       this.$router.push({ name: 'My Postings' })
