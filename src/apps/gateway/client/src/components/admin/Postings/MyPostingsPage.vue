@@ -3,9 +3,6 @@
     <v-toolbar flat color="white">
       <v-toolbar-title>My Postings</v-toolbar-title>
       <v-spacer />
-      <v-btn color="success" class="mb-2 mr-2" @click="newPayment">
-        Make a Payment
-      </v-btn>
       <v-btn color="primary" class="mb-2" @click="newItem()">New Post</v-btn>
     </v-toolbar>
 
@@ -18,10 +15,20 @@
       :options.sync="options"
       :server-items-length="totalItems"
     >
-      <template v-slot:item.order_id="{ item }">
-        <router-link :to="`/postings/id/${item.posting_id}`">
-          {{ item.posting_id }}
-        </router-link>
+      <template v-slot:item.game_id="{ item }">
+        {{ games[item.game_id] }}
+      </template>
+
+      <template v-slot:item.confirm_pay_amt="{ item }">
+        {{ `${item.confirm_pay_amt} ${item.confirm_pay_type}` }}
+      </template>
+
+      <template v-slot:item.complete_pay_amt="{ item }">
+        {{ `${item.complete_pay_amt} ${item.complete_pay_type}` }}
+      </template>
+
+      <template v-slot:item.bonus_pay_amt="{ item }">
+        {{ `${item.bonus_pay_amt} ${item.bonus_pay_type}` }}
       </template>
 
       <template v-slot:item.actions="{ item }">
@@ -95,7 +102,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
-import MakePayment from './MakePayment.vue'
+import MakePayment from '@/components/common/MakePayment.vue'
 
 export default {
   name: 'MyPostingsPage',
@@ -124,6 +131,7 @@ export default {
       options: {},
       payOptions: ['Confirm', 'Complete', 'Bonus'],
       paymentData: null,
+      games: {},
     }
   },
   computed: {
@@ -149,13 +157,7 @@ export default {
         {
           text: 'Confirm Amt',
           align: 'start',
-          value: 'complete_pay_amt',
-          sortable: false,
-        },
-        {
-          text: 'Confirm Currency',
-          align: 'start',
-          value: 'complete_pay_type',
+          value: 'confirm_pay_amt',
           sortable: false,
         },
         {
@@ -165,21 +167,9 @@ export default {
           sortable: false,
         },
         {
-          text: 'Complete Currency',
-          align: 'start',
-          value: 'complete_pay_type',
-          sortable: false,
-        },
-        {
           text: 'Bonus Amt',
           align: 'start',
           value: 'bonus_pay_amt',
-          sortable: false,
-        },
-        {
-          text: 'Bonus Currency',
-          align: 'start',
-          value: 'bonus_pay_type',
           sortable: false,
         },
         { text: '', align: 'end', value: 'actions', sortable: false },
@@ -203,10 +193,18 @@ export default {
       getPostingsPage: 'work/ApiActionGetUserPostingsPage',
       appNames: 'app/ApiActionFetchAllAppNames',
       deletePosting: 'work/ApiActionDeletePosting',
+      getAllAppNames: 'apps/ApiActionFetchAllAppNames',
     }),
     fetchTableData() {
       const { page, itemsPerPage } = this.options
       this.loading = true
+
+      this.getAllAppNames().then(({ payload }) => {
+        if (payload) {
+          this.games = payload
+        }
+      })
+
       this.getPostingsPage({
         user_id: this.userId,
         page: page - 1,
@@ -217,10 +215,6 @@ export default {
         }
         this.loading = false
       })
-    },
-    newPayment() {
-      this.paymentData = null
-      this.dialogPayment = true
     },
     newItem() {
       this.$router.push('/postings/new')

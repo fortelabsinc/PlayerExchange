@@ -3,96 +3,103 @@
     <AppLayoutPanel v-if="loading || !app">
       <v-progress-linear :active="true" :indeterminate="true" color="primary" />
     </AppLayoutPanel>
-    <v-row v-else>
-      <v-col>
-        <AppLayoutPanel>
-          <EditField :value="app.game_id" disabled label="App ID" />
-          <EditField
-            :value="app.name"
-            :onSave="saveName"
-            :isSaving="savingName"
-            label="Name"
-          />
-          <EditField
-            :value="app.fee"
-            :onSave="saveRevueSplit"
-            :isSaving="savingRevueSplit"
-            label="Revue Split"
-          />
-          <v-img
-            v-if="app.image"
-            :src="app.image"
-            aspect-ratio="1"
-            height="200"
-            width="200"
-          />
-          <EditField
-            :value="app.image"
-            :onSave="saveImageUrl"
-            :isSaving="savingImageUrl"
-            label="Image URL"
-          />
-          <!-- <EditField
+    <template v-else>
+      <v-tabs v-model="tab" background-color="normal">
+        <v-tab>Game Details</v-tab>
+        <v-tab>Game Currencies</v-tab>
+      </v-tabs>
+      <v-tabs-items v-model="tab">
+        <v-tab-item key="0">
+          <AppLayoutPanel>
+            <EditField :value="app.game_id" disabled label="App ID" />
+            <EditField
+              :value="app.name"
+              :onSave="saveName"
+              :isSaving="savingName"
+              label="Name"
+            />
+            <EditField
+              :value="app.fee"
+              :onSave="saveRevueSplit"
+              :isSaving="savingRevueSplit"
+              label="Revue Split"
+            />
+            <v-img
+              v-if="app.image"
+              :src="app.image"
+              aspect-ratio="1"
+              height="200"
+              width="200"
+            />
+            <EditField
+              :value="app.image"
+              :onSave="saveImageUrl"
+              :isSaving="savingImageUrl"
+              label="Image URL"
+            />
+            <!-- <EditField
             :value="app.description"
             :onSave="saveDescription"
             :isSaving="savingDescription"
             label="description"
             isTextarea
           /> -->
-          <v-textarea
-            v-model="app.description"
-            type="text"
-            name="description"
-            label="Description"
-            readonly
-            auto-grow
-          />
+            <v-textarea
+              v-model="app.description"
+              type="text"
+              name="description"
+              label="Description"
+              readonly
+              auto-grow
+            />
 
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="error" depressed small @click="dialog = true">
-              Delete App
-            </v-btn>
-          </v-card-actions>
+            <v-card-actions>
+              <v-spacer />
+              <v-btn color="error" depressed small @click="dialog = true">
+                Delete App
+              </v-btn>
+            </v-card-actions>
 
-          <v-dialog v-model="dialog" :persistent="deleting" max-width="600px">
-            <v-card>
-              <v-card-title>
-                Are you sure you want to delete this app?
-              </v-card-title>
-              <v-divider class="mb-2" />
-              <v-card-text>
-                <p>App ID: {{ app.game_id }}</p>
-                <p>Name: {{ app.name }}</p>
-              </v-card-text>
-              <v-card-actions>
-                <v-progress-linear
-                  v-if="deleting"
-                  height="25"
-                  :active="true"
-                  :indeterminate="true"
-                  color="primary"
-                >
-                  <strong class="white--text">Deleting</strong>
-                </v-progress-linear>
-                <template v-else>
-                  <v-spacer />
-                  <v-btn text @click="dialog = false">
-                    Cancel
-                  </v-btn>
-                  <v-btn color="primary" text @click="confirmDelete">
-                    Confirm
-                  </v-btn>
-                </template>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </AppLayoutPanel>
-      </v-col>
-      <v-col>
-        <CurrenciesPanel :gameId="app.game_id" />
-      </v-col>
-    </v-row>
+            <v-dialog v-model="dialog" :persistent="deleting" max-width="600px">
+              <v-card>
+                <v-card-title>
+                  Are you sure you want to delete this app?
+                </v-card-title>
+                <v-divider class="mb-2" />
+                <v-card-text>
+                  <p>App ID: {{ app.game_id }}</p>
+                  <p>Name: {{ app.name }}</p>
+                </v-card-text>
+                <v-card-actions>
+                  <v-progress-linear
+                    v-if="deleting"
+                    height="25"
+                    :active="true"
+                    :indeterminate="true"
+                    color="primary"
+                  >
+                    <strong class="white--text">Deleting</strong>
+                  </v-progress-linear>
+                  <template v-else>
+                    <v-spacer />
+                    <v-btn text @click="dialog = false">
+                      Cancel
+                    </v-btn>
+                    <v-btn color="primary" text @click="confirmDelete">
+                      Confirm
+                    </v-btn>
+                  </template>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </AppLayoutPanel>
+        </v-tab-item>
+
+        <v-tab-item key="1">
+          <CurrenciesPanel :gameId="app.game_id" />
+        </v-tab-item>
+      </v-tabs-items>
+    </template>
   </div>
 </template>
 
@@ -111,6 +118,7 @@ export default {
   },
   data() {
     return {
+      tab: null,
       dialog: false,
       loading: true,
       app: null,

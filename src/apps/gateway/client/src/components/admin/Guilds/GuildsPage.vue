@@ -20,14 +20,15 @@
           v-if="item.image"
           :src="item.image"
           aspect-ratio="1"
-          height="44"
-          width="44"
+          height="100"
+          width="100"
+          class="my-1"
         />
       </template>
 
-      <template v-slot:item.guild_id="{ item }">
+      <template v-slot:item.name="{ item }">
         <router-link :to="`/guilds/id/${item.guild_id}`">
-          {{ item.guild_id }}
+          {{ item.name }}
         </router-link>
       </template>
 
@@ -109,15 +110,15 @@ export default {
           sortable: false,
         },
         {
-          text: 'ID',
-          align: 'start',
-          value: 'guild_id',
-          sortable: false,
-        },
-        {
           text: 'Name',
           align: 'start',
           value: 'name',
+          sortable: false,
+        },
+        {
+          text: 'ID',
+          align: 'start',
+          value: 'guild_id',
           sortable: false,
         },
         { text: '', align: 'end', value: 'actions', sortable: false },
