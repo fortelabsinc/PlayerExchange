@@ -54,6 +54,35 @@ defmodule Gateway.Router.Portal.Commands.Handler.Work do
   end
 
   @doc """
+  """
+  @spec postingsPage(integer, integer) :: {:ok, Storage.pageT()} | {:error, :not_found}
+  def postingsPage(page, count) do
+    {:ok, info} = Storage.Work.Posting.queryPage(page, count)
+
+    postings =
+      Enum.map(info.list, fn post ->
+        Map.drop(post, [:__meta__, :__struct__])
+      end)
+
+    {:ok, Map.put(info, :list, postings)}
+  end
+
+  @doc """
+  """
+  @spec userPostingsPage(String.t(), integer, integer) ::
+          {:ok, Storage.pageT()} | {:error, :not_found}
+  def userPostingsPage(userId, page, count) do
+    {:ok, info} = Storage.Work.Posting.queryUserPage(userId, page, count)
+
+    postings =
+      Enum.map(info.list, fn post ->
+        Map.drop(post, [:__meta__, :__struct__])
+      end)
+
+    {:ok, Map.put(info, :list, postings)}
+  end
+
+  @doc """
   Get all the postings in a Map format for transmission
   """
   @spec posting(String.t()) :: {:ok, any} | {:error, String.t()}

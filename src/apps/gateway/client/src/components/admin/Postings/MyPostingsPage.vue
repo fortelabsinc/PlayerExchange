@@ -128,45 +128,58 @@ export default {
   },
   computed: {
     ...mapGetters({
+      userId: 'auth/getUserId',
       postingsList: 'work/getAllPostings',
       postingsItemsPerPage: 'work/getPostingsItemsPerPage',
     }),
     headers() {
       return [
         {
-          text: 'game_id',
+          text: 'Game',
           align: 'start',
           value: 'game_id',
           sortable: false,
         },
         {
-          text: 'type_req',
+          text: 'Type',
           align: 'start',
           value: 'type_req',
           sortable: false,
         },
         {
-          text: 'user_id',
-          align: 'start',
-          value: 'user_id',
-          sortable: false,
-        },
-        {
-          text: 'details',
-          align: 'start',
-          value: 'details',
-          sortable: false,
-        },
-        {
-          text: 'complete_pay_amt',
+          text: 'Confirm Amt',
           align: 'start',
           value: 'complete_pay_amt',
           sortable: false,
         },
         {
-          text: 'complete_pay_type',
+          text: 'Confirm Currency',
           align: 'start',
           value: 'complete_pay_type',
+          sortable: false,
+        },
+        {
+          text: 'Complete Amt',
+          align: 'start',
+          value: 'complete_pay_amt',
+          sortable: false,
+        },
+        {
+          text: 'Complete Currency',
+          align: 'start',
+          value: 'complete_pay_type',
+          sortable: false,
+        },
+        {
+          text: 'Bonus Amt',
+          align: 'start',
+          value: 'bonus_pay_amt',
+          sortable: false,
+        },
+        {
+          text: 'Bonus Currency',
+          align: 'start',
+          value: 'bonus_pay_type',
           sortable: false,
         },
         { text: '', align: 'end', value: 'actions', sortable: false },
@@ -187,16 +200,17 @@ export default {
   },
   methods: {
     ...mapActions({
-      getPostingsPage: 'work/ApiActionFetchAllPostings',
+      getPostingsPage: 'work/ApiActionGetUserPostingsPage',
+      appNames: 'app/ApiActionFetchAllAppNames',
       deletePosting: 'work/ApiActionDeletePosting',
     }),
     fetchTableData() {
       const { page, itemsPerPage } = this.options
       this.loading = true
-      this.getPostingsPage({ page: page - 1, count: itemsPerPage }).then(
+      this.getPostingsPage({ user_id: this.userId, page: page - 1, count: itemsPerPage }).then(
         ({ payload }) => {
           if (payload) {
-            // this.totalItems = payload.count
+            this.totalItems = payload.count
           }
           this.loading = false
         }

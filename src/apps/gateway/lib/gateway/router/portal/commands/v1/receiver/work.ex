@@ -81,6 +81,51 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
     end
   end
 
+  # Pull the games based on a page set of info
+  get "/posting/page/:page/:count" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, _data} ->
+            page = String.to_integer(page)
+            count = String.to_integer(count)
+            {:ok, data} = Gateway.Router.Portal.Commands.Handler.Work.postingsPage(page, count)
+            jsonRsp(conn, 200, %{ok: data})
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
+  # Pull the games based on a page set of info
+  get "/posting/:user_id/:page/:count" do
+    case getHeaderValue(conn, "access-token") do
+      nil ->
+        send_resp(conn, 422, "Missing request parameters: access-token")
+
+      token ->
+        case Auth.check(token) do
+          {:ok, _data} ->
+            page = String.to_integer(page)
+            count = String.to_integer(count)
+
+            {:ok, data} =
+              Gateway.Router.Portal.Commands.Handler.Work.userPostingsPage(user_id, page, count)
+
+            jsonRsp(conn, 200, %{ok: data})
+
+          {:error, errorMessage} ->
+            Logger.error("Error Checking Token #{inspect(errorMessage)}")
+            jsonRsp(conn, 401, %{error: "unauthorized"})
+        end
+    end
+  end
+
   # ----------------------------------------------------------------------------
   # Get all the postings for a specific user
   get "/posting/:user_id" do
@@ -160,7 +205,7 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Work do
             case Auth.check(token) do
               {:ok, info} ->
                 {:ok, _} =
-                  Gateway.Router.Portal.Commands.Handler.Work.addPosting(info.username, params)
+                  Gateway.Router.Portal.Commands.Handler.Work.addPosting(info.user_id, params)
 
                 jsonRsp(conn, 200, %{ok: "ok"})
 

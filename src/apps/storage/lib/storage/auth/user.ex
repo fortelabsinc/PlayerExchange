@@ -226,10 +226,13 @@ defmodule Storage.Auth.User do
   def login(username, password) do
     case AccessPass.login(username, password) do
       {:ok, map} ->
-        # TODO:
-        # Lets pull out the meta data.  This should really
-        # be returned as part of the login.
-        {:ok, Map.put(map, "meta", Storage.Auth.User.queryMetaByName(username))}
+        info = Storage.Repo.get_by(Storage.Auth.User, username: username)
+
+        map =
+          Map.put(map, "user_id", info.user_id)
+          |> Map.put("meta", info.meta)
+
+        {:ok, map}
 
       e ->
         e

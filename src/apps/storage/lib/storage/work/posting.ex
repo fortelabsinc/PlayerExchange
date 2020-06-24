@@ -375,6 +375,31 @@ defmodule Storage.Work.Posting do
     {:ok, rez}
   end
 
+  @doc """
+  """
+  @spec queryUserPage(String.t(), non_neg_integer, non_neg_integer) ::
+          {:ok,
+           %{
+             count: any,
+             first_idx: number,
+             last_idx: any,
+             last_page: number,
+             list: [Storage.Work.Posting.t()],
+             next: boolean,
+             next_page: number,
+             page: number,
+             prev: boolean
+           }}
+  def queryUserPage(user_id, page, count) do
+    rez =
+      from(p in Storage.Work.Posting, where: p.user_id == ^user_id)
+      |> order_by(desc: :id)
+      |> Storage.Repo.page(page, count)
+      |> parsePage()
+
+    {:ok, rez}
+  end
+
   # ----------------------------------------------------------------------------
   # Private API
   # ----------------------------------------------------------------------------

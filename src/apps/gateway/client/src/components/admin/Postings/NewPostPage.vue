@@ -198,7 +198,8 @@ export default {
       this.showModal = true
 
       this.creating = true
-      this.apiCreatePost({
+
+      let args = {
         meta: {},
         game_id: this.game,
         user_count: Number(this.player_count),
@@ -211,7 +212,9 @@ export default {
         bonus_amt: String(this.bonus_amt),
         bonus_type: this.bonus_type,
         bonus_req: this.bonus_req,
-      }).then(({ error }) => {
+      }
+
+      this.apiCreatePost(args).then(({ error }) => {
         this.creating = false
         if (!error) {
           this.$router.push({ name: 'My Postings' })

@@ -29,12 +29,34 @@ export const ApiActionFetchUserPostings = ({ commit }, { username }) =>
     )
     .catch(apiErrorHandler)
 
+export const ApiActionGetPostingsPage = ({ commit }, { page, count }) =>
+  apiAxios
+    .get(`/work/postings/page/${page}/${count}`)
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(POSTINGS_LIST_SET, payload.list)
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)
+
+export const ApiActionGetUserPostingsPage = ({ commit }, { user_id, page, count }) =>
+  apiAxios
+    .get(`/work/posting/${user_id}/${page}/${count}`)
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(POSTINGS_LIST_SET, payload.list)
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)
+
 export const ApiActionFetchMyUserPostings = (context, payload) => {
   const username = get(context.rootState, 'auth.user.name')
   return ApiActionFetchUserPostings(context, { ...payload, username })
 }
 
-export const ApiActionCreatePosting = ({ commit }, { posting }) =>
+export const ApiActionCreatePosting = ({ commit }, posting) =>
   apiAxios
     .post('/work/posting', posting)
     .then((response) =>
