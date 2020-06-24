@@ -33,9 +33,9 @@ export const ApiActionGetAppsPage = ({ commit }, { page, count }) =>
     )
     .catch(apiErrorHandler)
 
-export const ApiActionGetAppById = ({ commit }, { app_id }) =>
+export const ApiActionGetAppById = ({ commit }, { game_id }) =>
   apiAxios
-    .get(`/game/${app_id}`)
+    .get(`/game/${game_id}`)
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         commit(APPS_LIST_ADD, payload)
@@ -58,20 +58,20 @@ export const ApiActionCreateApp = (
     )
     .catch(apiErrorHandler)
 
-export const ApiActionDeleteApp = ({ commit }, { app_id }) =>
+export const ApiActionDeleteApp = ({ commit }, { game_id }) =>
   apiAxios
-    .delete(`/game/${app_id}`)
+    .delete(`/game/${game_id}`)
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
-        commit(APPS_LIST_REMOVE, app_id)
+        commit(APPS_LIST_REMOVE, game_id)
         return { payload }
       })
     )
     .catch(apiErrorHandler)
 
-export const ApiActionBalanceApp = ({ commit }, { app_id }) =>
+export const ApiActionBalanceApp = ({ commit }, { game_id }) =>
   apiAxios
-    .get(`/game/${app_id}/balance`)
+    .get(`/game/${game_id}/balance`)
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         commit(APPS_LIST_BALANCE, payload)
@@ -80,52 +80,52 @@ export const ApiActionBalanceApp = ({ commit }, { app_id }) =>
     )
     .catch(apiErrorHandler)
 
-export const ApiActionEditApp = ({ commit }, { app_id, path, prop, value }) =>
+export const ApiActionEditApp = ({ commit }, { game_id, path, prop, value }) =>
   apiAxios
-    .post(`/game/${app_id}/${path}`, { id: app_id, [prop]: value })
+    .post(`/game/${game_id}/${path}`, { id: game_id, [prop]: value })
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
-        commit(APPS_LIST_EDIT, { app_id, [prop]: value })
+        commit(APPS_LIST_EDIT, { game_id, [prop]: value })
         return { payload }
       })
     )
     .catch(apiErrorHandler)
 
-export const ApiActionEditAppName = (context, { app_id, name }) =>
+export const ApiActionEditAppName = (context, { game_id, name }) =>
   ApiActionEditApp(context, {
-    app_id,
+    game_id,
     path: 'name',
     prop: 'name',
     value: name,
   })
 
-export const ApiActionEditAppOwner = (context, { app_id, revueSplit }) =>
+export const ApiActionEditAppOwner = (context, { game_id, revueSplit }) =>
   ApiActionEditApp(context, {
-    app_id,
+    game_id,
     path: 'owner',
     prop: 'owner',
     value: revueSplit,
   })
 
-export const ApiActionEditAppImageUrl = (context, { app_id, imageUrl }) =>
+export const ApiActionEditAppImageUrl = (context, { game_id, imageUrl }) =>
   ApiActionEditApp(context, {
-    app_id,
+    game_id,
     path: 'image',
     prop: 'image',
     value: imageUrl,
   })
 
-export const ApiActionEditAppMeta = (context, { app_id, meta }) =>
+export const ApiActionEditAppMeta = (context, { game_id, meta }) =>
   ApiActionEditApp(context, {
-    app_id,
+    game_id,
     path: 'meta',
     prop: 'meta',
     value: meta,
   })
 
-export const ApiActionPayOutApp = ({ commit }, { app_id, type, amount }) =>
+export const ApiActionPayOutApp = ({ commit }, { game_id, type, amount }) =>
   apiAxios
-    .post(`/game/${app_id}/pay`, { type: type, amount: amount })
+    .post(`/game/${game_id}/pay`, { type: type, amount: amount })
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         commit(APPS_LIST_PAY, payload)

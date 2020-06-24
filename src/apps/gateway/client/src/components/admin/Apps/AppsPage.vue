@@ -94,7 +94,6 @@ export default {
       return [
         {
           text: 'Image',
-          align: 'start',
           value: 'image',
           sortable: false,
         },
@@ -145,7 +144,7 @@ export default {
       this.$router.push('/apps/new')
     },
     editItem(item) {
-      this.$router.push(`/apps/id/${item.app_id}`)
+      this.$router.push(`/apps/id/${item.game_id}`)
     },
     deleteItem(item) {
       this.currentItem = item

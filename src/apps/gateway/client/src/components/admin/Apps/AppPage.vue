@@ -7,9 +7,9 @@
       color="primary"
     />
     <template v-else>
-      <EditField :value="app.app_id" disabled label="App ID" />
+      <EditField :value="app.game_id" disabled label="App ID" />
       <EditField
-        :value="app.name"
+        :value="app.fee"
         :onSave="saveName"
         :isSaving="savingName"
         label="Name"
@@ -21,7 +21,7 @@
         label="Revue Split"
       />
       <EditField
-        :value="app.imageUrl"
+        :value="app.image"
         :onSave="saveImageUrl"
         :isSaving="savingImageUrl"
         label="Image URL"
@@ -41,7 +41,7 @@
           </v-card-title>
           <v-divider class="mb-2" />
           <v-card-text>
-            <p>App ID: {{ app.app_id }}</p>
+            <p>App ID: {{ app.game_id }}</p>
             <p>Name: {{ app.name }}</p>
           </v-card-text>
           <v-card-actions>
@@ -99,12 +99,12 @@ export default {
   },
   watch: {
     getApp() {
-      this.app = this.getApp(this.$route.params.id)
+      this.app = this.getApp(this.$route.params.game_id)
     },
   },
   mounted() {
     this.loading = true
-    this.apiGetAppById({ app_id: this.$route.params.id }).then(
+    this.apiGetAppById({ game_id: this.$route.params.id }).then(
       () => (this.loading = false)
     )
   },
@@ -118,7 +118,7 @@ export default {
     }),
     saveName(name) {
       this.savingName = true
-      this.apiEditAppName({ app_id: this.app.app_id, name }).then(
+      this.apiEditAppName({ game_id: this.app.game_id, name }).then(
         ({ error }) => {
           this.savingName = false
           if (!error) {
@@ -131,7 +131,7 @@ export default {
     },
     saveRevueSplit(revueSplit) {
       this.savingRevueSplit = true
-      this.apiEditAppRevueSplit({ app_id: this.app.app_id, revueSplit }).then(
+      this.apiEditAppRevueSplit({ game_id: this.app.game_id, revueSplit }).then(
         ({ error }) => {
           this.savingRevueSplit = false
           if (!error) {
@@ -144,7 +144,7 @@ export default {
     },
     saveImageUrl(imageUrl) {
       this.savingImageUrl = true
-      this.apiEditAppImageUrl({ app_id: this.app.app_id, imageUrl }).then(
+      this.apiEditAppImageUrl({ game_id: this.app.game_id, imageUrl }).then(
         ({ error }) => {
           this.savingImageUrl = false
           if (!error) {
@@ -157,7 +157,7 @@ export default {
     },
     confirmDelete() {
       this.deleting = true
-      this.deleteApp({ app_id: this.app.app_id }).then(({ error }) => {
+      this.deleteApp({ game_id: this.app.game_id }).then(({ error }) => {
         this.dialog = false
         this.deleting = false
         if (!error) {
