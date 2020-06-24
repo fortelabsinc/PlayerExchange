@@ -1,9 +1,8 @@
 <template>
   <v-dialog v-model="content" :persistent="paying" max-width="600px">
     <v-card>
-      <v-card-title>
-        Make a Payment
-      </v-card-title>
+      <v-card-title v-if="label === ''"> Make a Payment</v-card-title>
+      <v-card-title v-else> Make a Payment for: {{ label }} </v-card-title>
       <v-divider class="mb-2" />
       <v-card-text>
         <v-form ref="form" v-model="valid" lazy-validation>
@@ -22,6 +21,7 @@
                 name="amount"
                 label="Amount"
                 required
+                :readonly="editable"
               />
             </v-col>
             <v-col>
@@ -31,6 +31,7 @@
                 :items="currencies"
                 label="Currency"
                 required
+                :readonly="editable"
               />
             </v-col>
           </v-row>
@@ -74,6 +75,8 @@ export default {
       type: this.data ? this.data.type : '',
       paying: false,
       valid: true,
+      editable: false,
+      label: '',
     }
   },
   computed: {
@@ -89,6 +92,8 @@ export default {
       this.payId = val ? val.payId : ''
       this.amount = val ? val.amount : ''
       this.type = val ? val.type : ''
+      this.label = val ? val.typeLabel : ''
+      this.editable = !!val
     },
     content(val) {
       this.$emit('input', val)

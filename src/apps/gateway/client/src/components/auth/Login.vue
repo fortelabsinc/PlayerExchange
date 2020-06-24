@@ -48,9 +48,25 @@ export default {
       keepLoggedIn: true,
     }
   },
+  mounted() {
+    const self = this
+    this.checkAuth().then(({ payload }) => {
+      if (payload) {
+        if (self.$route.query && self.$route.query.redirect) {
+          self.$router.push({
+            name: self.$route.query.redirect,
+            params: self.$route.query.params,
+          })
+        } else {
+          self.$router.push({ name: 'Home' })
+        }
+      }
+    })
+  },
   methods: {
     ...mapActions({
       login: 'auth/ApiActionLogin',
+      checkAuth: 'auth/ApiActionCheckAuth',
     }),
     onSubmit() {
       if (!this.$refs.form.validate()) {

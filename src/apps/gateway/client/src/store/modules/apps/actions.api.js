@@ -64,7 +64,13 @@ export const ApiActionCreateApp = (
     .post('/game', { name, imageUrl, fee, description })
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
-        commit(APPS_LIST_ADD, { name, imageUrl, fee, description, app_id: payload })
+        commit(APPS_LIST_ADD, {
+          name,
+          imageUrl,
+          fee,
+          description,
+          game_id: payload,
+        })
         return { payload }
       })
     )
@@ -125,6 +131,17 @@ export const ApiActionEditAppImageUrl = (context, { game_id, imageUrl }) =>
     path: 'image',
     prop: 'image',
     value: imageUrl,
+  })
+
+export const ApiActionEditAppDescription = (
+  context,
+  { game_id, description }
+) =>
+  ApiActionEditApp(context, {
+    game_id,
+    path: 'description',
+    prop: 'description',
+    value: description,
   })
 
 export const ApiActionEditAppMeta = (context, { game_id, meta }) =>

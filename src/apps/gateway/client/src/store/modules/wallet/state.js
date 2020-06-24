@@ -1,8 +1,8 @@
 export default {
   list: [
-    { id: 'BTC', balance: 1 },
-    { id: 'ETH', balance: 12 },
-    { id: 'XRP', balance: 123 },
+    { id: 'BTC', balance: 0 },
+    { id: 'ETH', balance: 0 },
+    { id: 'XRP', balance: 0 },
   ],
   itemsPerPage: 10,
 }

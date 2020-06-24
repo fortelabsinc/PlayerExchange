@@ -79,7 +79,10 @@ export default {
       membersItemsPerPage: 'guilds/getMembersItemsPerPage',
     }),
     membersList() {
-      return this.guild_id ? this.membersListGet(this.guild_id) : this.value
+      const list = this.guild_id
+        ? this.membersListGet(this.guild_id)
+        : this.value
+      return list || []
     },
     headers() {
       return [

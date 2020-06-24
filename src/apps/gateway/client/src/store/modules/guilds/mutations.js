@@ -8,10 +8,15 @@ export const GUILDS_LIST_SET_ITEMS_PAGE = 'GUILDS_LIST_SET_ITEMS_PAGE'
 export const GUILD_MEMBERS_LIST_SET = 'GUILD_MEMBERS_LIST_SET'
 export const GUILD_MEMBERS_LIST_ADD = 'GUILD_MEMBERS_LIST_ADD'
 export const GUILD_MEMBERS_LIST_REMOVE = 'GUILD_MEMBERS_LIST_REMOVE'
+export const GUILD_LIST_BALANCE = 'GUILD_LIST_BALANCE'
+export const GUILD_LIST_PAY = 'GUILD_LIST_PAY'
 
 export default {
   [GUILDS_LIST_SET](state, payload) {
     state.list = payload
+  },
+  [GUILD_LIST_BALANCE](state, payload) {
+    state.balance = payload
   },
   [GUILDS_LIST_ADD](state, payload) {
     state.list = uniqBy([...state.list, ...castArray(payload)], 'guild_id')
@@ -72,5 +77,10 @@ export default {
         (member) => !includes(castArray(payload.user_id), member.user_id)
       )
     }
+  },
+
+  [GUILD_LIST_PAY](state, payload) {
+    console.log('State: ' + JSON.stringify(state))
+    console.log('Payload: ' + JSON.stringify(payload))
   },
 }

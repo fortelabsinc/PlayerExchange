@@ -15,6 +15,10 @@
       :options.sync="options"
       :server-items-length="totalItems"
     >
+      <template v-slot:item.image="{ item }">
+        <v-img :src="item.image" aspect-ratio="1" height="44" width="44" />
+      </template>
+
       <template v-slot:item.order_id="{ item }">
         <router-link :to="`/guilds/id/${item.guild_id}`">
           {{ item.guild_id }}
@@ -92,6 +96,12 @@ export default {
     }),
     headers() {
       return [
+        {
+          text: 'Image',
+          align: 'start',
+          value: 'image',
+          sortable: false,
+        },
         {
           text: 'ID',
           align: 'start',

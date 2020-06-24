@@ -10,10 +10,10 @@
       <v-spacer />
 
       <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
-      <v-btn icon>
         <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
+      <v-btn icon @click="clickLogout()">
+        <v-icon>mdi-logout-variant</v-icon>
       </v-btn>
     </v-app-bar>
 
@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import { findIndex } from 'lodash'
 import AppLayoutContent from '@/components/admin/AppLayoutContent.vue'
 
@@ -89,6 +90,15 @@ export default {
           ({ routeName }) => this.$route.name === routeName
         )
       },
+    },
+  },
+  methods: {
+    ...mapActions({
+      logout: 'auth/ActionLogout',
+    }),
+    clickLogout() {
+      this.logout()
+      this.$router.push({ name: 'Login' })
     },
   },
 }

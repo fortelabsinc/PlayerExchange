@@ -9,6 +9,7 @@ import {
   GUILD_MEMBERS_LIST_SET,
   GUILD_MEMBERS_LIST_ADD,
   GUILD_MEMBERS_LIST_REMOVE,
+  GUILD_LIST_BALANCE,
 } from './mutations'
 
 export const ApiActionFetchAllGuilds = ({ commit }) =>
@@ -87,6 +88,17 @@ export const ApiActionDeleteGuild = ({ commit }, { guild_id }) =>
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         commit(GUILDS_LIST_REMOVE, guild_id)
+        return { payload }
+      })
+    )
+    .catch(apiErrorHandler)
+
+export const ApiActionBalanceGuild = ({ commit }, { guild_id }) =>
+  apiAxios
+    .get(`/guild/${guild_id}/balance`)
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        commit(GUILD_LIST_BALANCE, payload)
         return { payload }
       })
     )

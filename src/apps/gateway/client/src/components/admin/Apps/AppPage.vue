@@ -1,84 +1,105 @@
 <template>
-  <AppLayoutPanel>
-    <v-progress-linear
-      v-if="loading || !app"
-      :active="true"
-      :indeterminate="true"
-      color="primary"
-    />
-    <template v-else>
-      <EditField :value="app.game_id" disabled label="App ID" />
-      <EditField
-        :value="app.fee"
-        :onSave="saveName"
-        :isSaving="savingName"
-        label="Name"
-      />
-      <EditField
-        :value="app.revueSplit"
-        :onSave="saveRevueSplit"
-        :isSaving="savingRevueSplit"
-        label="Revue Split"
-      />
-      <EditField
-        :value="app.image"
-        :onSave="saveImageUrl"
-        :isSaving="savingImageUrl"
-        label="Image URL"
-      />
+  <div>
+    <AppLayoutPanel v-if="loading || !app">
+      <v-progress-linear :active="true" :indeterminate="true" color="primary" />
+    </AppLayoutPanel>
+    <v-row v-else>
+      <v-col>
+        <AppLayoutPanel>
+          <EditField :value="app.game_id" disabled label="App ID" />
+          <EditField
+            :value="app.name"
+            :onSave="saveName"
+            :isSaving="savingName"
+            label="Name"
+          />
+          <EditField
+            :value="app.fee"
+            :onSave="saveRevueSplit"
+            :isSaving="savingRevueSplit"
+            label="Revue Split"
+          />
+          <EditField
+            :value="app.image"
+            :onSave="saveImageUrl"
+            :isSaving="savingImageUrl"
+            label="Image URL"
+          />
+          <!-- <EditField
+            :value="app.description"
+            :onSave="saveDescription"
+            :isSaving="savingDescription"
+            label="description"
+            isTextarea
+          /> -->
+          <v-textarea
+            v-model="app.description"
+            type="text"
+            name="description"
+            label="Description"
+            readonly
+            auto-grow
+          />
 
-      <v-card-actions>
-        <v-spacer />
-        <v-btn color="error" depressed small @click="dialog = true">
-          Delete App
-        </v-btn>
-      </v-card-actions>
-
-      <v-dialog v-model="dialog" :persistent="deleting" max-width="600px">
-        <v-card>
-          <v-card-title>
-            Are you sure you want to delete this app?
-          </v-card-title>
-          <v-divider class="mb-2" />
-          <v-card-text>
-            <p>App ID: {{ app.game_id }}</p>
-            <p>Name: {{ app.name }}</p>
-          </v-card-text>
           <v-card-actions>
-            <v-progress-linear
-              v-if="deleting"
-              height="25"
-              :active="true"
-              :indeterminate="true"
-              color="primary"
-            >
-              <strong class="white--text">Deleting</strong>
-            </v-progress-linear>
-            <template v-else>
-              <v-spacer />
-              <v-btn text @click="dialog = false">
-                Cancel
-              </v-btn>
-              <v-btn color="primary" text @click="confirmDelete">
-                Confirm
-              </v-btn>
-            </template>
+            <v-spacer />
+            <v-btn color="error" depressed small @click="dialog = true">
+              Delete App
+            </v-btn>
           </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </template>
-  </AppLayoutPanel>
+
+          <v-dialog v-model="dialog" :persistent="deleting" max-width="600px">
+            <v-card>
+              <v-card-title>
+                Are you sure you want to delete this app?
+              </v-card-title>
+              <v-divider class="mb-2" />
+              <v-card-text>
+                <p>App ID: {{ app.game_id }}</p>
+                <p>Name: {{ app.name }}</p>
+              </v-card-text>
+              <v-card-actions>
+                <v-progress-linear
+                  v-if="deleting"
+                  height="25"
+                  :active="true"
+                  :indeterminate="true"
+                  color="primary"
+                >
+                  <strong class="white--text">Deleting</strong>
+                </v-progress-linear>
+                <template v-else>
+                  <v-spacer />
+                  <v-btn text @click="dialog = false">
+                    Cancel
+                  </v-btn>
+                  <v-btn color="primary" text @click="confirmDelete">
+                    Confirm
+                  </v-btn>
+                </template>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </AppLayoutPanel>
+      </v-col>
+      <v-col>
+        <CurrenciesPanel :gameId="app.game_id" />
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
+import CurrenciesPanel from '@/components/common/GameCurrenciesPanel.vue'
 import EditField from '@/components/common/EditField.vue'
 
 export default {
   name: 'AppPage',
   components: {
     AppLayoutPanel,
+    CurrenciesPanel,
     EditField,
   },
   data() {
@@ -89,6 +110,7 @@ export default {
       savingName: false,
       savingRevueSplit: false,
       savingImageUrl: false,
+      savingDescription: false,
       deleting: false,
     }
   },
@@ -99,7 +121,7 @@ export default {
   },
   watch: {
     getApp() {
-      this.app = this.getApp(this.$route.params.game_id)
+      this.app = this.getApp(this.$route.params.id)
     },
   },
   mounted() {
@@ -114,6 +136,7 @@ export default {
       apiEditAppName: 'apps/ApiActionEditAppName',
       apiEditAppRevueSplit: 'apps/ApiActionEditAppRevueSplit',
       apiEditAppImageUrl: 'apps/ApiActionEditAppImageUrl',
+      apiEditAppDescription: 'apps/ApiActionEditAppDescription',
       deleteApp: 'apps/ApiActionDeleteApp',
     }),
     saveName(name) {
@@ -154,6 +177,20 @@ export default {
           }
         }
       )
+    },
+    saveDescription(description) {
+      this.savingDescription = true
+      this.apiEditAppDescription({
+        game_id: this.app.game_id,
+        description,
+      }).then(({ error }) => {
+        this.savingDescription = false
+        if (!error) {
+          this.$toast.success('Description saved successfully.')
+        } else {
+          this.$toast.error(`Error saving Description. ${error.message}`)
+        }
+      })
     },
     confirmDelete() {
       this.deleting = true
