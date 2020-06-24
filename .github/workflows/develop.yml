@@ -13,6 +13,7 @@ env:
   PLYXCHG_DB_HOST: ${{ secrets.PLYXCHG_DB_HOST_DEV }}
   PLYXCHG_NAMESPACE: ${{ secrets.PLYXCHG_NAMESPACE_DEV }}
   PLYXCHG_APP_KEYS: ${{ secrets.PLYXCHG_APP_KEYS }}
+  PLYXCHG_PAY_ID_DOMAIN: ${{ secrets.PLYXCHG_PAY_ID_DOMAIN_DEV }}
 
 jobs:
   build-application:
