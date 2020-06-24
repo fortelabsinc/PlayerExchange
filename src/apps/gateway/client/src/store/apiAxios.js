@@ -4,7 +4,7 @@ import axios from 'axios'
 const apiAxios = axios.create({
   baseURL: 'http://localhost:8181/portal/commands/v1',
   //baseURL: '/portal/commands/v1',
-  timeout: 3000,
+  timeout: 60000,
   headers: {
     'Content-Type': 'application/json',
   },

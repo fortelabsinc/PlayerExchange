@@ -53,40 +53,56 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
   @doc """
   Make a payment to a payID
   """
-  @spec payment(String.t(), String.t(), String.t()) ::
+  @spec payment(String.t(), String.t(), String.t(), String.t()) ::
           {:error, String.t()} | {:ok, String.t()}
-  def payment(amt, username, payId) do
+  def payment(amt, type, username, payId) do
     info =
       Blockchain.Ripple.PayID.format(username)
-      |> Blockchain.Ripple.PayID.lookup()
+      |> Blockchain.Ripple.PayID.lookupAddress(type)
 
     case info do
-      {:ok, rsp} ->
-        from =
-          Map.get(rsp, "addressDetails")
-          |> Map.get("address")
+      {:ok, from} ->
+        case type do
+          "XRP" ->
+            # Lookup the address info
+            case Storage.Wallet.XRP.query(from) do
+              nil ->
+                {:error, "wallet not found"}
 
-        # Lookup the address info
-        case Storage.Wallet.XRP.query(from) do
-          nil ->
-            {:error, "wallet not found"}
+              wallet ->
+                # Now Let's lookup the receiver wallet address
+                case Blockchain.Ripple.PayID.lookupAddress(payId, type) do
+                  {:ok, to} ->
+                    mnemonic = Storage.Wallet.XRP.mnemonic(wallet)
+                    # now let's pay this out
+                    amt = String.to_integer(amt) * 1_000_000
+                    Blockchain.Ripple.XRP.pay("#{amt}", mnemonic, to)
 
-          wallet ->
-            # Now Let's lookup the receiver wallet address
-            case Blockchain.Ripple.PayID.lookup(payId) do
-              {:ok, toRsp} ->
-                to =
-                  Map.get(toRsp, "addressDetails")
-                  |> Map.get("address")
-
-                mnemonic = Storage.Wallet.XRP.mnemonic(wallet)
-                # now let's pay this out
-                amt = String.to_integer(amt) * 1_000_000
-                Blockchain.Ripple.XRP.pay("#{amt}", mnemonic, to)
-
-              _ ->
-                {:error, "could not find PayID #{payId}"}
+                  _ ->
+                    {:error, "could not find PayID #{payId}"}
+                end
             end
+
+          "ETH" ->
+            case Storage.Wallet.Eth.query(from) do
+              nil ->
+                {:error, "wallet not found"}
+
+              wallet ->
+                # Now Let's lookup the receiver wallet address
+                case Blockchain.Ripple.PayID.lookupAddress(payId, type) do
+                  {:ok, to} ->
+                    # now let's pay this out
+                    amt = String.to_integer(amt)
+                    Blockchain.Eth.pay("#{amt}", wallet.address, to, wallet.privatekey)
+
+                  _ ->
+                    {:error, "could not find PayID #{payId}"}
+                end
+            end
+
+          "BTC" ->
+            {:error, :not_implemented}
         end
 
       _ ->

@@ -247,13 +247,13 @@ defmodule Blockchain.Eth do
   }
   ```
   """
-  @spec pay(String.t(), String.t(), String.t()) :: {:error, any} | {:ok, String.t()}
-  def pay(amount, from, to) do
+  @spec pay(String.t(), String.t(), String.t(), String.t()) :: {:error, any} | {:ok, String.t()}
+  def pay(amount, from, to, privateKey) do
     data = %{
       amount: amount,
       from: from,
       to: to,
-      type: "mnemonic"
+      privateKey: privateKey
     }
 
     case post("/wallet/send/kovan", data) do

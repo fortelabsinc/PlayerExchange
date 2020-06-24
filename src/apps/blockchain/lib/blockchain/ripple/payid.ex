@@ -148,7 +148,13 @@ defmodule Blockchain.Ripple.PayID do
   """
   @spec lookup(String.t(), chainT()) ::
           {:ok, map} | {:error, String.t()} | {:error, :invalid_format}
-  def lookup(payID, type \\ :xrp_test) do
+  def lookup(payID, type \\ :xrp_test)
+
+  def lookup(payID, type) when is_bitstring(type) do
+    lookup(payID, code(type))
+  end
+
+  def lookup(payID, type) do
     accountInfo = String.split(payID, "$")
 
     case accountInfo do
@@ -173,7 +179,13 @@ defmodule Blockchain.Ripple.PayID do
 
   @spec lookupAddress(String.t(), chainT()) ::
           {:ok, String.t()} | {:error, String.t()} | {:error, :invalid_format}
-  def lookupAddress(payID, type \\ :xrp_test) do
+  def lookupAddress(payID, type \\ :xrp_test)
+
+  def lookupAddress(payID, type) when is_bitstring(type) do
+    lookupAddress(payID, code(type))
+  end
+
+  def lookupAddress(payID, type) do
     accountInfo = String.split(payID, "$")
 
     case accountInfo do
@@ -187,7 +199,6 @@ defmodule Blockchain.Ripple.PayID do
           200 ->
             body = Jason.decode!(rsp.body)
             addresses = List.first(body["addresses"])
-            Logger.debug("*** body = #{inspect(body, pretty: true)}")
             {:ok, addresses["addressDetails"]["address"]}
 
           status ->
@@ -432,6 +443,9 @@ defmodule Blockchain.Ripple.PayID do
   defp environment(:eth_rinkeby), do: "RINKEBY"
   defp environment(:eth_goerli), do: "GOERLI"
   defp environment(:eth_kovan), do: "KOVAN"
+
+  defp code("XRP"), do: :xrp_test
+  defp code("ETH"), do: :eth_kovan
 
   defp addressBlock({address, type}) do
     %{

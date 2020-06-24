@@ -13,7 +13,7 @@ export const ApiActionFetchBalances = ({ commit }) =>
     )
     .catch(apiErrorHandler)
 
-export const ApiActionMakePayment = ({ commit }, { data }) =>
+export const ApiActionMakePayment = ({ commit }, data) =>
   apiAxios
     .post('/wallet/payment', data)
     .then((response) =>

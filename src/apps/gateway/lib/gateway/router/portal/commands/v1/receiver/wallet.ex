@@ -105,6 +105,7 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Wallet do
                 {:ok, _} =
                   Gateway.Router.Portal.Commands.Handler.Wallet.payment(
                     params["amt"],
+                    params["type"],
                     info.username,
                     params["pay_id"]
                   )

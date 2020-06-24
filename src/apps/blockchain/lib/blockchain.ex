@@ -99,6 +99,7 @@ defmodule Blockchain do
          {:ok, ethAddress} <- Blockchain.Ripple.PayID.lookupAddress(payId, :eth_kovan),
          {:ok, xrpBalance} <- Blockchain.Ripple.XRP.balance(xrpAddress),
          {:ok, ethBalance} <- Blockchain.Eth.balance(ethAddress) do
+      xrpBalance = (String.to_integer(xrpBalance) / 1_000_000) |> Float.to_string()
       # Success.  All calls worked!
       {:ok,
        [
