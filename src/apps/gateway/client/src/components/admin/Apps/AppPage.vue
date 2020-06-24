@@ -18,6 +18,13 @@
               :isSaving="savingName"
               label="Name"
             />
+            <v-text-field
+              v-model="app.pay_id"
+              type="text"
+              name="pay_id"
+              label="Pay ID"
+              readonly
+            />
             <EditField
               :value="app.fee"
               :onSave="saveRevueSplit"

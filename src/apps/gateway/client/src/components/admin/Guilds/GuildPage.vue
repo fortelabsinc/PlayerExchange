@@ -18,6 +18,13 @@
               :isSaving="savingName"
               label="Name"
             />
+            <v-text-field
+              v-model="guild.pay_id"
+              type="text"
+              name="pay_id"
+              label="Pay ID"
+              readonly
+            />
             <v-img
               v-if="guild.image"
               :src="guild.image"
