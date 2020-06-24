@@ -20,14 +20,15 @@
           v-if="item.image"
           :src="item.image"
           aspect-ratio="1"
-          height="44"
-          width="44"
+          height="100"
+          width="100"
+          class="my-1"
         />
       </template>
 
-      <template v-slot:item.game_id="{ item }">
+      <template v-slot:item.name="{ item }">
         <router-link :to="`/apps/id/${item.game_id}`">
-          {{ item.game_id }}
+          {{ item.name }}
         </router-link>
       </template>
 
@@ -108,13 +109,13 @@ export default {
           sortable: false,
         },
         {
-          text: 'ID',
-          value: 'game_id',
+          text: 'Name',
+          value: 'name',
           sortable: false,
         },
         {
-          text: 'Name',
-          value: 'name',
+          text: 'ID',
+          value: 'game_id',
           sortable: false,
         },
         { text: '', align: 'end', value: 'actions', sortable: false },

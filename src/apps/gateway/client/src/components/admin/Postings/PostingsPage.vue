@@ -2,8 +2,6 @@
   <AppLayoutPanel>
     <v-toolbar flat color="white">
       <v-toolbar-title>Postings</v-toolbar-title>
-      <v-spacer />
-      <v-btn color="primary" class="mb-2" @click="newItem()">New Post</v-btn>
     </v-toolbar>
 
     <v-data-table
@@ -15,14 +13,23 @@
       :options.sync="options"
       :server-items-length="totalItems"
     >
-      <template v-slot:item.order_id="{ item }">
-        <router-link :to="`/postings/id/${item.posting_id}`">
-          {{ item.posting_id }}
-        </router-link>
+      <template v-slot:item.game_id="{ item }">
+        {{ games[item.game_id] }}
       </template>
 
+      <template v-slot:item.confirm_pay_amt="{ item }">
+        {{ `${item.confirm_pay_amt} ${item.confirm_pay_type}` }}
+      </template>
+
+      <template v-slot:item.complete_pay_amt="{ item }">
+        {{ `${item.complete_pay_amt} ${item.complete_pay_type}` }}
+      </template>
+
+      <template v-slot:item.bonus_pay_amt="{ item }">
+        {{ `${item.bonus_pay_amt} ${item.bonus_pay_type}` }}
+      </template>
       <template v-slot:item.actions="{ item }">
-        <v-btn color="primary" text @click="showDetails(item)">
+        <v-btn color="primary" small dark outlined @click="showDetails(item)">
           Details
         </v-btn>
       </template>
@@ -76,6 +83,7 @@ export default {
       loading: false,
       totalItems: 0,
       options: {},
+      games: {},
     }
   },
   computed: {
@@ -86,39 +94,39 @@ export default {
     headers() {
       return [
         {
-          text: 'game_id',
+          text: 'Game',
           align: 'start',
           value: 'game_id',
           sortable: false,
         },
         {
-          text: 'type_req',
+          text: 'Type',
           align: 'start',
           value: 'type_req',
           sortable: false,
         },
         {
-          text: 'user_id',
+          text: 'User',
           align: 'start',
           value: 'user_id',
           sortable: false,
         },
         {
-          text: 'details',
+          text: 'Confirm Amt',
           align: 'start',
-          value: 'details',
+          value: 'confirm_pay_amt',
           sortable: false,
         },
         {
-          text: 'complete_pay_amt',
+          text: 'Complete Amt',
           align: 'start',
           value: 'complete_pay_amt',
           sortable: false,
         },
         {
-          text: 'complete_pay_type',
+          text: 'Bonus Amt',
           align: 'start',
-          value: 'complete_pay_type',
+          value: 'bonus_pay_amt',
           sortable: false,
         },
         { text: '', align: 'end', value: 'actions', sortable: false },
@@ -140,21 +148,26 @@ export default {
   methods: {
     ...mapActions({
       getPostingsPage: 'work/ApiActionFetchAllPostings',
+      getAllAppNames: 'apps/ApiActionFetchAllAppNames',
     }),
     fetchTableData() {
       const { page, itemsPerPage } = this.options
       this.loading = true
+
+      this.getAllAppNames().then(({ payload }) => {
+        if (payload) {
+          this.games = payload
+        }
+      })
+
       this.getPostingsPage({ page: page - 1, count: itemsPerPage }).then(
         ({ payload }) => {
           if (payload) {
-            // this.totalItems = payload.count
+            this.totalItems = payload.count
           }
           this.loading = false
         }
       )
-    },
-    newItem() {
-      this.$router.push('/postings/new')
     },
     showDetails(item) {
       this.currentItem = item

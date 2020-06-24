@@ -1,15 +1,18 @@
 <template>
   <AppLayoutPanel>
-    <v-toolbar flat color="white">
-      <v-toolbar-title>Game Currencies</v-toolbar-title>
+    <div class="d-flex">
+      <v-btn color="success" @click="dialogPayment = true">
+        Make a Payment
+      </v-btn>
+      <MakePayment v-model="dialogPayment" />
+      <v-spacer />
 
-      <v-spacer></v-spacer>
-      <v-btn icon class="m-4" @click="getTheBalances()">
+      <v-btn icon @click="getTheBalances()">
         <v-icon large>
           mdi-refresh
         </v-icon>
       </v-btn>
-    </v-toolbar>
+    </div>
     <v-row>
       <v-col lg="4">
         <v-text-field
@@ -38,12 +41,19 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
+import MakePayment from '@/components/common/MakePayment.vue'
 
 export default {
   name: 'GameCurrenciesPanel',
   props: ['gameId'],
+  data() {
+    return {
+      dialogPayment: false,
+    }
+  },
   components: {
     AppLayoutPanel,
+    MakePayment,
   },
   computed: {
     ...mapGetters({

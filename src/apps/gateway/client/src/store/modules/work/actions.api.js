@@ -40,7 +40,10 @@ export const ApiActionGetPostingsPage = ({ commit }, { page, count }) =>
     )
     .catch(apiErrorHandler)
 
-export const ApiActionGetUserPostingsPage = ({ commit }, { user_id, page, count }) =>
+export const ApiActionGetUserPostingsPage = (
+  { commit },
+  { user_id, page, count }
+) =>
   apiAxios
     .get(`/work/posting/${user_id}/${page}/${count}`)
     .then((response) =>
