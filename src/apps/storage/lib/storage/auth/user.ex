@@ -230,6 +230,7 @@ defmodule Storage.Auth.User do
 
         map =
           Map.put(map, "user_id", info.user_id)
+          |> Map.put("email", info.email)
           |> Map.put("meta", info.meta)
 
         {:ok, map}
