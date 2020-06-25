@@ -21,7 +21,7 @@ export default {
             data: this.generateArray(6),
           },
           {
-            label: 'Bitcoin',
+            label: 'Ethereum',
             backgroundColor: 'rgba(54, 162, 235, 0.5)',
             data: this.generateArray(6),
           },
@@ -42,12 +42,12 @@ export default {
         'April',
         'May',
         'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
+        //'July',
+        //'August',
+        //'September',
+        //'October',
+        //'November',
+        //'December',
       ]
       return [...months, ...months].splice(8, length)
     },

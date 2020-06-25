@@ -37,12 +37,12 @@ export default {
         'April',
         'May',
         'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December',
+        //'July',
+        //'August',
+        //'September',
+        //'October',
+        //'November',
+        //'December',
       ]
       return [...months, ...months].splice(8, length)
     },
