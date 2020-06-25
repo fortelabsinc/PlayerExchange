@@ -15,6 +15,7 @@ export const ApiActionLogin = ({ dispatch }, { username, password }) =>
           meta: get(payload, 'meta'),
           user: {
             name: username,
+            email: get(payload, 'email'),
             payId: get(payload, 'payId'),
             userId: get(payload, 'user_id'),
           },
