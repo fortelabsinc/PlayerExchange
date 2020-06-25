@@ -11,7 +11,7 @@ export default {
     state.list = payload
   },
   [POSTINGS_LIST_ADD](state, payload) {
-    state.list = uniqBy([...state.list, ...castArray(payload)], 'post_id')
+    state.list = uniqBy([...castArray(payload), ...state.list], 'post_id')
   },
   [POSTINGS_LIST_EDIT](state, payload) {
     const postIndex = findIndex(

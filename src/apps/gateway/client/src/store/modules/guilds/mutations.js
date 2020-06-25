@@ -19,7 +19,7 @@ export default {
     state.balance = payload
   },
   [GUILDS_LIST_ADD](state, payload) {
-    state.list = uniqBy([...state.list, ...castArray(payload)], 'guild_id')
+    state.list = uniqBy([...castArray(payload), ...state.list], 'guild_id')
   },
   [GUILDS_LIST_EDIT](state, payload) {
     const guildIndex = findIndex(

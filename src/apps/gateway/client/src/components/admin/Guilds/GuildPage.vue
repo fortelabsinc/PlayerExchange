@@ -59,6 +59,14 @@
               >
                 Add Member
               </v-btn>
+              <v-btn
+                color="success"
+                depressed
+                small
+                @click="dialogMember = true"
+              >
+                Payout
+              </v-btn>
               <v-spacer />
               <v-btn color="error" depressed small @click="dialog = true">
                 Delete Guild
