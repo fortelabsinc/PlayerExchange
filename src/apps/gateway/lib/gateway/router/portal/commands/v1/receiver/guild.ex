@@ -464,6 +464,9 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Guild do
               :ok ->
                 jsonRsp(conn, 200, %{ok: "ok"})
 
+              {:ok, _} ->
+                jsonRsp(conn, 200, %{ok: "ok"})
+
               {:error, errorMessage} ->
                 Logger.error(
                   "[Gateway.Router.Service.V1.Receiver] Error update app email #{
@@ -501,6 +504,9 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Guild do
               :ok ->
                 jsonRsp(conn, 200, %{ok: "ok"})
 
+              {:ok, _} ->
+                jsonRsp(conn, 200, %{ok: "ok"})
+
               {:error, errorMessage} ->
                 Logger.error(
                   "[Gateway.Router.Service.V1.Receiver] Error update app email #{
@@ -534,6 +540,9 @@ defmodule Gateway.Router.Portal.Commands.V1.Receiver.Guild do
                    userId
                  ) do
               :ok ->
+                jsonRsp(conn, 200, %{ok: "ok"})
+
+              {:ok, _} ->
                 jsonRsp(conn, 200, %{ok: "ok"})
 
               {:error, errorMessage} ->
