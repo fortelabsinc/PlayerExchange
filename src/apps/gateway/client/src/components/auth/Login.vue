@@ -74,7 +74,6 @@ export default {
         username: this.username,
         password: this.password,
       }).then((data) => {
-        console.log('data', data)
         if (undefined != data['payload']) {
           this.$router.push({ name: 'Home' })
         } else {

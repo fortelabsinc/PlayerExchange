@@ -6,7 +6,7 @@ import { apiResponseHandler, apiErrorHandler } from '../../utils/api'
 
 export const ApiActionLogin = ({ dispatch }, { username, password }) =>
   apiAxios
-    .post('/auth/login', { username: username, password })
+    .post('/auth/login', { username, password })
     .then((response) =>
       apiResponseHandler(response).then(({ payload }) => {
         payload = {
@@ -66,11 +66,22 @@ export const ApiActionCheckAuth = ({ dispatch, state }) => {
 export const ApiActionRegister = (_, { username, email, password }) =>
   apiAxios
     .post('/auth/register', {
-      username: username,
-      email: email,
-      password: password,
+      username,
+      email,
+      password,
       password_confirm: password,
       meta: {},
     })
     .then((response) => apiResponseHandler(response))
+    .catch(apiErrorHandler)
+
+export const ApiActionFetchAllUserNames = (_, { ids }) =>
+  apiAxios
+    .post('/auth/names', { ids })
+    .then((response) =>
+      apiResponseHandler(response).then(({ payload }) => {
+        // commit(APPS_NAME_SET, payload)
+        return { payload }
+      })
+    )
     .catch(apiErrorHandler)

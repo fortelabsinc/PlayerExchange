@@ -17,6 +17,10 @@
         {{ games[item.game_id] }}
       </template>
 
+      <template v-slot:item.user_id="{ item }">
+        {{ users[item.user_id] }}
+      </template>
+
       <template v-slot:item.confirm_pay_amt="{ item }">
         {{ `${item.confirm_pay_amt} ${item.confirm_pay_type}` }}
       </template>
@@ -35,23 +39,7 @@
       </template>
     </v-data-table>
 
-    <v-dialog v-model="dialog">
-      <v-card>
-        <v-card-title>
-          Post Details
-        </v-card-title>
-        <v-divider class="mb-2" />
-        <v-card-text>
-          <PostDetails :posting="currentItem" />
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" text @click="closeDetails">
-            Close
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <PostDetails v-model="dialog" :posting="currentItem" />
   </AppLayoutPanel>
 </template>
 
@@ -84,6 +72,7 @@ export default {
       totalItems: 0,
       options: {},
       games: {},
+      users: {},
     }
   },
   computed: {
@@ -149,6 +138,7 @@ export default {
     ...mapActions({
       getPostingsPage: 'work/ApiActionFetchAllPostings',
       getAllAppNames: 'apps/ApiActionFetchAllAppNames',
+      getAllUserNames: 'auth/ApiActionFetchAllUserNames',
     }),
     fetchTableData() {
       const { page, itemsPerPage } = this.options
@@ -159,6 +149,16 @@ export default {
           this.games = payload
         }
       })
+
+      if (this.postingsList) {
+        this.getAllUserNames({
+          ids: this.postingsList.map((p) => p.user_id),
+        }).then(({ payload }) => {
+          if (payload) {
+            this.users = payload
+          }
+        })
+      }
 
       this.getPostingsPage({ page: page - 1, count: itemsPerPage }).then(
         ({ payload }) => {
@@ -172,10 +172,6 @@ export default {
     showDetails(item) {
       this.currentItem = item
       this.dialog = true
-    },
-    closeDetails() {
-      this.currentItem = {}
-      this.dialog = false
     },
   },
 }
