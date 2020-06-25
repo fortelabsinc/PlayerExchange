@@ -228,7 +228,11 @@ export default {
       this.$router.push('/postings/new')
     },
     payItem(item, type) {
-      this.paymentData = { typeLabel: type, postId: item.post_id, postType: "post"}
+      this.paymentData = {
+        typeLabel: type,
+        postId: item.post_id,
+        postType: 'post',
+      }
       if (type === 'Confirm') {
         this.paymentData.amount = item.confirm_pay_amt
         this.paymentData.type = item.confirm_pay_type

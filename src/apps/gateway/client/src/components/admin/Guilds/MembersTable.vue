@@ -132,7 +132,7 @@ export default {
         this.$emit('removed', item)
         return
       }
-      //nugdci
+
       this.currentItem = item
       this.dialog = true
     },

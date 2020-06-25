@@ -17,7 +17,7 @@ export default {
     state.balance = payload
   },
   [APPS_LIST_ADD](state, payload) {
-    state.list = uniqBy([...state.list, ...castArray(payload)], 'game_id')
+    state.list = uniqBy([...castArray(payload), ...state.list], 'game_id')
   },
   [APPS_LIST_EDIT](state, payload) {
     const appIndex = findIndex(

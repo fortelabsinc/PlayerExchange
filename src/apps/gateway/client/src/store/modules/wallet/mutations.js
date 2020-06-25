@@ -11,7 +11,7 @@ export default {
     state.list = payload
   },
   [BALANCE_LIST_ADD](state, payload) {
-    state.list = uniqBy([...state.list, ...castArray(payload)], 'id')
+    state.list = uniqBy([...castArray(payload), ...state.list], 'id')
   },
   [BALANCE_LIST_EDIT](state, payload) {
     const balanceIndex = findIndex(state.list, ({ id }) => id === payload.id)
