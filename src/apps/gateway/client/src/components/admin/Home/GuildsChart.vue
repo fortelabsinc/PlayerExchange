@@ -37,12 +37,12 @@ export default {
   methods: {
     generateLabels() {
       return [
-        'Counter-Strike',
-        'League of Legends',
-        'Grand Theft Auto V',
-        'Dota 2',
-        'Overwatch',
-        'Apex Legends',
+        'Looter Shooter',
+        'Goats',
+        'Tale of Dragons',
+        'Double Dribble',
+        'Heroes of Destiny',
+        'Morty',
       ]
     },
     generateArray(length) {
