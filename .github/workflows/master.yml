@@ -8,13 +8,14 @@ on:
 
 env:
   GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
-  GKE_CLUSTER: us-central1-a
-  GKE_ZONE: us-central1-c
+  GKE_CLUSTER: forte-player-exchange
+  GKE_ZONE: us-central1-a
   IMAGE: plyxchg
   DEPLOYMENT: prod
   SEND_GRID_KEY: ${{ secrets.SEND_GRID_KEY }}
   PLYXCHG_DB_HOST: ${{ secrets.PLYXCHG_DB_HOST_PROD }}
   PLYXCHG_APP_KEYS: ${{ secrets.PLYXCHG_APP_KEYS }}
+  PLYXCHG_PAY_ID_DOMAIN: ${{ secrets.PLYXCHG_PAY_ID_DOMAIN_PROD }}
 
 jobs:
   build-application:
