@@ -37,7 +37,7 @@ export default {
   methods: {
     generateLabels() {
       return [
-        'Looter Shooter',
+        'Robo Battle',
         'Goats',
         'Tale of Dragons',
         'Double Dribble',
