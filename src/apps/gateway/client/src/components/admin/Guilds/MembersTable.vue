@@ -11,11 +11,13 @@
       :headers="headers"
       :items="membersList"
       :loading="loading"
-      :options.sync="guild_id ? options : undefined"
-      :server-items-length="guild_id ? totalItems : undefined"
     >
+      <template v-slot:item.name="{ item }">
+        {{ users[item.user_id] }}
+      </template>
+
       <template v-slot:item.actions="{ item }">
-        <v-btn color="red" text @click="removeMember(item)">
+        <v-btn color="red" outlined small @click="removeMember(item)">
           Remove
         </v-btn>
       </template>
@@ -29,7 +31,7 @@
         <v-divider class="mb-2" />
         <v-card-text>
           <p>User ID: {{ currentItem.user_id }}</p>
-          <p>Name: {{ currentItem.name }}</p>
+          <p>Name: {{ users[currentItem.user_id] }}</p>
         </v-card-text>
         <v-card-actions>
           <v-progress-linear
@@ -58,19 +60,19 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import { map } from 'lodash'
 
 export default {
   name: 'MembersTable',
   props: ['guild_id', 'value'],
   data() {
     return {
-      // membersList: [],
       dialog: false,
       currentItem: {},
       loading: false,
       removing: false,
       totalItems: 0,
-      options: {},
+      users: {},
     }
   },
   computed: {
@@ -82,7 +84,7 @@ export default {
       const list = this.guild_id
         ? this.membersListGet(this.guild_id)
         : this.value
-      return list || []
+      return map(list, (stake, user_id) => ({ user_id, stake }))
     },
     headers() {
       return [
@@ -99,54 +101,38 @@ export default {
           sortable: false,
         },
         {
-          text: 'Bio',
+          text: 'Guild Points',
           align: 'start',
-          value: 'bio',
+          value: 'stake',
           sortable: false,
         },
         { text: '', align: 'end', value: 'actions', sortable: false },
       ]
     },
   },
-  watch: {
-    options: {
-      handler() {
-        this.fetchTableData()
-      },
-      deep: true,
-    },
-  },
+
   mounted() {
-    if (this.guild_id) {
-      this.options.itemsPerPage = this.membersItemsPerPage
-      this.fetchTableData()
+    if (this.membersList) {
+      this.getAllUserNames({
+        ids: this.membersList.map((p) => p.user_id),
+      }).then(({ payload }) => {
+        if (payload) {
+          this.users = payload
+        }
+      })
     }
   },
   methods: {
     ...mapActions({
-      getGuildMembers: 'guilds/ApiActionFetchGuildMembers',
-      removeGuildMembers: 'guilds/ApiActionRemoveGuildMember',
+      getAllUserNames: 'auth/ApiActionFetchAllUserNames',
+      removeGuildMember: 'guilds/ApiActionRemoveGuildMember',
     }),
-    fetchTableData() {
-      const { page, itemsPerPage } = this.options
-      this.loading = true
-      this.getGuildMembers({
-        guild_id: this.guild_id,
-        page: page - 1,
-        count: itemsPerPage,
-      }).then(({ payload }) => {
-        if (payload) {
-          // this.totalItems = payload.count
-        }
-        this.loading = false
-      })
-    },
     removeMember(item) {
       if (!this.guild_id) {
         this.$emit('removed', item)
         return
       }
-
+      //nugdci
       this.currentItem = item
       this.dialog = true
     },
@@ -156,7 +142,7 @@ export default {
     },
     confirmRemove() {
       this.removing = true
-      this.removeGuildMembers({
+      this.removeGuildMember({
         guild_id: this.guild_id,
         user_id: this.currentItem.user_id,
       }).then(({ error }) => {
@@ -168,6 +154,7 @@ export default {
         } else {
           this.$toast.error(`Error removing the member. ${error.message}`)
         }
+        this.$emit('removed')
       })
     },
   },
