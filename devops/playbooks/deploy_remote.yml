@@ -12,8 +12,8 @@
   tasks:
     - include_tasks: tasks/namespaces.yml
     - include_tasks: tasks/cockroach/kube_deploy.yml
-    - include_tasks: tasks/monitoring/kube_deploy.yml
-      when: stage == "prod"
+    #- include_tasks: tasks/monitoring/kube_deploy.yml
+    #  when: stage == "prod"
     - include_tasks: tasks/redis/kube_deploy.yml
     - include_tasks: tasks/payid/kube_deploy.yml
     - include_tasks: tasks/rippler/kube_deploy.yml

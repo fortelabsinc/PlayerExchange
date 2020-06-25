@@ -113,7 +113,7 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
     end
   end
 
-  def payment(amt, type, username, payId, postId, _postType) do
+  def payment(amt, type, username, payId, postId, "post") do
     # Let's look up the posting
     case Storage.Work.Posting.queryByPostId(postId) do
       nil ->
@@ -163,10 +163,95 @@ defmodule Gateway.Router.Portal.Commands.Handler.Wallet do
                         mnemonic = Storage.Wallet.XRP.mnemonic(userWallet)
 
                         # Let's pay off the game in a different thread
-                        spawn(fn ->
-                          _ = Blockchain.Ripple.XRP.pay(fee, mnemonic, gameAddress)
-                          :ok
-                        end)
+                        _ = Blockchain.Ripple.XRP.pay(fee, mnemonic, gameAddress)
+
+                        # But let's wait for this one to be done
+                        _ = Blockchain.Ripple.XRP.pay(pay, mnemonic, to)
+                        {:ok, "ok"}
+
+                      _ ->
+                        {:error, "could not find PayID #{payId}"}
+                    end
+                end
+
+              "ETH" ->
+                {:error, :not_implemented}
+
+              # case Storage.Wallet.Eth.query(from) do
+              #  nil ->
+              #    {:error, "wallet not found"}
+
+              #  wallet ->
+              #    # Now Let's lookup the receiver wallet address
+              #    case Blockchain.Ripple.PayID.lookupAddress(payId, type) do
+              #      {:ok, to} ->
+              #        # now let's pay this out
+              #        amt = String.to_integer(amt)
+              #        Blockchain.Eth.pay("#{amt}", wallet.address, to, wallet.privatekey)
+
+              #      _ ->
+              #        {:error, "could not find PayID #{payId}"}
+              #    end
+              # end
+
+              "BTC" ->
+                {:error, :not_implemented}
+            end
+        end
+    end
+  end
+
+  def payment(amt, type, username, payId, postId, "guild") do
+    # Let's look up the posting
+    case Storage.Work.Posting.queryByPostId(postId) do
+      nil ->
+        {:error, "Invalid Posting ID"}
+
+      post ->
+        # Let's grab the game info from the posting
+        gameId = post.game_id
+
+        case Storage.Game.query(gameId) do
+          nil ->
+            {:error, "Invalid Game ID"}
+
+          game ->
+            {:ok, userAddress} =
+              Blockchain.Ripple.PayID.format(username)
+              |> Blockchain.Ripple.PayID.lookupAddress(type)
+
+            {:ok, gameAddress} = Blockchain.Ripple.PayID.lookupAddress(game.pay_id, type)
+
+            case type do
+              "XRP" ->
+                # Lets break out the "cuts"
+                amt = String.to_integer(amt) * 1_000_000
+                feePercent = String.to_integer(game.fee) / 100.0
+                payPercent = 1.0 - feePercent
+
+                fee =
+                  (feePercent * amt)
+                  |> round()
+                  |> Integer.to_string()
+
+                pay =
+                  (payPercent * amt)
+                  |> round()
+                  |> Integer.to_string()
+
+                # Lookup the address info
+                case Storage.Wallet.XRP.query(userAddress) do
+                  nil ->
+                    {:error, "wallet not found"}
+
+                  userWallet ->
+                    # Now Let's lookup the receiver wallet address
+                    case Blockchain.Ripple.PayID.lookupAddress(payId, type) do
+                      {:ok, to} ->
+                        mnemonic = Storage.Wallet.XRP.mnemonic(userWallet)
+
+                        # Let's pay off the game in a different thread
+                        _ = Blockchain.Ripple.XRP.pay(fee, mnemonic, gameAddress)
 
                         # But let's wait for this one to be done
                         _ = Blockchain.Ripple.XRP.pay(pay, mnemonic, to)
