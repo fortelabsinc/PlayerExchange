@@ -1,9 +1,17 @@
 <template>
   <v-dialog v-model="content">
     <v-card>
-      <v-card-title>
-        Post Details
-      </v-card-title>
+      <div class="d-flex align-center">
+        <v-card-title>
+          Post Details
+        </v-card-title>
+        <template v-if="posting.state === 'closed'">
+          <v-chip class="ma-2">closed</v-chip>
+        </template>
+        <template v-else>
+          <v-chip class="ma-2" dark color="green">open</v-chip>
+        </template>
+      </div>
       <v-divider class="mb-2" />
       <v-card-text>
         <v-row>
@@ -11,15 +19,7 @@
             <v-text-field
               v-model="posting.post_id"
               name="post_id"
-              label="post_id"
-              type="text"
-              readonly
-            />
-
-            <v-text-field
-              v-model="posting.user_id"
-              name="user_id"
-              label="user_id"
+              label="Post ID"
               type="text"
               readonly
             />
@@ -27,21 +27,42 @@
             <v-row>
               <v-col class="sm12 md6 lg6">
                 <v-text-field
-                  v-model="posting.game_id"
-                  name="game_id"
-                  label="game_id"
+                  v-model="users[posting.user_id]"
+                  name="user_name"
+                  label="User Name"
                   type="text"
                   readonly
                 />
               </v-col>
+              <v-col class="sm12 md6 lg6">
+                <v-text-field
+                  v-model="posting.user_id"
+                  name="user_id"
+                  label="User ID"
+                  type="text"
+                  readonly
+                />
+              </v-col>
+            </v-row>
 
-              <v-col class="xs12 md6 lg6">
-                <template v-if="posting.state === 'closed'">
-                  <v-chip class="ma-2">closed</v-chip>
-                </template>
-                <template v-else>
-                  <v-chip class="ma-2" dark color="green">open</v-chip>
-                </template>
+            <v-row>
+              <v-col class="sm12 md6 lg6">
+                <v-text-field
+                  v-model="games[posting.game_id]"
+                  name="gamename"
+                  label="Game Name"
+                  type="text"
+                  readonly
+                />
+              </v-col>
+              <v-col class="sm12 md6 lg6">
+                <v-text-field
+                  v-model="posting.game_id"
+                  name="game_id"
+                  label="Game ID"
+                  type="text"
+                  readonly
+                />
               </v-col>
             </v-row>
 
@@ -149,12 +170,15 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'PostDetails',
   props: ['value', 'posting'],
   data() {
     return {
       content: this.value,
+      games: {},
+      users: {},
     }
   },
   watch: {
@@ -166,9 +190,30 @@ export default {
     },
   },
   methods: {
+    ...mapActions({
+      getAllAppNames: 'apps/ApiActionFetchAllAppNames',
+      getAllUserNames: 'auth/ApiActionFetchAllUserNames',
+    }),
     close() {
       this.content = false
     },
+  },
+  mounted() {
+    this.getAllAppNames().then(({ payload }) => {
+      if (payload) {
+        this.games = payload
+      }
+    })
+
+    if (this.posting) {
+      this.getAllUserNames({
+        ids: [this.posting.user_id],
+      }).then(({ payload }) => {
+        if (payload) {
+          this.users = payload
+        }
+      })
+    }
   },
 }
 </script>

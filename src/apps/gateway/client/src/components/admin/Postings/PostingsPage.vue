@@ -17,6 +17,10 @@
         {{ games[item.game_id] }}
       </template>
 
+      <template v-slot:item.user_id="{ item }">
+        {{ users[item.user_id] }}
+      </template>
+
       <template v-slot:item.confirm_pay_amt="{ item }">
         {{ `${item.confirm_pay_amt} ${item.confirm_pay_type}` }}
       </template>
@@ -68,6 +72,7 @@ export default {
       totalItems: 0,
       options: {},
       games: {},
+      users: {},
     }
   },
   computed: {
@@ -133,6 +138,7 @@ export default {
     ...mapActions({
       getPostingsPage: 'work/ApiActionFetchAllPostings',
       getAllAppNames: 'apps/ApiActionFetchAllAppNames',
+      getAllUserNames: 'auth/ApiActionFetchAllUserNames',
     }),
     fetchTableData() {
       const { page, itemsPerPage } = this.options
@@ -143,6 +149,16 @@ export default {
           this.games = payload
         }
       })
+
+      if (this.postingsList) {
+        this.getAllUserNames({
+          ids: this.postingsList.map((p) => p.user_id),
+        }).then(({ payload }) => {
+          if (payload) {
+            this.users = payload
+          }
+        })
+      }
 
       this.getPostingsPage({ page: page - 1, count: itemsPerPage }).then(
         ({ payload }) => {
