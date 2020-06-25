@@ -45,7 +45,10 @@
               label="Description"
             />
 
-            <MembersTable :guild_id="guild.guild_id" />
+            <MembersTable
+              :guild_id="guild.guild_id"
+              @removed="onMemberRemoved"
+            />
 
             <v-card-actions>
               <v-btn
@@ -78,6 +81,12 @@
                     type="text"
                     name="user_id"
                     label="User ID"
+                  />
+                  <v-text-field
+                    v-model="currentMember.stake"
+                    type="text"
+                    name="stake"
+                    label="Guild Points"
                   />
                 </v-card-text>
                 <v-card-actions>
@@ -187,10 +196,7 @@ export default {
     },
   },
   mounted() {
-    this.loading = true
-    this.apiGetGuildById({ guild_id: this.$route.params.id }).then(() => {
-      this.loading = false
-    })
+    this.fetchGuildData()
   },
   methods: {
     ...mapActions({
@@ -200,7 +206,14 @@ export default {
       apiEditGuildImageUrl: 'guilds/ApiActionEditGuildImageUrl',
       deleteGuild: 'guilds/ApiActionDeleteGuild',
       addGuildMember: 'guilds/ApiActionAddGuildMember',
+      setGuildMemberStake: 'guilds/ApiActionGuildMemberStake',
     }),
+    fetchGuildData() {
+      this.loading = true
+      this.apiGetGuildById({ guild_id: this.$route.params.id }).then(() => {
+        this.loading = false
+      })
+    },
     saveName(name) {
       this.savingName = true
       this.apiEditGuildName({ guild_id: this.guild.guild_id, name }).then(
@@ -269,6 +282,11 @@ export default {
         guild_id: this.guild.guild_id,
         user_id: this.currentMember.user_id,
       }).then(({ error }) => {
+        const guild_id = this.guild.guild_id
+        const user_id = this.currentMember.user_id
+        const stake = this.currentMember.stake
+        const self = this
+
         this.currentMember = {}
         this.dialogMember = false
         this.adding = false
@@ -277,7 +295,20 @@ export default {
         } else {
           this.$toast.error(`Error adding the guild member. ${error.message}`)
         }
+        this.setGuildMemberStake({ guild_id, user_id, stake }).then(
+          ({ error }) => {
+            if (error) {
+              this.$toast.error(
+                `Error seting the guild member stake. ${error.message}`
+              )
+            }
+            self.fetchGuildData()
+          }
+        )
       })
+    },
+    onMemberRemoved() {
+      this.fetchGuildData()
     },
   },
 }
