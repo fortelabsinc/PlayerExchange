@@ -42,7 +42,7 @@
       </v-tab-item>
 
       <v-tab-item key="1">
-        <CurrenciesPanel />
+        <MyCurrenciesPanel />
       </v-tab-item>
     </v-tabs-items>
   </div>
@@ -51,13 +51,13 @@
 <script>
 import { mapGetters } from 'vuex'
 import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
-import CurrenciesPanel from '@/components/common/MyCurrenciesPanel.vue'
+import MyCurrenciesPanel from './MyCurrenciesPanel.vue'
 
 export default {
   name: 'ProfilePage',
   components: {
     AppLayoutPanel,
-    CurrenciesPanel,
+    MyCurrenciesPanel,
   },
   data() {
     return {

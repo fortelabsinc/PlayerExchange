@@ -61,7 +61,7 @@
               auto-grow
             />
 
-            <v-card-actions>
+            <v-card-actions v-if="isOwner">
               <v-spacer />
               <v-btn color="error" depressed small @click="dialog = true">
                 Delete App
@@ -104,7 +104,7 @@
         </v-tab-item>
 
         <v-tab-item key="1">
-          <CurrenciesPanel :gameId="app.game_id" />
+          <GameCurrenciesPanel :gameId="app.game_id" :ownerId="app.owner" />
         </v-tab-item>
       </v-tabs-items>
     </template>
@@ -114,14 +114,14 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
-import CurrenciesPanel from '@/components/common/GameCurrenciesPanel.vue'
+import GameCurrenciesPanel from './GameCurrenciesPanel.vue'
 import EditField from '@/components/common/EditField.vue'
 
 export default {
   name: 'AppPage',
   components: {
     AppLayoutPanel,
-    CurrenciesPanel,
+    GameCurrenciesPanel,
     EditField,
   },
   data() {
@@ -140,7 +140,11 @@ export default {
   computed: {
     ...mapGetters({
       getApp: 'apps/getAppById',
+      userId: 'auth/getUserId',
     }),
+    isOwner() {
+      return this.app && this.app.owner === this.userId
+    },
   },
   watch: {
     getApp() {

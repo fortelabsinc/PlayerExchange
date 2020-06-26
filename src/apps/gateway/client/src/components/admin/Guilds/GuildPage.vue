@@ -46,11 +46,12 @@
             />
 
             <MembersTable
-              :guild_id="guild.guild_id"
+              :guildId="guild.guild_id"
+              :ownerId="guild.owner"
               @removed="onMemberRemoved"
             />
 
-            <v-card-actions>
+            <v-card-actions v-if="isOwner">
               <v-btn
                 color="primary"
                 depressed
@@ -156,7 +157,10 @@
         </v-tab-item>
 
         <v-tab-item key="1">
-          <CurrenciesPanel :guildId="guild.guild_id" />
+          <GuildCurrenciesPanel
+            :guildId="guild.guild_id"
+            :ownerId="guild.owner"
+          />
         </v-tab-item>
       </v-tabs-items>
     </template>
@@ -168,7 +172,7 @@ import { mapGetters, mapActions } from 'vuex'
 import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
 import EditField from '@/components/common/EditField.vue'
 import MembersTable from '@/components/admin/Guilds/MembersTable.vue'
-import CurrenciesPanel from '@/components/common/GuildCurrenciesPanel.vue'
+import GuildCurrenciesPanel from './GuildCurrenciesPanel.vue'
 
 export default {
   name: 'GuildPage',
@@ -176,7 +180,7 @@ export default {
     AppLayoutPanel,
     EditField,
     MembersTable,
-    CurrenciesPanel,
+    GuildCurrenciesPanel,
   },
   data() {
     return {
@@ -196,7 +200,11 @@ export default {
   computed: {
     ...mapGetters({
       getGuild: 'guilds/getGuildById',
+      userId: 'auth/getUserId',
     }),
+    isOwner() {
+      return this.guild && this.guild.owner === this.userId
+    },
   },
   watch: {
     getGuild() {

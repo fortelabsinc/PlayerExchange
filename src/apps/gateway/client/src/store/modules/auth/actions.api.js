@@ -54,6 +54,8 @@ export const ApiActionCheckAuth = ({ dispatch, state }) => {
           user: {
             name: get(payload, 'username'),
             email: get(payload, 'email'),
+            payId: get(payload, 'payId'),
+            userId: get(payload, 'user_id'),
           },
         }
 

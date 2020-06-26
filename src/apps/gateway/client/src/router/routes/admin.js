@@ -55,7 +55,7 @@ export default {
       path: '/profile',
       component: () =>
         import(
-          /* webpackChunkName: "profile" */ '@/components/admin/Profile.vue'
+          /* webpackChunkName: "profile" */ '@/components/admin/Profile/Profile.vue'
         ),
       meta: {
         requireAuth: true,
