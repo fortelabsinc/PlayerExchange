@@ -15,7 +15,7 @@
     "core-js": "^3.6.4",
     "detect-browser": "^5.1.0",
     "element-resize-detector": "^1.2.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "normalize.css": "^8.0.1",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
