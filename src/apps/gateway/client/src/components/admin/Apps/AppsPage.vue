@@ -142,7 +142,7 @@ export default {
     fetchTableData() {
       const { page, itemsPerPage } = this.options
       this.loading = true
-      this.getAppsPage({ page: page - 10, count: itemsPerPage }).then(
+      this.getAppsPage({ page: page - 1, count: itemsPerPage }).then(
         ({ payload, error }) => {
           if (payload) {
             this.totalItems = payload.count
