@@ -146,9 +146,12 @@ export default {
       const { page, itemsPerPage } = this.options
       this.loading = true
       this.getGuildsPage({ page: page - 1, count: itemsPerPage }).then(
-        ({ payload }) => {
+        ({ payload, error }) => {
           if (payload) {
             this.totalItems = payload.count
+          }
+          if (error) {
+            this.$toast.error(`Error fetching guilds page. ${error.message}`)
           }
           this.loading = false
         }

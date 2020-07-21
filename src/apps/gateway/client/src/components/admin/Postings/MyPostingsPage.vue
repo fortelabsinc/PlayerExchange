@@ -207,9 +207,12 @@ export default {
       const { page, itemsPerPage } = this.options
       this.loading = true
 
-      this.getAllAppNames().then(({ payload }) => {
+      this.getAllAppNames().then(({ payload, error }) => {
         if (payload) {
           this.games = payload
+        }
+        if (error) {
+          this.$toast.error(`Error fetching apps. ${error.message}`)
         }
       })
 
@@ -217,9 +220,12 @@ export default {
         user_id: this.userId,
         page: page - 1,
         count: itemsPerPage,
-      }).then(({ payload }) => {
+      }).then(({ payload, error }) => {
         if (payload) {
           this.totalItems = payload.count
+        }
+        if (error) {
+          this.$toast.error(`Error getting postings page. ${error.message}`)
         }
         this.loading = false
       })

@@ -67,10 +67,10 @@ export default {
       getBalances: 'wallet/ApiActionFetchBalances',
     }),
     getTheBalances() {
-      this.getBalances().then((rsp) => {
-        if (undefined != rsp.error) {
+      this.getBalances().then(({ error }) => {
+        if (error) {
           this.$toast.error(
-            'Error getting balances: ' + JSON.stringify(rsp.error.message)
+            'Error getting balances: ' + JSON.stringify(error.message)
           )
         } else {
           this.$toast.success('Info updated')

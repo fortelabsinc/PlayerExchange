@@ -68,10 +68,10 @@ export default {
       getBalances: 'guilds/ApiActionBalanceGuild',
     }),
     getTheBalances() {
-      this.getBalances({ guild_id: this.guildId }).then((rsp) => {
-        if (undefined != rsp.error) {
+      this.getBalances({ guild_id: this.guildId }).then(({ error }) => {
+        if (error) {
           this.$toast.error(
-            'Error getting balances: ' + JSON.stringify(rsp.error.message)
+            'Error getting balances: ' + JSON.stringify(error.message)
           )
         } else {
           this.$toast.success('Info updated')
