@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // TODO: Move baseUrl var to .env
 const apiAxios = axios.create({
-  // baseURL: 'http://localhost:8181/portal/commands/v1',
+  //baseURL: 'http://localhost:8181/portal/commands/v1',
   baseURL: '/portal/commands/v1',
   timeout: 60000,
   headers: {
