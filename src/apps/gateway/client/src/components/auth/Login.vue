@@ -93,8 +93,7 @@ export default {
           this.$router.push({ name: 'Home' })
           this.$toast.success('Successfuly logged in')
         } else {
-          this.$router.push({ name: 'Home' })
-          this.$toast.error(`Error logging in, no payload.`)
+          this.$toast.error(`Error logging in.`)
           console.log('Error: ' + JSON.stringify(data))
         }
         if (error) {
