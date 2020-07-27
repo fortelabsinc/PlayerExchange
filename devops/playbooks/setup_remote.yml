@@ -1,9 +1,6 @@
 ---
 - hosts: localhost
   gather_facts: false
-  vars:
-    #ansible_python_interpreter: "/opt/hostedtoolcache/Python/3.8.3/x64/bin/python3"
-    ansible_python_interpreter: "/usr/bin/python3"
 
   pre_tasks:
     - include_tasks: tasks/args_load.yml
@@ -13,14 +10,16 @@
     - include_tasks: tasks/namespaces.yml
     - include_tasks: tasks/cockroach/kube_deploy.yml
     - include_tasks: tasks/monitoring/kube_deploy.yml
-      when: stage == "prod"
+    #- name: wait for 60 seconds while the database sets up
+    #  wait_for:
+    #    timeout: 60
     #- name: Setup the port forwarding for cockroach
     #  shell: kubectl port-forward svc/cockroachdb-public 26257:26257 -n {{cluster_name}}-{{stage}}
     #  async: 60
     #  poll: 0
-    #- name: wait for 2 seconds and continue with play
+    #- name: wait for 10 seconds and continue with play
     #  wait_for:
-    #    timeout: 2
+    #    timeout: 10
     #- name: Setup the Database services
     #  shell: cd ../../src/apps/storage && mix ecto.create && mix ecto.migrate
     #  register: output

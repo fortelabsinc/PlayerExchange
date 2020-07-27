@@ -1,13 +1,29 @@
 {
   "cSpell.ignoreWords": [
+    "alertmanager",
+    "alertmanagers",
+    "alertname",
     "ansible",
+    "apiservers",
+    "cadvisor",
+    "datasources",
     "devops",
+    "devopscube",
+    "etc",
+    "etc alertmanager templates tmpl",
     "gcloud",
+    "kube",
     "kubernetes",
+    "labelmap",
     "openshift",
     "payid",
     "playerexchange",
     "plyxchg",
-    "preemptible"
+    "preemptible",
+    "rbac",
+    "serviceaccount",
+    "templates",
+    "tmpl",
+    "tsdb"
   ]
 }

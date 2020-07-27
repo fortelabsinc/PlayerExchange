@@ -97,6 +97,10 @@
       metadata:
         name: cockroachdb
         namespace: "{{cluster_name}}-{{stage}}"
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/path: "_status/vars"
+          prometheus.io/port: "8080"
       spec:
         serviceName: "cockroachdb"
         replicas: "{{cockroach_replicas}}"
@@ -105,6 +109,10 @@
             app: cockroachdb
         template:
           metadata:
+            annotations:
+              prometheus.io/scrape: "true"
+              prometheus.io/path: "_status/vars"
+              prometheus.io/port: "8080"
             labels:
               app: cockroachdb
           spec:
