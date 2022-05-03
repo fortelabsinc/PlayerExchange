@@ -129,6 +129,17 @@ export default {
       },
       deep: true,
     },
+    postingsList() {
+      if (this.postingsList) {
+        this.getAllUserNames({
+          ids: this.postingsList.map((p) => p.user_id),
+        }).then(({ payload }) => {
+          if (payload) {
+            this.users = payload
+          }
+        })
+      }
+    },
   },
   mounted() {
     this.options.itemsPerPage = this.postingsItemsPerPage
@@ -149,16 +160,6 @@ export default {
           this.games = payload
         }
       })
-
-      if (this.postingsList) {
-        this.getAllUserNames({
-          ids: this.postingsList.map((p) => p.user_id),
-        }).then(({ payload }) => {
-          if (payload) {
-            this.users = payload
-          }
-        })
-      }
 
       this.getPostingsPage({ page: page - 1, count: itemsPerPage }).then(
         ({ payload }) => {

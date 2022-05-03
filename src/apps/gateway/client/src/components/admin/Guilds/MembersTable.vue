@@ -17,7 +17,13 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-btn color="red" outlined small @click="removeMember(item)">
+        <v-btn
+          v-if="isOwner"
+          color="red"
+          outlined
+          small
+          @click="removeMember(item)"
+        >
           Remove
         </v-btn>
       </template>
@@ -64,7 +70,7 @@ import { map } from 'lodash'
 
 export default {
   name: 'MembersTable',
-  props: ['guild_id', 'value'],
+  props: ['guildId', 'ownerId', 'value'],
   data() {
     return {
       dialog: false,
@@ -79,12 +85,14 @@ export default {
     ...mapGetters({
       membersListGet: 'guilds/getGuildMembers',
       membersItemsPerPage: 'guilds/getMembersItemsPerPage',
+      userId: 'auth/getUserId',
     }),
     membersList() {
-      const list = this.guild_id
-        ? this.membersListGet(this.guild_id)
-        : this.value
+      const list = this.guildId ? this.membersListGet(this.guildId) : this.value
       return map(list, (stake, user_id) => ({ user_id, stake }))
+    },
+    isOwner() {
+      return this.ownerId === this.userId
     },
     headers() {
       return [
@@ -106,11 +114,12 @@ export default {
           value: 'stake',
           sortable: false,
         },
-        { text: '', align: 'end', value: 'actions', sortable: false },
+        ...(this.isOwner
+          ? [{ text: '', align: 'end', value: 'actions', sortable: false }]
+          : []),
       ]
     },
   },
-
   mounted() {
     if (this.membersList) {
       this.getAllUserNames({
@@ -128,7 +137,7 @@ export default {
       removeGuildMember: 'guilds/ApiActionRemoveGuildMember',
     }),
     removeMember(item) {
-      if (!this.guild_id) {
+      if (!this.guildId) {
         this.$emit('removed', item)
         return
       }
@@ -143,7 +152,7 @@ export default {
     confirmRemove() {
       this.removing = true
       this.removeGuildMember({
-        guild_id: this.guild_id,
+        guild_id: this.guildId,
         user_id: this.currentItem.user_id,
       }).then(({ error }) => {
         this.currentItem = {}

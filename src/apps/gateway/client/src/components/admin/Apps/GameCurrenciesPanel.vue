@@ -1,12 +1,14 @@
 <template>
   <AppLayoutPanel>
     <div class="d-flex">
-      <v-btn color="success" @click="dialogPayment = true">
-        Make a Payment
-      </v-btn>
-      <MakePayment v-model="dialogPayment" />
-      <v-spacer />
+      <template v-if="isOwner">
+        <v-btn color="success" @click="dialogPayment = true">
+          Make a Payment
+        </v-btn>
+        <MakePayment v-model="dialogPayment" />
+      </template>
 
+      <v-spacer />
       <v-btn icon @click="getTheBalances()">
         <v-icon large>
           mdi-refresh
@@ -44,8 +46,8 @@ import AppLayoutPanel from '@/components/admin/AppLayoutPanel.vue'
 import MakePayment from '@/components/common/MakePayment.vue'
 
 export default {
-  name: 'GuildCurrenciesPanel',
-  props: ['guildId'],
+  name: 'GameCurrenciesPanel',
+  props: ['gameId', 'ownerId'],
   data() {
     return {
       dialogPayment: false,
@@ -57,18 +59,22 @@ export default {
   },
   computed: {
     ...mapGetters({
-      balance: 'guilds/getBalances',
+      balance: 'apps/getBalances',
+      userId: 'auth/getUserId',
     }),
+    isOwner() {
+      return this.ownerId === this.userId
+    },
   },
   mounted() {
     this.getTheBalances()
   },
   methods: {
     ...mapActions({
-      getBalances: 'guilds/ApiActionBalanceGuild',
+      getBalances: 'apps/ApiActionBalanceApp',
     }),
     getTheBalances() {
-      this.getBalances({ guild_id: this.guildId }).then((rsp) => {
+      this.getBalances({ game_id: this.gameId }).then((rsp) => {
         if (undefined != rsp.error) {
           this.$toast.error(
             'Error getting balances: ' + JSON.stringify(rsp.error.message)
