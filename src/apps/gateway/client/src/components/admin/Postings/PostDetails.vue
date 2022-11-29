@@ -199,18 +199,24 @@ export default {
     },
   },
   mounted() {
-    this.getAllAppNames().then(({ payload }) => {
+    this.getAllAppNames().then(({ payload, error }) => {
       if (payload) {
         this.games = payload
+      }
+      if (error) {
+        this.$toast.error(`Error fetching apps. ${error.message}`)
       }
     })
 
     if (this.posting) {
       this.getAllUserNames({
         ids: [this.posting.user_id],
-      }).then(({ payload }) => {
+      }).then(({ payload, error }) => {
         if (payload) {
           this.users = payload
+        }
+        if (error) {
+          this.$toast.error(`Error getting user names. ${error.message}`)
         }
       })
     }

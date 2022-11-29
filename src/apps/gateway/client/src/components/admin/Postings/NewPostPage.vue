@@ -179,12 +179,15 @@ export default {
       getAllAppNames: 'apps/ApiActionFetchAllAppNames',
     }),
     fetchAppNames() {
-      this.getAllAppNames().then(({ payload }) => {
+      this.getAllAppNames().then(({ payload, error }) => {
         if (payload) {
           var result = Object.keys(payload).map(function(key) {
             return { game_id: key, name: payload[key] }
           })
           this.games = result
+        }
+        if (error) {
+          this.$toast.error(`Error fetching apps. ${error.message}`)
         }
       })
     },

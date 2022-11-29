@@ -1,43 +1,51 @@
 <template>
-  <div class="login">
-    <v-card-text>
-      <v-form ref="form" v-model="valid" lazy-validation>
-        <v-text-field
-          v-model="username"
-          type="text"
-          name="username"
-          label="Username"
-          required
-          :rules="rules.username"
-        />
-        <v-text-field
-          v-model="email"
-          type="text"
-          name="email"
-          label="Email"
-          required
-          :rules="rules.email"
-        />
-        <v-text-field
-          id="password"
-          v-model="password"
-          label="Password"
-          name="password"
-          type="password"
-          required
-          :rules="rules.password"
-        />
-      </v-form>
-    </v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn color="primary" @click="onSubmit">Sign up</v-btn>
-    </v-card-actions>
+  <div class="my-container">
+    <VueElementLoading
+      :active="isActive"
+      spinner="bar-fade-scale"
+      color="#1976d2"
+    />
+    <div class="login">
+      <v-card-text>
+        <v-form ref="form" v-model="valid" lazy-validation>
+          <v-text-field
+            v-model="username"
+            type="text"
+            name="username"
+            label="Username"
+            required
+            :rules="rules.username"
+          />
+          <v-text-field
+            v-model="email"
+            type="text"
+            name="email"
+            label="Email"
+            required
+            :rules="rules.email"
+          />
+          <v-text-field
+            id="password"
+            v-model="password"
+            label="Password"
+            name="password"
+            type="password"
+            required
+            :rules="rules.password"
+          />
+        </v-form>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" @click="onSubmit">Sign up</v-btn>
+      </v-card-actions>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import VueElementLoading from 'vue-element-loading'
 export default {
   name: 'Signup',
   data() {
@@ -55,6 +63,7 @@ export default {
       email: '',
       password: '',
       keepLoggedIn: true,
+      isActive: false,
     }
   },
   methods: {
@@ -65,20 +74,30 @@ export default {
       if (!this.$refs.form.validate()) {
         return
       }
+
+      this.isActive = true
+
       this.register({
         username: this.username,
         email: this.email,
         password: this.password,
-      }).then((data) => {
-        if (undefined != data['payload']) {
+      }).then(({ error, payload, ...data }) => {
+        this.isActive = false
+        if (payload) {
           this.$router.push({ name: 'Login' })
           this.$toast.success('Successfuly created account')
         } else {
           this.$toast.error('Error creating account')
           console.log('Error: ' + JSON.stringify(data))
         }
+        if (error) {
+          this.$toast.error(`Error creating account. ${error.message}`)
+        }
       })
     },
+  },
+  components: {
+    VueElementLoading,
   },
 }
 </script>

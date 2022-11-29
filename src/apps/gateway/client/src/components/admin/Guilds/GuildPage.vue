@@ -218,7 +218,10 @@ export default {
     }),
     fetchGuildData() {
       this.loading = true
-      this.apiGetGuildById({ guild_id: this.$route.params.id }).then(() => {
+      this.apiGetGuildById({ guild_id: this.$route.params.id }).then(({ error }) => {
+        if (error) {
+          this.$toast.error(`Error fetching guild data. ${error.message}`)
+        }
         this.loading = false
       })
     },

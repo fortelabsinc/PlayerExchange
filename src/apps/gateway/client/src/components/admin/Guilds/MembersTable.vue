@@ -115,9 +115,12 @@ export default {
     if (this.membersList) {
       this.getAllUserNames({
         ids: this.membersList.map((p) => p.user_id),
-      }).then(({ payload }) => {
+      }).then(({ payload, error }) => {
         if (payload) {
           this.users = payload
+        }
+        if (error) {
+          this.$toast.error(`Error fetching user names. ${error.message}`)
         }
       })
     }

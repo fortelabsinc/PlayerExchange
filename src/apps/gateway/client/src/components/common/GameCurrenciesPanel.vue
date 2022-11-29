@@ -68,10 +68,10 @@ export default {
       getBalances: 'apps/ApiActionBalanceApp',
     }),
     getTheBalances() {
-      this.getBalances({ game_id: this.gameId }).then((rsp) => {
-        if (undefined != rsp.error) {
+      this.getBalances({ game_id: this.gameId }).then(({ error }) => {
+        if (error) {
           this.$toast.error(
-            'Error getting balances: ' + JSON.stringify(rsp.error.message)
+            'Error getting balances: ' + JSON.stringify(error.message)
           )
         } else {
           this.$toast.success('Info updated')

@@ -144,18 +144,24 @@ export default {
       const { page, itemsPerPage } = this.options
       this.loading = true
 
-      this.getAllAppNames().then(({ payload }) => {
+      this.getAllAppNames().then(({ payload, error}) => {
         if (payload) {
           this.games = payload
+        }
+        if (error) {
+          this.$toast.error(`Error fetching apps. ${error.message}`)
         }
       })
 
       if (this.postingsList) {
         this.getAllUserNames({
           ids: this.postingsList.map((p) => p.user_id),
-        }).then(({ payload }) => {
+        }).then(({ payload, error }) => {
           if (payload) {
             this.users = payload
+          }
+          if (error) {
+            this.$toast.error(`Error getting user names. ${error.message}`)
           }
         })
       }
